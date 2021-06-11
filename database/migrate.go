@@ -10,6 +10,15 @@ import (
 func Migrate(database *gorm.DB) {
 	err := database.AutoMigrate(
 		models.User{},
+		models.Tag{},
+		models.Genre{},
+		models.Country{},
+		models.Profile{},
+		models.Movie{},
+		models.MovieTag{},
+		models.MovieGenre{},
+		models.MovieCountry{},
+		models.MoviePeople{},
 	)
 
 	if err != nil {
