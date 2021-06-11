@@ -2,13 +2,13 @@ package database
 
 import (
 	"fmt"
-	"github.com/xdorro/golang-fiber-base-project/config"
+	config2 "github.com/xdorro/golang-fiber-base-project/pkg/config"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 // NewDatabase creates a new Database object
-func NewDatabase(config *config.YamlConfig) (*gorm.DB, error) {
+func NewDatabase(config *config2.YamlConfig) (*gorm.DB, error) {
 	var err error
 	dbConfig := config.Database
 
