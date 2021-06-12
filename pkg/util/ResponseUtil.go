@@ -6,7 +6,15 @@ import (
 )
 
 // ResponseSuccess : returning json structur for success request
-func ResponseSuccess(c *fiber.Ctx, data interface{}, message string) error {
+func ResponseSuccess(c *fiber.Ctx, message string) error {
+	return c.JSON(&dto.DefaultResponse{
+		Status:  200,
+		Message: message,
+	})
+}
+
+// ResponseSuccessData : returning json structur for success request
+func ResponseSuccessData(c *fiber.Ctx, data interface{}, message string) error {
 	return c.JSON(&dto.DataResponse{
 		Status:  200,
 		Message: message,
@@ -22,12 +30,20 @@ func ResponseNotFound(c *fiber.Ctx, message string) error {
 	})
 }
 
-// ResponseError : returning json structur for error request
-func ResponseError(c *fiber.Ctx, data interface{}, message string) error {
+// ResponseErrorData : returning json structur for error request
+func ResponseErrorData(c *fiber.Ctx, data interface{}, message string) error {
 	return c.JSON(&dto.DataResponse{
 		Status:  500,
 		Message: message,
 		Data:    data,
+	})
+}
+
+// ResponseError : returning json structur for error request
+func ResponseError(c *fiber.Ctx, message string) error {
+	return c.JSON(&dto.DefaultResponse{
+		Status:  500,
+		Message: message,
 	})
 }
 

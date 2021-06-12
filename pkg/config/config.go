@@ -8,10 +8,8 @@ import (
 	"path"
 )
 
-var Config *YamlConfig
-
-func init() {
-	Config = ReadYaml("")
+func GetConfig() *YamlConfig {
+	return ReadYaml("")
 }
 
 type ServerConfig struct {
