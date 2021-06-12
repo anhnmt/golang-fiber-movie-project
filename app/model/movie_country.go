@@ -1,4 +1,4 @@
-package models
+package model
 
 type MovieCountry struct {
 	MovieCountryId uint `gorm:"primarykey"`

@@ -1,4 +1,4 @@
-package models
+package model
 
 type MovieTag struct {
 	MovieTagId uint `gorm:"primarykey"`

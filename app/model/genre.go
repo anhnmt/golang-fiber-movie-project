@@ -1,4 +1,4 @@
-package models
+package model
 
 type Genre struct {
 	GenreId uint   `gorm:"primarykey"`

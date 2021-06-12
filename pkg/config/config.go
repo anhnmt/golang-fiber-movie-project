@@ -8,17 +8,23 @@ import (
 	"path"
 )
 
+type ServerConfig struct {
+	Host string `yaml:"host"`
+	Port int    `yaml:"port"`
+}
+
 type DatabaseConfig struct {
 	User     string `yaml:"user"`
 	Password string `yaml:"password"`
 	Host     string `yaml:"host"`
-	Port     string `yaml:"port"`
+	Port     int    `yaml:"port"`
 	DBName   string `yaml:"dbname"`
 }
 
 // YamlConfig This maps the configuration in the yaml file
 // into a struct
 type YamlConfig struct {
+	Server   ServerConfig   `yaml:"server"`
 	Database DatabaseConfig `yaml:"database"`
 }
 

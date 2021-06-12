@@ -1,7 +1,7 @@
 package database
 
 import (
-	models2 "github.com/xdorro/golang-fiber-base-project/app/models"
+	models2 "github.com/xdorro/golang-fiber-base-project/app/model"
 	"gorm.io/gorm"
 	"log"
 )

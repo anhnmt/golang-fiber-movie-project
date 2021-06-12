@@ -1,4 +1,4 @@
-package models
+package model
 
 type Country struct {
 	CountryId uint   `gorm:"primarykey"`
