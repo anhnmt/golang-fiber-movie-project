@@ -2,15 +2,32 @@ package database
 
 import (
 	"fmt"
-	config2 "github.com/xdorro/golang-fiber-base-project/pkg/config"
+	"github.com/xdorro/golang-fiber-base-project/pkg/config"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"log"
+	"os"
 )
 
-// NewDatabase creates a new Database object
-func NewDatabase(config *config2.YamlConfig) (*gorm.DB, error) {
+var DB *gorm.DB
+
+func init() {
 	var err error
-	dbConfig := config.Database
+
+	DB, err = newDatabase()
+	if err != nil {
+		log.Printf("database err %s", err)
+		os.Exit(1)
+	}
+
+	// run migrations; update tables
+	Migrate(DB)
+}
+
+// newDatabase creates a new Database object
+func newDatabase() (*gorm.DB, error) {
+	var err error
+	dbConfig := config.Config.Database
 
 	dsn := fmt.Sprintf(`%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local`, dbConfig.User, dbConfig.Password, dbConfig.Host, dbConfig.Port, dbConfig.DBName)
 	fmt.Println(dsn)
@@ -22,4 +39,8 @@ func NewDatabase(config *config2.YamlConfig) (*gorm.DB, error) {
 	}
 
 	return db, nil
+}
+
+func GetDB() *gorm.DB {
+	return DB
 }

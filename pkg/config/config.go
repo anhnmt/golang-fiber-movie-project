@@ -8,6 +8,12 @@ import (
 	"path"
 )
 
+var Config *YamlConfig
+
+func init() {
+	Config = ReadYaml("")
+}
+
 type ServerConfig struct {
 	Host string `yaml:"host"`
 	Port int    `yaml:"port"`
