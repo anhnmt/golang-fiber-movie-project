@@ -2,48 +2,49 @@ package util
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/xdorro/golang-fiber-base-project/app/dto"
 )
 
 // ResponseSuccess : returning json structur for success request
 func ResponseSuccess(c *fiber.Ctx, data interface{}, message string) error {
-	return c.JSON(fiber.Map{
-		"status":  200,
-		"message": message,
-		"data":    data,
+	return c.JSON(&dto.DataResponse{
+		Status:  200,
+		Message: message,
+		Data:    data,
 	})
 }
 
 // ResponseNotFound : returning json structur for notfound request
-func ResponseNotFound(c *fiber.Ctx, data interface{}, message string) error {
-	return c.JSON(fiber.Map{
-		"status":  404,
-		"message": message,
+func ResponseNotFound(c *fiber.Ctx, message string) error {
+	return c.JSON(&dto.DefaultResponse{
+		Status:  404,
+		Message: message,
 	})
 }
 
 // ResponseError : returning json structur for error request
 func ResponseError(c *fiber.Ctx, data interface{}, message string) error {
-	return c.JSON(fiber.Map{
-		"status":  500,
-		"message": message,
-		"data":    data,
+	return c.JSON(&dto.DataResponse{
+		Status:  500,
+		Message: message,
+		Data:    data,
 	})
 }
 
 // ResponseUnauthenticated : returning json structur for validation error request
 func ResponseUnauthenticated(c *fiber.Ctx, data interface{}, message string) error {
-	return c.JSON(fiber.Map{
-		"status":  403,
-		"message": message,
-		"data":    data,
+	return c.JSON(&dto.DataResponse{
+		Status:  403,
+		Message: message,
+		Data:    data,
 	})
 }
 
 // ResponseValidationError : returning json structur for validation error request
 func ResponseValidationError(c *fiber.Ctx, data interface{}, message string) error {
-	return c.JSON(fiber.Map{
-		"status":  304,
-		"message": message,
-		"data":    data,
+	return c.JSON(&dto.DataResponse{
+		Status:  304,
+		Message: message,
+		Data:    data,
 	})
 }
