@@ -7,6 +7,7 @@ type DatabaseConfig struct {
 	Port     int    `yaml:"port"`
 	DBName   string `yaml:"dbname"`
 	Migrate  bool   `yaml:"migrate"`
+	Logger   bool   `yaml:"logger"`
 }
 
 func GetDatabase() *DatabaseConfig {
