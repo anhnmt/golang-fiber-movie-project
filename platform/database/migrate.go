@@ -1,7 +1,7 @@
 package database
 
 import (
-	models2 "github.com/xdorro/golang-fiber-base-project/app/model"
+	"github.com/xdorro/golang-fiber-base-project/app/model"
 	"gorm.io/gorm"
 	"log"
 )
@@ -9,16 +9,16 @@ import (
 // Migrate updates the db with new columns, and tables
 func Migrate(database *gorm.DB) {
 	err := database.AutoMigrate(
-		models2.User{},
-		models2.Tag{},
-		models2.Genre{},
-		models2.Country{},
-		models2.People{},
-		models2.Movie{},
-		models2.MovieTag{},
-		models2.MovieGenre{},
-		models2.MovieCountry{},
-		models2.MoviePeople{},
+		model.User{},
+		model.Tag{},
+		model.Genre{},
+		model.Country{},
+		model.People{},
+		model.Movie{},
+		model.MovieTag{},
+		model.MovieGenre{},
+		model.MovieCountry{},
+		model.MoviePeople{},
 	)
 
 	if err != nil {
