@@ -109,8 +109,8 @@ func DeleteCountryById(c *fiber.Ctx) error {
 
 // findCountryByIdAndStatus : Find country by Country_Id and Status = 1
 func findCountryByIdAndStatus(countryId string, country *model.Country, db *gorm.DB) (*model.Country, error) {
-	if result := db.First(&country, "country_id = ? and status = ?", countryId, 1); result.Error != nil {
-		return nil, result.Error
+	if err := db.First(&country, "country_id = ? and status = ?", countryId, 1).Error; err != nil {
+		return nil, err
 	}
 
 	return country, nil

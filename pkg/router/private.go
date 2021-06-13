@@ -31,4 +31,12 @@ func privateRoute(a *fiber.App) {
 	countries.Get("/:id", controller.FindCountryById)
 	countries.Put("/:id", controller.UpdateCountryById)
 	countries.Delete("/:id", controller.DeleteCountryById)
+
+	// Users Controller
+	users := api.Group("/users")
+	users.Get("/", controller.FindAllUsers)
+	users.Post("/", controller.CreateNewUser)
+	users.Get("/:id", controller.FindUserById)
+	users.Put("/:id", controller.UpdateUserById)
+	users.Delete("/:id", controller.DeleteUserById)
 }
