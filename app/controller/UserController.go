@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/xdorro/golang-fiber-base-project/app/dto"
 	"github.com/xdorro/golang-fiber-base-project/app/model"
+	"github.com/xdorro/golang-fiber-base-project/pkg/mapper"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
 	"github.com/xdorro/golang-fiber-base-project/platform/database"
 	"gorm.io/gorm"
@@ -14,7 +15,10 @@ func FindAllUsers(c *fiber.Ctx) error {
 	db := database.GetDB()
 	var users []model.User
 	db.Find(&users, "status = ?", 1)
-	return util.ResponseSuccess(c, "Thành công", users)
+
+	result := mapper.ListUserSearch(users)
+
+	return util.ResponseSuccess(c, "Thành công", result)
 }
 
 // FindUserById : Find user by User_Id and Status = 1
@@ -23,15 +27,15 @@ func FindUserById(c *fiber.Ctx) error {
 	db := database.GetDB()
 
 	userId := c.Params("id")
-	user := new(model.User)
-
-	user, err = findUserByIdAndStatus(userId, user, db)
+	user, err := findUserByIdAndStatus(userId, db)
 
 	if err != nil || user.UserId == 0 {
 		return util.ResponseNotFound(c, "Đường dẫn không tồn tại")
 	}
 
-	return util.ResponseSuccess(c, "Thành công", user)
+	result := mapper.UserSearch(user)
+
+	return util.ResponseSuccess(c, "Thành công", result)
 }
 
 // CreateNewUser : Create a new user
@@ -66,7 +70,7 @@ func UpdateUserById(c *fiber.Ctx) error {
 	userRequest := new(dto.UserRequest)
 	user := new(model.User)
 
-	user, err = findUserByIdAndStatus(userId, user, db)
+	user, err = findUserByIdAndStatus(userId, db)
 
 	if err != nil || user.UserId == 0 {
 		return util.ResponseNotFound(c, "Đường dẫn không tồn tại")
@@ -76,10 +80,13 @@ func UpdateUserById(c *fiber.Ctx) error {
 		return util.ResponseError(c, err.Error(), nil)
 	}
 
-	user.Name = userRequest.Name
-	user.Username = userRequest.Username
-	user.Password = userRequest.Password
-	user.Gender = userRequest.Gender
+	user = &model.User{
+		UserId:   user.UserId,
+		Name:     userRequest.Name,
+		Username: userRequest.Username,
+		Password: userRequest.Password,
+		Gender:   userRequest.Gender,
+	}
 
 	if err := db.Save(&user).Error; err != nil {
 		return util.ResponseError(c, err.Error(), nil)
@@ -97,7 +104,7 @@ func DeleteUserById(c *fiber.Ctx) error {
 
 	userId := c.Params("id")
 
-	user, err = findUserByIdAndStatus(userId, user, db)
+	user, err = findUserByIdAndStatus(userId, db)
 
 	if err != nil || user.UserId == 0 {
 		return util.ResponseNotFound(c, "Đường dẫn không tồn tại")
@@ -111,7 +118,9 @@ func DeleteUserById(c *fiber.Ctx) error {
 }
 
 // findUserByIdAndStatus : Find user by User_Id and Status = 1
-func findUserByIdAndStatus(userId string, user *model.User, db *gorm.DB) (*model.User, error) {
+func findUserByIdAndStatus(userId string, db *gorm.DB) (*model.User, error) {
+	user := new(model.User)
+
 	if err := db.First(&user, "user_id = ? and status = ?", userId, 1).Error; err != nil {
 		return nil, err
 	}
