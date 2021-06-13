@@ -6,7 +6,6 @@ import (
 	"github.com/xdorro/golang-fiber-base-project/pkg/config"
 	"github.com/xdorro/golang-fiber-base-project/pkg/middleware"
 	"github.com/xdorro/golang-fiber-base-project/pkg/router"
-	"github.com/xdorro/golang-fiber-base-project/platform/database"
 	"log"
 	"os"
 	"os/signal"
@@ -16,20 +15,10 @@ import (
 func main() {
 	app := fiber.New()
 
+	serverConfig := config.GetServer()
+
 	// Attach Middlewares.
 	middleware.FiberMiddleware(app)
-
-	cfg := config.ReadYaml("")
-	fmt.Println("Xin chao")
-
-	db, err := database.NewDatabase(cfg)
-	if err != nil {
-		log.Printf("database err %s", err)
-		os.Exit(1)
-	}
-
-	// run migrations; update tables
-	database.Migrate(db)
 
 	// Routes.
 	router.GeneralRoute(app)
@@ -47,7 +36,8 @@ func main() {
 	}()
 
 	// start http server
-	serverAddr := fmt.Sprintf("%s:%d", cfg.Server.Host, cfg.Server.Port)
+	serverAddr := fmt.Sprintf("%s:%d", serverConfig.Host, serverConfig.Port)
+
 	if err := app.Listen(serverAddr); err != nil {
 		log.Printf("Oops... server is not running! error: %v", err)
 	}

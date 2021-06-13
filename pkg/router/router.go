@@ -1,6 +1,9 @@
 package router
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/gofiber/fiber/v2"
+	"github.com/xdorro/golang-fiber-base-project/pkg/util"
+)
 
 func GeneralRoute(a *fiber.App) {
 	a.Get("/", func(c *fiber.Ctx) error {
@@ -19,9 +22,7 @@ func GeneralRoute(a *fiber.App) {
 func notFoundRoute(a *fiber.App) {
 	a.Use(
 		func(c *fiber.Ctx) error {
-			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-				"msg": "sorry, endpoint is not found",
-			})
+			return util.ResponseNotFound(c, "404 Not Found")
 		},
 	)
 }
