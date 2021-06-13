@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+	"github.com/xdorro/golang-fiber-base-project/app/model"
 	"github.com/xdorro/golang-fiber-base-project/pkg/config"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -11,25 +12,32 @@ import (
 	"time"
 )
 
-var DB *gorm.DB
+var (
+	err error
+	DB  *gorm.DB
+)
 
 func init() {
-	var err error
+	dbConfig := config.GetDatabase()
 
-	DB, err = newDatabase()
+	DB, err = newDatabase(dbConfig)
 	if err != nil {
 		log.Printf("database err %s", err)
 		os.Exit(1)
 	}
 
 	// run migrations; update tables
-	Migrate(DB)
+	if dbConfig.Migrate {
+		migrate()
+	}
 }
 
-// newDatabase creates a new Database object
-func newDatabase() (*gorm.DB, error) {
-	var err error
-	dbConfig := config.GetConfig().Database
+func GetDB() *gorm.DB {
+	return DB
+}
+
+// newDatabase : creates a new Database object
+func newDatabase(dbConfig *config.DatabaseConfig) (*gorm.DB, error) {
 
 	dsn := fmt.Sprintf(`%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local`, dbConfig.User, dbConfig.Password, dbConfig.Host, dbConfig.Port, dbConfig.DBName)
 	fmt.Println(dsn)
@@ -55,6 +63,20 @@ func newDatabase() (*gorm.DB, error) {
 	return db, nil
 }
 
-func GetDB() *gorm.DB {
-	return DB
+// migrate : updates the db with new columns, and tables
+func migrate() {
+	if err := DB.AutoMigrate(
+		model.User{},
+		model.Tag{},
+		model.Genre{},
+		model.Country{},
+		model.People{},
+		model.Movie{},
+		model.MovieTag{},
+		model.MovieGenre{},
+		model.MovieCountry{},
+		model.MoviePeople{},
+	); err != nil {
+		log.Println(err)
+	}
 }
