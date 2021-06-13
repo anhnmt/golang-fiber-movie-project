@@ -22,7 +22,7 @@ func GeneralRoute(a *fiber.App) {
 func notFoundRoute(a *fiber.App) {
 	a.Use(
 		func(c *fiber.Ctx) error {
-			return util.ResponseNotFound(c, "404 Not Found")
+			return util.ResponseNotFound(c, "Đường dẫn không tồn tại")
 		},
 	)
 }
