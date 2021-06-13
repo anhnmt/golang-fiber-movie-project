@@ -15,7 +15,7 @@ import (
 func main() {
 	app := fiber.New()
 
-	cfg := config.GetConfig()
+	serverConfig := config.GetServer()
 
 	// Attach Middlewares.
 	middleware.FiberMiddleware(app)
@@ -36,8 +36,7 @@ func main() {
 	}()
 
 	// start http server
-	serverAddr := fmt.Sprintf("%s:%d", cfg.Server.Host, cfg.Server.Port)
-	log.Println(serverAddr)
+	serverAddr := fmt.Sprintf("%s:%d", serverConfig.Host, serverConfig.Port)
 
 	if err := app.Listen(serverAddr); err != nil {
 		log.Printf("Oops... server is not running! error: %v", err)

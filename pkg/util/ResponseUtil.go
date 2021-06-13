@@ -5,62 +5,74 @@ import (
 	"github.com/xdorro/golang-fiber-base-project/app/dto"
 )
 
-// ResponseSuccess : returning json structur for success request
-func ResponseSuccess(c *fiber.Ctx, message string) error {
+// ResponseSuccess : returning json structure for success request
+func ResponseSuccess(c *fiber.Ctx, message string, data interface{}) error {
+	if data != nil {
+		return c.JSON(&dto.DataResponse{
+			Status:  fiber.StatusOK,
+			Message: message,
+			Data:    data,
+		})
+	}
+
 	return c.JSON(&dto.DefaultResponse{
-		Status:  200,
+		Status:  fiber.StatusOK,
 		Message: message,
 	})
 }
 
-// ResponseSuccessData : returning json structur for success request
-func ResponseSuccessData(c *fiber.Ctx, data interface{}, message string) error {
-	return c.JSON(&dto.DataResponse{
-		Status:  200,
-		Message: message,
-		Data:    data,
-	})
-}
-
-// ResponseNotFound : returning json structur for notfound request
+// ResponseNotFound : returning json structure for notfound request
 func ResponseNotFound(c *fiber.Ctx, message string) error {
 	return c.JSON(&dto.DefaultResponse{
-		Status:  404,
+		Status:  fiber.StatusNotFound,
 		Message: message,
 	})
 }
 
-// ResponseErrorData : returning json structur for error request
-func ResponseErrorData(c *fiber.Ctx, data interface{}, message string) error {
-	return c.JSON(&dto.DataResponse{
-		Status:  500,
-		Message: message,
-		Data:    data,
-	})
-}
+// ResponseError : returning json structure for error request
+func ResponseError(c *fiber.Ctx, message string, data interface{}) error {
+	if data != nil {
+		return c.JSON(&dto.DataResponse{
+			Status:  fiber.StatusInternalServerError,
+			Message: message,
+			Data:    data,
+		})
+	}
 
-// ResponseError : returning json structur for error request
-func ResponseError(c *fiber.Ctx, message string) error {
 	return c.JSON(&dto.DefaultResponse{
-		Status:  500,
+		Status:  fiber.StatusInternalServerError,
 		Message: message,
 	})
 }
 
-// ResponseUnauthenticated : returning json structur for validation error request
-func ResponseUnauthenticated(c *fiber.Ctx, data interface{}, message string) error {
+// ResponseUnauthenticated : returning json structure for validation error request
+func ResponseUnauthenticated(c *fiber.Ctx, message string, data interface{}) error {
+	if data != nil {
+		return c.JSON(&dto.DataResponse{
+			Status:  fiber.StatusUnauthorized,
+			Message: message,
+			Data:    data,
+		})
+	}
+
 	return c.JSON(&dto.DataResponse{
-		Status:  403,
+		Status:  fiber.StatusUnauthorized,
 		Message: message,
-		Data:    data,
 	})
 }
 
-// ResponseValidationError : returning json structur for validation error request
-func ResponseValidationError(c *fiber.Ctx, data interface{}, message string) error {
+// ResponseBadRequestError : returning json structure for validation error request
+func ResponseBadRequestError(c *fiber.Ctx, message string, data interface{}) error {
+	if data != nil {
+		return c.JSON(&dto.DataResponse{
+			Status:  fiber.StatusBadRequest,
+			Message: message,
+			Data:    data,
+		})
+	}
+
 	return c.JSON(&dto.DataResponse{
-		Status:  304,
+		Status:  fiber.StatusBadRequest,
 		Message: message,
-		Data:    data,
 	})
 }

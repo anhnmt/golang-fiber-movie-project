@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/xdorro/golang-fiber-base-project/app/dto"
 	"github.com/xdorro/golang-fiber-base-project/app/model"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
 	"github.com/xdorro/golang-fiber-base-project/platform/database"
@@ -21,7 +22,7 @@ func init() {
 func FindAllTags(c *fiber.Ctx) error {
 	var tags []model.Tag
 	db.Find(&tags, "status = ?", 1)
-	return util.ResponseSuccessData(c, tags, "Thành công")
+	return util.ResponseSuccess(c, "Thành công", tags)
 }
 
 // FindTagById : Find tag by Tag_Id and Status = 1
@@ -35,25 +36,33 @@ func FindTagById(c *fiber.Ctx) error {
 		return util.ResponseNotFound(c, "Không tìm thấy ID này")
 	}
 
-	return util.ResponseSuccessData(c, tag, "Thành công")
+	return util.ResponseSuccess(c, "Thành công", tag)
 }
 
 // CreateNewTag : Create a new tag
 func CreateNewTag(c *fiber.Ctx) error {
-	tag := new(model.Tag)
+	tagRequest := new(dto.TagRequest)
 
-	if err := c.BodyParser(tag); err != nil {
-		return util.ResponseError(c, err.Error())
+	if err := c.BodyParser(tagRequest); err != nil {
+		return util.ResponseError(c, err.Error(), nil)
 	}
 
-	result := db.Create(&tag)
+	tag := model.Tag{
+		Name: tagRequest.Name,
+		Slug: tagRequest.Slug,
+	}
 
-	return util.ResponseSuccessData(c, result, "Thành công")
+	if err := db.Create(&tag).Error; err != nil {
+		return util.ResponseError(c, err.Error(), nil)
+	}
+
+	return util.ResponseSuccess(c, "Thành công", nil)
 }
 
 // UpdateTagById : Update tag by Tag_Id and Status = 1
 func UpdateTagById(c *fiber.Ctx) error {
 	tagId := c.Params("id")
+	tagRequest := new(dto.TagRequest)
 	tag := new(model.Tag)
 
 	tag, err = findTagByIdAndStatus(tagId, tag, db)
@@ -62,13 +71,18 @@ func UpdateTagById(c *fiber.Ctx) error {
 		return util.ResponseNotFound(c, "Không tìm thấy ID này")
 	}
 
-	if err := c.BodyParser(tag); err != nil {
-		return util.ResponseError(c, err.Error())
+	if err := c.BodyParser(tagRequest); err != nil {
+		return util.ResponseError(c, err.Error(), nil)
 	}
 
-	db.Save(&tag)
+	tag.Name = tagRequest.Name
+	tag.Slug = tagRequest.Slug
 
-	return util.ResponseSuccess(c, "Thành công")
+	if err := db.Save(&tag).Error; err != nil {
+		return util.ResponseError(c, err.Error(), nil)
+	}
+
+	return util.ResponseSuccess(c, "Thành công", nil)
 }
 
 // DeleteTagById : Delete tag by Tag_Id and Status = 1
@@ -84,9 +98,11 @@ func DeleteTagById(c *fiber.Ctx) error {
 		return util.ResponseNotFound(c, "Không tìm thấy ID này")
 	}
 
-	db.Model(&tag).Update("status", 0)
+	if result := db.Model(&tag).Update("status", 0); result.Error != nil {
+		return util.ResponseError(c, result.Error.Error(), nil)
+	}
 
-	return util.ResponseSuccess(c, "Thành công")
+	return util.ResponseSuccess(c, "Thành công", nil)
 }
 
 // findTagByIdAndStatus : Find tag by Tag_Id and Status = 1
