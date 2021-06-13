@@ -108,8 +108,8 @@ func DeleteTagById(c *fiber.Ctx) error {
 
 // findTagByIdAndStatus : Find tag by Tag_Id and Status = 1
 func findTagByIdAndStatus(tagId string, tag *model.Tag, db *gorm.DB) (*model.Tag, error) {
-	if result := db.First(&tag, "tag_id = ? and status = ?", tagId, 1); result.Error != nil {
-		return nil, result.Error
+	if err := db.First(&tag, "tag_id = ? and status = ?", tagId, 1).Error; err != nil {
+		return nil, err
 	}
 
 	return tag, nil

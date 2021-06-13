@@ -109,8 +109,8 @@ func DeleteGenreById(c *fiber.Ctx) error {
 
 // findGenreByIdAndStatus : Find genre by Genre_Id and Status = 1
 func findGenreByIdAndStatus(genreId string, genre *model.Genre, db *gorm.DB) (*model.Genre, error) {
-	if result := db.First(&genre, "genre_id = ? and status = ?", genreId, 1); result.Error != nil {
-		return nil, result.Error
+	if err := db.First(&genre, "genre_id = ? and status = ?", genreId, 1).Error; err != nil {
+		return nil, err
 	}
 
 	return genre, nil
