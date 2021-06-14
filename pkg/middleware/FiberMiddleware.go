@@ -4,17 +4,20 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/xdorro/golang-fiber-base-project/pkg/config"
 )
 
 func FiberMiddleware(a *fiber.App) {
-	a.Use(
-		// Add CORS to each route.
-		cors.New(),
+	serverConfig := config.GetServer()
 
-		// Add simple logger.
-		logger.New(),
+	// Add CORS to each route.
+	a.Use(cors.New())
 
-		// Add caching.
-		//cache.New(),
-	)
+	// Add simple logger.
+	if serverConfig.Logger {
+		a.Use(logger.New())
+	}
+
+	// Add caching.
+	//cache.New(),
 }

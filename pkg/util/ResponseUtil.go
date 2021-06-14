@@ -61,8 +61,8 @@ func ResponseUnauthenticated(c *fiber.Ctx, message string, data interface{}) err
 	})
 }
 
-// ResponseBadRequestError : returning json structure for validation error request
-func ResponseBadRequestError(c *fiber.Ctx, message string, data interface{}) error {
+// ResponseBadRequest : returning json structure for validation error request
+func ResponseBadRequest(c *fiber.Ctx, message string, data interface{}) error {
 	if data != nil {
 		return c.JSON(&dto.DataResponse{
 			Status:  fiber.StatusBadRequest,
