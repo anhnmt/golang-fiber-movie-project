@@ -14,13 +14,13 @@ import (
 
 var (
 	err error
-	DB  *gorm.DB
+	db  *gorm.DB
 )
 
 func init() {
 	dbConfig := config.GetDatabase()
 
-	DB, err = newDatabase(dbConfig)
+	db, err = newDatabase(dbConfig)
 	if err != nil {
 		log.Printf("database err %s", err)
 		os.Exit(1)
@@ -33,7 +33,7 @@ func init() {
 }
 
 func GetDB() *gorm.DB {
-	return DB
+	return db
 }
 
 // newDatabase : creates a new Database object
@@ -69,7 +69,7 @@ func newDatabase(dbConfig *config.DatabaseConfig) (*gorm.DB, error) {
 
 // migrate : updates the db with new columns, and tables
 func migrate() {
-	if err := DB.AutoMigrate(
+	if err := db.AutoMigrate(
 		model.User{},
 		model.Role{},
 		model.Permission{},

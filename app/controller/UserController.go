@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/xdorro/golang-fiber-base-project/app/dto"
 	"github.com/xdorro/golang-fiber-base-project/app/model"
+	"github.com/xdorro/golang-fiber-base-project/app/repository"
 	"github.com/xdorro/golang-fiber-base-project/pkg/mapper"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
 	"github.com/xdorro/golang-fiber-base-project/platform/database"
@@ -40,21 +41,25 @@ func FindUserById(c *fiber.Ctx) error {
 
 // CreateNewUser : Create a new user
 func CreateNewUser(c *fiber.Ctx) error {
-	db := database.GetDB()
 	userRequest := new(dto.UserRequest)
 
 	if err := c.BodyParser(userRequest); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
 	}
 
+	hash, err := util.HashPassword(userRequest.Password)
+	if err != nil {
+		return util.ResponseError(c, "Không thể mã hoá mật khẩu", err)
+	}
+
 	user := model.User{
 		Name:     userRequest.Name,
 		Username: userRequest.Username,
-		Password: userRequest.Password,
+		Password: hash,
 		Gender:   userRequest.Gender,
 	}
 
-	if err := db.Create(&user).Error; err != nil {
+	if _, err = repository.SaveUser(user); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
 	}
 
@@ -64,31 +69,35 @@ func CreateNewUser(c *fiber.Ctx) error {
 // UpdateUserById : Update user by User_Id and Status = 1
 func UpdateUserById(c *fiber.Ctx) error {
 	var err error
-	db := database.GetDB()
 
 	userId := c.Params("id")
 	userRequest := new(dto.UserRequest)
-	user := new(model.User)
+	var user *model.User
 
-	user, err = findUserByIdAndStatus(userId, db)
+	user, err = repository.FindUserByIdAndStatus(userId, 1)
 
 	if err != nil || user.UserId == 0 {
 		return util.ResponseNotFound(c, "Đường dẫn không tồn tại")
 	}
 
-	if err := c.BodyParser(userRequest); err != nil {
+	if err = c.BodyParser(userRequest); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
 	}
 
-	user = &model.User{
+	hash, err := util.HashPassword(userRequest.Password)
+	if err != nil {
+		return util.ResponseError(c, "Không thể mã hoá mật khẩu", err)
+	}
+
+	newUser := model.User{
 		UserId:   user.UserId,
 		Name:     userRequest.Name,
 		Username: userRequest.Username,
-		Password: userRequest.Password,
+		Password: hash,
 		Gender:   userRequest.Gender,
 	}
 
-	if err := db.Save(&user).Error; err != nil {
+	if _, err = repository.SaveUser(newUser); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
 	}
 
