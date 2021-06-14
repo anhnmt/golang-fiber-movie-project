@@ -2,6 +2,9 @@
 APP_NAME = golang-fiber-base-project
 BUILD_DIR = ./build
 
+config:
+	cp config.example.yml config.yml
+
 clean:
 	rm -rf $(BUILD_DIR)/*
 	rm -rf *.out
