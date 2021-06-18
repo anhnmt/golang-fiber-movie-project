@@ -1,5 +1,5 @@
-
 APP_NAME = golang-fiber-base-project
+APP_VERSION = 1.0
 BUILD_DIR = ./build
 
 config:
@@ -34,3 +34,9 @@ docker.mariadb:
 		-d mariadb:10 \
 		--character-set-server=utf8mb4 \
 		--collation-server=utf8mb4_unicode_ci
+
+docker.build:
+	docker image build -t $(APP_NAME):$(APP_VERSION) .
+
+docker.run:
+	docker-compose up --build -d
