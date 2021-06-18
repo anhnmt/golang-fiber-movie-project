@@ -6,30 +6,25 @@ import (
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
 )
 
-func BaseRoute(a *fiber.App) {
-	a.Get("/", func(c *fiber.Ctx) error {
+func BaseRoute(app *fiber.App) {
+	app.Get("/", func(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{
 			"msg":  "Welcome to Fiber Go API!",
 			"docs": "/swagger/index.html",
 		})
 	})
 
-	swaggerRoute(a)
+	// Create route group.
+	app.Get("/swagger/*", swagger.Handler)
 
-	api := a.Group("/api")
+	api := app.Group("/api")
 	privateRoute(api)
 
 	// Auth Router
 	authRouter(api)
 
 	// 404 Not Found Router
-	notFoundRoute(a)
-}
-
-func swaggerRoute(a *fiber.App) {
-	// Create route group.
-	route := a.Group("/swagger")
-	route.Get("*", swagger.Handler)
+	notFoundRoute(app)
 }
 
 func notFoundRoute(a *fiber.App) {

@@ -38,9 +38,7 @@ func FindUserByIdAndStatus(id string, status int8) (*model.User, error) {
 	return &user, nil
 }
 
-func SaveUser(newUser model.User) (*model.User, error) {
-	var user model.User
-
+func SaveUser(user model.User) (*model.User, error) {
 	if err := db.Save(&user).Error; err != nil {
 		return nil, err
 	}
