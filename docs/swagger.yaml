@@ -1,4 +1,43 @@
+basePath: /
+definitions:
+  dto.DataResponse:
+    properties:
+      data:
+        type: object
+      message:
+        type: object
+      status:
+        type: integer
+    type: object
+host: localhost:8080
 info:
-  contact: {}
-paths: {}
+  contact:
+    email: xdorro@gmail.com
+    name: Tuan Anh Nguyen Manh
+  description: This is a sample swagger for Fiber
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Golang Fiber Base Project
+  version: "1.0"
+paths:
+  /api/oauth/token:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.DataResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.DataResponse'
+      summary: Authentication User
+      tags:
+      - token
 swagger: "2.0"

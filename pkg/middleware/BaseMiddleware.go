@@ -7,7 +7,7 @@ import (
 	"github.com/xdorro/golang-fiber-base-project/pkg/config"
 )
 
-func FiberMiddleware(a *fiber.App) {
+func BaseMiddleware(a *fiber.App) {
 	serverConfig := config.GetServer()
 
 	// Add CORS to each route.

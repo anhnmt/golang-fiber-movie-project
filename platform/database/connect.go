@@ -14,7 +14,6 @@ import (
 // connect : creates a new Database object
 func connect(dbConfig *config.DatabaseConfig) (*gorm.DB, error) {
 	dsn := fmt.Sprintf(`%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local`, dbConfig.User, dbConfig.Password, dbConfig.Host, dbConfig.Port, dbConfig.DBName)
-	fmt.Println(dsn)
 
 	var newLogger logger.Interface
 

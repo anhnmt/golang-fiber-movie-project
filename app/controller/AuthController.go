@@ -11,6 +11,13 @@ import (
 )
 
 // AuthToken : Find user by Username and Password and Status = 1
+// @Summary Authentication User
+// @Tags token
+// @Accept json
+// @Produce json
+// @Success 200 {object} dto.DataResponse{}
+// @Failure 400 {object} dto.DataResponse{}
+// @Router /api/oauth/token [post]
 func AuthToken(c *fiber.Ctx) error {
 	var userRequest dto.UserRequest
 

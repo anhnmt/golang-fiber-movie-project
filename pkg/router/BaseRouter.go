@@ -6,7 +6,7 @@ import (
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
 )
 
-func GeneralRoute(a *fiber.App) {
+func BaseRoute(a *fiber.App) {
 	a.Get("/", func(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{
 			"msg":  "Welcome to Fiber Go API!",
