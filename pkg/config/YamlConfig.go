@@ -5,6 +5,7 @@ package config
 type YamlConfig struct {
 	Server   ServerConfig   `yaml:"server"`
 	Database DatabaseConfig `yaml:"database"`
+	Redis    RedisConfig    `yaml:"redis"`
 	Jwt      JwtConfig      `yaml:"jwt"`
 }
 
