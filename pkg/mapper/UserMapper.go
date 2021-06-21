@@ -6,7 +6,7 @@ import (
 )
 
 func ListUserSearch(users []model.User) []dto.UserResponse {
-	var result []dto.UserResponse
+	result := make([]dto.UserResponse, 0)
 
 	for _, user := range users {
 		mapper := UserSearch(&user)
