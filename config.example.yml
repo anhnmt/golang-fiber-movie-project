@@ -1,6 +1,8 @@
 server:
   host: localhost
   port: 8080
+  logger: true
+  prefork: false
 
 database:
   host: localhost
@@ -8,7 +10,8 @@ database:
   user: root
   password:
   dbname:
-  migrate: true
+  migrate: false
+  logger: true
 
 jwt:
   secret: jwt-secret-key

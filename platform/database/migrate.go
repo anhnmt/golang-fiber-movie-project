@@ -25,6 +25,7 @@ func migrate() {
 		model.MovieGenre{},
 		model.MovieCountry{},
 		model.MoviePeople{},
+		model.MovieType{},
 	); err != nil {
 		log.Println(err)
 	}
