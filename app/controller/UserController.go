@@ -7,16 +7,17 @@ import (
 	"github.com/xdorro/golang-fiber-base-project/app/repository"
 	"github.com/xdorro/golang-fiber-base-project/pkg/mapper"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
-	"github.com/xdorro/golang-fiber-base-project/platform/database"
 )
 
 // FindAllUsers : Find all users by Status = 1
 func FindAllUsers(c *fiber.Ctx) error {
-	db := database.GetDB()
-	users := make([]model.User, 0)
-	db.Find(&users, "status = ?", 1)
+	users, err := repository.FindAllUsersByStatus(1)
 
-	result := mapper.ListUserSearch(users)
+	if err != nil {
+		return util.ResponseError(c, err.Error(), nil)
+	}
+
+	result := mapper.ListUserSearch(*users)
 
 	return util.ResponseSuccess(c, "Thành công", result)
 }

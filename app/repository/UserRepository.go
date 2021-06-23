@@ -7,6 +7,20 @@ import (
 	"gorm.io/gorm"
 )
 
+func FindAllUsersByStatus(status int8) (*[]model.User, error) {
+	users := make([]model.User, 0)
+
+	if err := db.Find(&users, "status = ?", 1).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+
+		return nil, err
+	}
+
+	return &users, nil
+}
+
 // FindUserByUsernameAndStatus : Get User by Username and Status
 func FindUserByUsernameAndStatus(username string, status int8) (*model.User, error) {
 	var user model.User
