@@ -25,6 +25,9 @@ build: swag clean
 run: build
 	$(BUILD_DIR)/$(APP_NAME)
 
+sonar:
+	sonar-scanner -Dproject.settings=./sonar-project.properties
+
 docker.mariadb:
 	docker run --rm -d \
 		--name demo_mariadb \
