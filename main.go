@@ -36,7 +36,7 @@ func main() {
 	middleware.BaseMiddleware(app)
 
 	// Routes.
-	router.BaseRoute(app)
+	router.BaseRouter(app)
 
 	// signal channel to capture system calls
 	sigCh := make(chan os.Signal, 1)

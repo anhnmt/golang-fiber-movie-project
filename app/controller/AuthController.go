@@ -19,18 +19,18 @@ import (
 // @Failure 400 {object} dto.DataResponse{}
 // @Router /api/oauth/token [post]
 func AuthToken(c *fiber.Ctx) error {
-	var userRequest dto.UserRequest
+	var loginRequest dto.LoginRequest
 
-	if err := c.BodyParser(&userRequest); err != nil {
+	if err := c.BodyParser(&loginRequest); err != nil {
 		return util.ResponseBadRequest(c, "Đăng nhập không thành công", err)
 	}
 
-	user, err := repository.FindUserByUsernameAndStatus(userRequest.Username, 1)
+	user, err := repository.FindUserByUsernameAndStatus(loginRequest.Username, 1)
 	if user == nil || user.Username == "" || err != nil {
 		return util.ResponseUnauthenticated(c, "Tài khoản không tồn tại", err)
 	}
 
-	if !util.CheckPasswordHash(userRequest.Password, user.Password) {
+	if !util.CheckPasswordHash(loginRequest.Password, user.Password) {
 		return util.ResponseUnauthenticated(c, "Mật khẩu không chính xác", nil)
 	}
 
