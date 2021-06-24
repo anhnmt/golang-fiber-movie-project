@@ -40,7 +40,7 @@ func FindUserById(c *fiber.Ctx) error {
 func CreateNewUser(c *fiber.Ctx) error {
 	userRequest := new(dto.UserRequest)
 
-	if err = c.BodyParser(userRequest); err != nil {
+	if err := c.BodyParser(userRequest); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
 	}
 

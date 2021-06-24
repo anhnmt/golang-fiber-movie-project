@@ -44,7 +44,7 @@ func CreateNewTag(c *fiber.Ctx) error {
 		Slug: tagRequest.Slug,
 	}
 
-	if _, err = repository.SaveTag(tag); err != nil {
+	if _, err := repository.SaveTag(tag); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
 	}
 
