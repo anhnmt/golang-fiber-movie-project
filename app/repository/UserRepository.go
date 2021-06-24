@@ -37,10 +37,9 @@ func FindUserByUsernameAndStatus(username string, status int8) (*model.User, err
 }
 
 func FindUserByIdAndStatus(id string, status int8) (*model.User, error) {
-	var user model.User
-
 	uid := util.ParseStringToUInt(id)
 
+	var user model.User
 	if err := db.Where(&model.User{UserId: uid, Status: status}).Find(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil

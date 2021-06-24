@@ -24,10 +24,9 @@ func FindAllTagsByStatus(status int8) (*[]model.Tag, error) {
 
 // FindTagByIdAndStatus : Find tag by TagId and Status = 1
 func FindTagByIdAndStatus(id string, status int8) (*model.Tag, error) {
-	var tag model.Tag
-
 	uid := util.ParseStringToUInt(id)
 
+	var tag model.Tag
 	if err := db.Where(&model.Tag{TagId: uid, Status: status}).Find(&tag).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
