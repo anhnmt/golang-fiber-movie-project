@@ -26,7 +26,7 @@ run: build
 	$(BUILD_DIR)/$(APP_NAME)
 
 sonar:
-	sonar-scanner -Dproject.settings=./sonar-project.properties
+	sonar-scanner.bat -Dproject.settings=./sonar-project.properties
 
 docker.mariadb:
 	docker run --rm -d \
