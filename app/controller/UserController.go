@@ -28,7 +28,7 @@ func FindUserById(c *fiber.Ctx) error {
 	user, err := repository.FindUserByIdAndStatus(userId, 1)
 
 	if err != nil || user.UserId == 0 {
-		return util.ResponseNotFound(c, "Đường dẫn không tồn tại")
+		return util.ResponseBadRequest(c, "ID không tồn tại", err)
 	}
 
 	result := mapper.UserSearch(user)
@@ -66,14 +66,14 @@ func CreateNewUser(c *fiber.Ctx) error {
 // UpdateUserById : Update user by User_Id and Status = 1
 func UpdateUserById(c *fiber.Ctx) error {
 	userId := c.Params("id")
-	userRequest := new(dto.UserRequest)
 
 	user, err := repository.FindUserByIdAndStatus(userId, 1)
 
 	if err != nil || user.UserId == 0 {
-		return util.ResponseNotFound(c, "Đường dẫn không tồn tại")
+		return util.ResponseBadRequest(c, "ID không tồn tại", err)
 	}
 
+	userRequest := new(dto.UserRequest)
 	if err = c.BodyParser(userRequest); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
 	}
@@ -87,9 +87,8 @@ func UpdateUserById(c *fiber.Ctx) error {
 	user.Username = userRequest.Username
 	user.Password = hash
 	user.Gender = userRequest.Gender
-	newUser := *user
 
-	if _, err = repository.SaveUser(newUser); err != nil {
+	if _, err = repository.SaveUser(*user); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
 	}
 
@@ -103,13 +102,12 @@ func DeleteUserById(c *fiber.Ctx) error {
 	user, err := repository.FindUserByIdAndStatus(userId, 1)
 
 	if err != nil || user.UserId == 0 {
-		return util.ResponseNotFound(c, "Đường dẫn không tồn tại")
+		return util.ResponseBadRequest(c, "ID không tồn tại", err)
 	}
 
 	user.Status = 0
-	newUser := *user
 
-	if _, err = repository.SaveUser(newUser); err != nil {
+	if _, err = repository.SaveUser(*user); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
 	}
 

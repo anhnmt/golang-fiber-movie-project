@@ -38,4 +38,8 @@ func privateRoute(a fiber.Router) {
 	users.Get("/:id", controller.FindUserById)
 	users.Put("/:id", controller.UpdateUserById)
 	users.Delete("/:id", controller.DeleteUserById)
+
+	// Movies Controller
+	movies := a.Group("/movies")
+	movies.Get("/", controller.FindAllUsers)
 }

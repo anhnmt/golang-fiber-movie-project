@@ -3,7 +3,7 @@ APP_VERSION = 1.0
 BUILD_DIR = ./build
 
 config:
-	copy config.example.yml config.yml
+	cp config.example.yml config.yml
 
 clean:
 	rm -rf $(BUILD_DIR)/*

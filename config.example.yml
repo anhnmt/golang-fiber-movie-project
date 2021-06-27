@@ -10,7 +10,7 @@ database:
   user: root
   password:
   dbname:
-  migrate: false
+  migrate: true
   logger: true
 
 jwt:

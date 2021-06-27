@@ -16,7 +16,7 @@ func FindAllTags(c *fiber.Ctx) error {
 		return util.ResponseError(c, err.Error(), nil)
 	}
 
-	return util.ResponseSuccess(c, "Thành công", *tags)
+	return util.ResponseSuccess(c, "Thành công", tags)
 }
 
 // FindTagById : Find tag by Tag_Id and Status = 1
@@ -25,7 +25,7 @@ func FindTagById(c *fiber.Ctx) error {
 	tag, err := repository.FindTagByIdAndStatus(tagId, 1)
 
 	if err != nil || tag.TagId == 0 {
-		return util.ResponseNotFound(c, "Đường dẫn không tồn tại")
+		return util.ResponseBadRequest(c, "ID không tồn tại", err)
 	}
 
 	return util.ResponseSuccess(c, "Thành công", tag)
@@ -54,14 +54,14 @@ func CreateNewTag(c *fiber.Ctx) error {
 // UpdateTagById : Update tag by Tag_Id and Status = 1
 func UpdateTagById(c *fiber.Ctx) error {
 	tagId := c.Params("id")
-	tagRequest := new(dto.TagRequest)
 
 	tag, err := repository.FindTagByIdAndStatus(tagId, 1)
 
 	if err != nil || tag.TagId == 0 {
-		return util.ResponseNotFound(c, "Đường dẫn không tồn tại")
+		return util.ResponseBadRequest(c, "ID không tồn tại", err)
 	}
 
+	tagRequest := new(dto.TagRequest)
 	if err = c.BodyParser(tagRequest); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
 	}
@@ -82,7 +82,7 @@ func DeleteTagById(c *fiber.Ctx) error {
 	tag, err := repository.FindTagByIdAndStatus(tagId, 1)
 
 	if err != nil || tag.TagId == 0 {
-		return util.ResponseNotFound(c, "Đường dẫn không tồn tại")
+		return util.ResponseBadRequest(c, "ID không tồn tại", err)
 	}
 
 	tag.Status = 0
