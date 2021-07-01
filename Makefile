@@ -73,7 +73,7 @@ docker.build:
 	docker image build -t $(APP_NAME):$(APP_VERSION) .
 
 docker.run:
-	docker run -d -p 8088:8000 $(APP_NAME):$(APP_VERSION)
+	docker run --name $(APP_NAME) -d -p 8000:8000 $(APP_NAME):$(APP_VERSION) -e SERVER_PORT=8000
 
 docker.deploy: docker.build docker.run
 
