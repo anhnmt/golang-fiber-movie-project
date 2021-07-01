@@ -1,23 +1,34 @@
-# Building the binary of the App
-FROM golang:1.16 AS build
+# ./Dockerfile
 
-RUN mkdir /app
+FROM golang:1.16-alpine AS builder
 
-ADD . /app/
+RUN apk add --no-cache git
 
-WORKDIR /app
+# Move to working directory (/build).
+WORKDIR /build
 
-COPY go.mod .
-COPY go.sum .
-
+# Copy and download dependency using go mod.
+COPY go.mod go.sum ./
 RUN go mod download
 
-RUN go build -o main .
+# Copy the code into the container.
+COPY . .
 
-RUN adduser -S -D -H -h /app appuser
+# Set necessary environment variables needed for our image
+# and build the API server.
+ENV CGO_ENABLED=0 GOOS=linux GOARCH=amd64
+RUN go build -a -installsuffix cgo -o main .
 
-USER appuser
+FROM alpine:latest
 
-EXPOSE 5000
+RUN apk --no-cache add ca-certificates
 
-CMD ["./main"]
+# Copy binary and config files from /build
+# to root folder of scratch container.
+COPY --from=builder ["/build/main", "/build/config.yml", "/"]
+
+# Command to run when starting the container.
+ENTRYPOINT ./main --port 8000
+
+# Export necessary port.
+EXPOSE 8000

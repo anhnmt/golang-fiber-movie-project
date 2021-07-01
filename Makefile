@@ -73,4 +73,13 @@ docker.build:
 	docker image build -t $(APP_NAME):$(APP_VERSION) .
 
 docker.run:
+	docker run -d -p 8088:8000 $(APP_NAME):$(APP_VERSION)
+
+docker.deploy: docker.build docker.run
+
+docker.compose:
 	docker-compose up --build -d
+
+docker.server:
+	docker build -t 68.183.224.212:5000/golang-fiber-base-project:1.0 .
+	docker push 68.183.224.212:5000/golang-fiber-base-project:1.0

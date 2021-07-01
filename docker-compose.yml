@@ -4,19 +4,21 @@ version: '3.3'
 services:
   # api is the container name for our Go API
   api:
+    # specifies the latest api image
+    image: golang-fiber-base-project:latest
     # It will look for a Dockerfile in the project root and build it
     build: "."
-    # Exposes the port 5000 from a container and binds it to a random port
+    # Exposes the port 8088 from a container and binds it to a random port
     ports:
-      - "5000"
+      - "8088"
     # If the container goes down, it will restart
     restart: "always"
     # Connects the API to a common api.network bridge
     networks:
       - "api.network"
-    # Starts up 5 replicas of the same image
+    # Starts up 1 replicas of the same image
     deploy:
-      replicas: 5
+      replicas: 1
   # nginx container
   nginx:
     # specifies the latest nginx image
