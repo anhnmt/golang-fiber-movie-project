@@ -70,16 +70,18 @@ docker.sonar:
     	-d sonarqube:8-community
 
 docker.build:
-	docker image build -t $(APP_NAME):$(APP_VERSION) .
+	docker build -t localhost:5000/$(APP_NAME):$(APP_VERSION) .
+
+docker.push:
+	docker push localhost:5000/$(APP_NAME):$(APP_VERSION)
 
 docker.run:
-	docker run --name $(APP_NAME) -d -p 8000:8000 $(APP_NAME):$(APP_VERSION) -e SERVER_PORT=8000
+	docker run --name $(APP_NAME) -d -p 8000:8000 localhost:5000/$(APP_NAME):$(APP_VERSION) -e SERVER_PORT=8000
 
 docker.deploy: docker.build docker.run
 
-docker.compose:
-	docker-compose up --build -d
+docker.local: docker.build docker.push
 
 docker.server:
-	docker build -t 68.183.224.212:5000/golang-fiber-base-project:1.0 .
-	docker push 68.183.224.212:5000/golang-fiber-base-project:1.0
+	docker build -t 68.183.224.212:5000/$(APP_NAME):$(APP_VERSION) .
+	docker push 68.183.224.212:5000/$(APP_NAME):$(APP_VERSION)
