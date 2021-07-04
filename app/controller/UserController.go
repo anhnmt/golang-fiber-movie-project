@@ -11,7 +11,7 @@ import (
 
 // FindAllUsers : Find all users by Status = 1
 func FindAllUsers(c *fiber.Ctx) error {
-	users, err := repository.FindAllUsersByStatus(1)
+	users, err := repository.FindAllUsersByStatus(util.STATUS_ACTIVATED)
 
 	if err != nil {
 		return util.ResponseError(c, err.Error(), nil)
@@ -25,7 +25,7 @@ func FindAllUsers(c *fiber.Ctx) error {
 // FindUserById : Find user by User_Id and Status = 1
 func FindUserById(c *fiber.Ctx) error {
 	userId := c.Params("id")
-	user, err := repository.FindUserByIdAndStatus(userId, 1)
+	user, err := repository.FindUserByIdAndStatus(userId, util.STATUS_ACTIVATED)
 
 	if err != nil || user.UserId == 0 {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
@@ -54,6 +54,7 @@ func CreateNewUser(c *fiber.Ctx) error {
 		Username: userRequest.Username,
 		Password: hash,
 		Gender:   userRequest.Gender,
+		Status:   util.STATUS_ACTIVATED,
 	}
 
 	if _, err = repository.SaveUser(user); err != nil {
@@ -67,7 +68,7 @@ func CreateNewUser(c *fiber.Ctx) error {
 func UpdateUserById(c *fiber.Ctx) error {
 	userId := c.Params("id")
 
-	user, err := repository.FindUserByIdAndStatus(userId, 1)
+	user, err := repository.FindUserByIdAndStatus(userId, util.STATUS_ACTIVATED)
 
 	if err != nil || user.UserId == 0 {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
@@ -99,13 +100,13 @@ func UpdateUserById(c *fiber.Ctx) error {
 func DeleteUserById(c *fiber.Ctx) error {
 	userId := c.Params("id")
 
-	user, err := repository.FindUserByIdAndStatus(userId, 1)
+	user, err := repository.FindUserByIdAndStatus(userId, util.STATUS_ACTIVATED)
 
 	if err != nil || user.UserId == 0 {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
 	}
 
-	user.Status = 0
+	user.Status = util.STATUS_DELETED
 
 	if _, err = repository.SaveUser(*user); err != nil {
 		return util.ResponseError(c, err.Error(), nil)

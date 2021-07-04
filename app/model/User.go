@@ -5,7 +5,8 @@ type User struct {
 	Name     string `gorm:"not null" json:"name"`
 	Username string `gorm:"not null;unique" json:"username"`
 	Password string `gorm:"not null" json:"password"`
-	Gender   int8   `gorm:"default:1" json:"gender"`
-	Status   int8   `gorm:"default:1" json:"status"`
+	Gender   int    `gorm:"default:1" json:"gender"`
+	Status   int    `gorm:"default:1" json:"status"`
+	RoleId   uint   `gorm:"not null" json:"role_id"`
 	BaseModel
 }

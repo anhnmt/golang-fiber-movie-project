@@ -10,7 +10,7 @@ import (
 
 // FindAllCountries : Find all countries by Status = 1
 func FindAllCountries(c *fiber.Ctx) error {
-	countries, err := repository.FindAllCountriesByStatus(1)
+	countries, err := repository.FindAllCountriesByStatus(util.STATUS_ACTIVATED)
 
 	if err != nil {
 		return util.ResponseError(c, err.Error(), nil)
@@ -22,7 +22,7 @@ func FindAllCountries(c *fiber.Ctx) error {
 // FindCountryById : Find country by Country_Id and Status = 1
 func FindCountryById(c *fiber.Ctx) error {
 	countryId := c.Params("id")
-	country, err := repository.FindCountryByIdAndStatus(countryId, 1)
+	country, err := repository.FindCountryByIdAndStatus(countryId, util.STATUS_ACTIVATED)
 
 	if err != nil || country.CountryId == 0 {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
@@ -40,8 +40,9 @@ func CreateNewCountry(c *fiber.Ctx) error {
 	}
 
 	country := model.Country{
-		Name: countryRequest.Name,
-		Slug: countryRequest.Slug,
+		Name:   countryRequest.Name,
+		Slug:   countryRequest.Slug,
+		Status: util.STATUS_ACTIVATED,
 	}
 
 	if _, err := repository.SaveCountry(country); err != nil {
@@ -55,7 +56,7 @@ func CreateNewCountry(c *fiber.Ctx) error {
 func UpdateCountryById(c *fiber.Ctx) error {
 	countryId := c.Params("id")
 
-	country, err := repository.FindCountryByIdAndStatus(countryId, 1)
+	country, err := repository.FindCountryByIdAndStatus(countryId, util.STATUS_ACTIVATED)
 
 	if err != nil || country.CountryId == 0 {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
@@ -79,13 +80,13 @@ func UpdateCountryById(c *fiber.Ctx) error {
 // DeleteCountryById : Delete country by Country_Id and Status = 1
 func DeleteCountryById(c *fiber.Ctx) error {
 	countryId := c.Params("id")
-	country, err := repository.FindCountryByIdAndStatus(countryId, 1)
+	country, err := repository.FindCountryByIdAndStatus(countryId, util.STATUS_ACTIVATED)
 
 	if err != nil || country.CountryId == 0 {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
 	}
 
-	country.Status = 0
+	country.Status = util.STATUS_DELETED
 
 	if _, err = repository.SaveCountry(*country); err != nil {
 		return util.ResponseError(c, err.Error(), nil)

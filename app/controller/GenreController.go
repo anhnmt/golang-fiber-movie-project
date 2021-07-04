@@ -10,7 +10,7 @@ import (
 
 // FindAllGenres : Find all genres by Status = 1
 func FindAllGenres(c *fiber.Ctx) error {
-	genres, err := repository.FindAllTagsByStatus(1)
+	genres, err := repository.FindAllGenresByStatus(util.STATUS_ACTIVATED)
 
 	if err != nil {
 		return util.ResponseError(c, err.Error(), nil)
@@ -22,7 +22,7 @@ func FindAllGenres(c *fiber.Ctx) error {
 // FindGenreById : Find genre by Genre_Id and Status = 1
 func FindGenreById(c *fiber.Ctx) error {
 	genreId := c.Params("id")
-	genre, err := repository.FindGenreByIdAndStatus(genreId, 1)
+	genre, err := repository.FindGenreByIdAndStatus(genreId, util.STATUS_ACTIVATED)
 
 	if err != nil || genre.GenreId == 0 {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
@@ -40,8 +40,9 @@ func CreateNewGenre(c *fiber.Ctx) error {
 	}
 
 	genre := model.Genre{
-		Name: genreRequest.Name,
-		Slug: genreRequest.Slug,
+		Name:   genreRequest.Name,
+		Slug:   genreRequest.Slug,
+		Status: util.STATUS_ACTIVATED,
 	}
 
 	if _, err := repository.SaveGenre(genre); err != nil {
@@ -55,7 +56,7 @@ func CreateNewGenre(c *fiber.Ctx) error {
 func UpdateGenreById(c *fiber.Ctx) error {
 	genreId := c.Params("id")
 
-	genre, err := repository.FindGenreByIdAndStatus(genreId, 1)
+	genre, err := repository.FindGenreByIdAndStatus(genreId, util.STATUS_ACTIVATED)
 
 	if err != nil || genre.GenreId == 0 {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
@@ -79,13 +80,13 @@ func UpdateGenreById(c *fiber.Ctx) error {
 // DeleteGenreById : Delete genre by Genre_Id and Status = 1
 func DeleteGenreById(c *fiber.Ctx) error {
 	genreId := c.Params("id")
-	genre, err := repository.FindGenreByIdAndStatus(genreId, 1)
+	genre, err := repository.FindGenreByIdAndStatus(genreId, util.STATUS_ACTIVATED)
 
 	if err != nil || genre.GenreId == 0 {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
 	}
 
-	genre.Status = 0
+	genre.Status = util.STATUS_DELETED
 
 	if _, err = repository.SaveGenre(*genre); err != nil {
 		return util.ResponseError(c, err.Error(), nil)

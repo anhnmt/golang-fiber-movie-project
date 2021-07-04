@@ -8,10 +8,10 @@ import (
 )
 
 // FindAllGenresByStatus : Find genre by GenreId and Status = 1
-func FindAllGenresByStatus(status int8) (*[]model.Genre, error) {
+func FindAllGenresByStatus(status int) (*[]model.Genre, error) {
 	genres := make([]model.Genre, 0)
 
-	if err := db.Find(&genres, "status = ?", 1).Error; err != nil {
+	if err := db.Find(&genres, "status = ?", status).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
@@ -23,7 +23,7 @@ func FindAllGenresByStatus(status int8) (*[]model.Genre, error) {
 }
 
 // FindGenreByIdAndStatus : Find genre by GenreId and Status = 1
-func FindGenreByIdAndStatus(id string, status int8) (*model.Genre, error) {
+func FindGenreByIdAndStatus(id string, status int) (*model.Genre, error) {
 	uid := util.ParseStringToUInt(id)
 
 	var genre model.Genre

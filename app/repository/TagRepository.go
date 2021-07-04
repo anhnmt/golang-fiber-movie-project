@@ -8,10 +8,10 @@ import (
 )
 
 // FindAllTagsByStatus : Find tag by TagId and Status = 1
-func FindAllTagsByStatus(status int8) (*[]model.Tag, error) {
+func FindAllTagsByStatus(status int) (*[]model.Tag, error) {
 	tags := make([]model.Tag, 0)
 
-	if err := db.Find(&tags, "status = ?", 1).Error; err != nil {
+	if err := db.Find(&tags, "status = ?", status).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
@@ -23,7 +23,7 @@ func FindAllTagsByStatus(status int8) (*[]model.Tag, error) {
 }
 
 // FindTagByIdAndStatus : Find tag by TagId and Status = 1
-func FindTagByIdAndStatus(id string, status int8) (*model.Tag, error) {
+func FindTagByIdAndStatus(id string, status int) (*model.Tag, error) {
 	uid := util.ParseStringToUInt(id)
 
 	var tag model.Tag

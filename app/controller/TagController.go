@@ -10,7 +10,7 @@ import (
 
 // FindAllTags : Find all tags by Status = 1
 func FindAllTags(c *fiber.Ctx) error {
-	tags, err := repository.FindAllTagsByStatus(1)
+	tags, err := repository.FindAllTagsByStatus(util.STATUS_ACTIVATED)
 
 	if err != nil {
 		return util.ResponseError(c, err.Error(), nil)
@@ -22,7 +22,7 @@ func FindAllTags(c *fiber.Ctx) error {
 // FindTagById : Find tag by Tag_Id and Status = 1
 func FindTagById(c *fiber.Ctx) error {
 	tagId := c.Params("id")
-	tag, err := repository.FindTagByIdAndStatus(tagId, 1)
+	tag, err := repository.FindTagByIdAndStatus(tagId, util.STATUS_ACTIVATED)
 
 	if err != nil || tag.TagId == 0 {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
@@ -40,8 +40,9 @@ func CreateNewTag(c *fiber.Ctx) error {
 	}
 
 	tag := model.Tag{
-		Name: tagRequest.Name,
-		Slug: tagRequest.Slug,
+		Name:   tagRequest.Name,
+		Slug:   tagRequest.Slug,
+		Status: util.STATUS_ACTIVATED,
 	}
 
 	if _, err := repository.SaveTag(tag); err != nil {
@@ -55,7 +56,7 @@ func CreateNewTag(c *fiber.Ctx) error {
 func UpdateTagById(c *fiber.Ctx) error {
 	tagId := c.Params("id")
 
-	tag, err := repository.FindTagByIdAndStatus(tagId, 1)
+	tag, err := repository.FindTagByIdAndStatus(tagId, util.STATUS_ACTIVATED)
 
 	if err != nil || tag.TagId == 0 {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
@@ -79,13 +80,13 @@ func UpdateTagById(c *fiber.Ctx) error {
 // DeleteTagById : Delete tag by Tag_Id and Status = 1
 func DeleteTagById(c *fiber.Ctx) error {
 	tagId := c.Params("id")
-	tag, err := repository.FindTagByIdAndStatus(tagId, 1)
+	tag, err := repository.FindTagByIdAndStatus(tagId, util.STATUS_ACTIVATED)
 
 	if err != nil || tag.TagId == 0 {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
 	}
 
-	tag.Status = 0
+	tag.Status = util.STATUS_DELETED
 
 	if _, err = repository.SaveTag(*tag); err != nil {
 		return util.ResponseError(c, err.Error(), nil)

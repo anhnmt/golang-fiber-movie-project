@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func FindAllUserRolesByUserIdAndStatus(id string, status int8) (*[]model.Role, error) {
+func FindAllUserRolesByUserIdAndStatus(id string, status int) (*[]model.Role, error) {
 	uid := util.ParseStringToUInt(id)
 
 	roles := make([]model.Role, 0)

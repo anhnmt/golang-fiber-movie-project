@@ -8,10 +8,10 @@ import (
 )
 
 // FindAllCountriesByStatus : Find country by CountryId and Status = 1
-func FindAllCountriesByStatus(status int8) (*[]model.Country, error) {
+func FindAllCountriesByStatus(status int) (*[]model.Country, error) {
 	countries := make([]model.Country, 0)
 
-	if err := db.Find(&countries, "status = ?", 1).Error; err != nil {
+	if err := db.Find(&countries, "status = ?", status).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
@@ -23,7 +23,7 @@ func FindAllCountriesByStatus(status int8) (*[]model.Country, error) {
 }
 
 // FindCountryByIdAndStatus : Find country by CountryId and Status = 1
-func FindCountryByIdAndStatus(id string, status int8) (*model.Country, error) {
+func FindCountryByIdAndStatus(id string, status int) (*model.Country, error) {
 	uid := util.ParseStringToUInt(id)
 
 	var country model.Country

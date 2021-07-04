@@ -13,6 +13,6 @@ type Movie struct {
 	Runtime     string `json:"runtime"`
 	SeoTitle    string `json:"seo_title"`
 	SeoKeywords string `json:"seo_keywords"`
-	Status      int8   `gorm:"default:1" json:"status"`
+	Status      int    `gorm:"default:1" json:"status"`
 	BaseModel
 }

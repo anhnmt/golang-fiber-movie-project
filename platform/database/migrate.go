@@ -11,9 +11,8 @@ func migrate() {
 		model.User{},
 		model.Role{},
 		model.Permission{},
-		model.UserRole{},
-		model.UserPermission{},
 		model.RolePermission{},
+		model.UserPermission{},
 
 		model.Tag{},
 		model.Genre{},

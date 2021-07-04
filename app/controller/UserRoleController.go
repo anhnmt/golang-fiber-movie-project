@@ -9,7 +9,7 @@ import (
 
 func FindAllUserRoles(c *fiber.Ctx) error {
 	userId := c.Params("id")
-	roles, err := repository.FindAllUserRolesByUserIdAndStatus(userId, 1)
+	roles, err := repository.FindAllUserRolesByUserIdAndStatus(userId, util.STATUS_ACTIVATED)
 
 	if err != nil {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)

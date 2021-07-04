@@ -4,6 +4,6 @@ type Genre struct {
 	GenreId uint   `gorm:"primaryKey" json:"genre_id"`
 	Name    string `gorm:"unique" json:"name"`
 	Slug    string `gorm:"unique" json:"slug"`
-	Status  int8   `gorm:"default:1" json:"status"`
+	Status  int    `gorm:"default:1" json:"status"`
 	BaseModel
 }

@@ -25,7 +25,7 @@ func AuthToken(c *fiber.Ctx) error {
 		return util.ResponseBadRequest(c, "Đăng nhập không thành công", err)
 	}
 
-	user, err := repository.FindUserByUsernameAndStatus(loginRequest.Username, 1)
+	user, err := repository.FindUserByUsernameAndStatus(loginRequest.Username, util.STATUS_ACTIVATED)
 	if user == nil || user.Username == "" || err != nil {
 		return util.ResponseUnauthenticated(c, "Tài khoản không tồn tại", err)
 	}
