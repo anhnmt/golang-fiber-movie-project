@@ -4,33 +4,31 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/xdorro/golang-fiber-base-project/app/dto"
 	"github.com/xdorro/golang-fiber-base-project/app/model"
+	"github.com/xdorro/golang-fiber-base-project/app/repository"
 	"github.com/xdorro/golang-fiber-base-project/pkg/mapper"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
-	"github.com/xdorro/golang-fiber-base-project/platform/database"
-	"gorm.io/gorm"
 )
 
 // FindAllUsers : Find all users by Status = 1
 func FindAllUsers(c *fiber.Ctx) error {
-	db := database.GetDB()
-	var users []model.User
-	db.Find(&users, "status = ?", 1)
+	users, err := repository.FindAllUsersByStatus(util.STATUS_ACTIVATED)
 
-	result := mapper.ListUserSearch(users)
+	if err != nil {
+		return util.ResponseError(c, err.Error(), nil)
+	}
+
+	result := mapper.ListUserSearch(*users)
 
 	return util.ResponseSuccess(c, "Thành công", result)
 }
 
 // FindUserById : Find user by User_Id and Status = 1
 func FindUserById(c *fiber.Ctx) error {
-	var err error
-	db := database.GetDB()
-
 	userId := c.Params("id")
-	user, err := findUserByIdAndStatus(userId, db)
+	user, err := repository.FindUserByIdAndStatus(userId, util.STATUS_ACTIVATED)
 
 	if err != nil || user.UserId == 0 {
-		return util.ResponseNotFound(c, "Đường dẫn không tồn tại")
+		return util.ResponseBadRequest(c, "ID không tồn tại", err)
 	}
 
 	result := mapper.UserSearch(user)
@@ -40,21 +38,26 @@ func FindUserById(c *fiber.Ctx) error {
 
 // CreateNewUser : Create a new user
 func CreateNewUser(c *fiber.Ctx) error {
-	db := database.GetDB()
 	userRequest := new(dto.UserRequest)
 
 	if err := c.BodyParser(userRequest); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
 	}
 
+	hash, err := util.HashPassword(userRequest.Password)
+	if err != nil {
+		return util.ResponseError(c, "Không thể mã hoá mật khẩu", err)
+	}
+
 	user := model.User{
 		Name:     userRequest.Name,
 		Username: userRequest.Username,
-		Password: userRequest.Password,
+		Password: hash,
 		Gender:   userRequest.Gender,
+		Status:   util.STATUS_ACTIVATED,
 	}
 
-	if err := db.Create(&user).Error; err != nil {
+	if _, err = repository.SaveUser(user); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
 	}
 
@@ -63,32 +66,30 @@ func CreateNewUser(c *fiber.Ctx) error {
 
 // UpdateUserById : Update user by User_Id and Status = 1
 func UpdateUserById(c *fiber.Ctx) error {
-	var err error
-	db := database.GetDB()
-
 	userId := c.Params("id")
-	userRequest := new(dto.UserRequest)
-	user := new(model.User)
 
-	user, err = findUserByIdAndStatus(userId, db)
+	user, err := repository.FindUserByIdAndStatus(userId, util.STATUS_ACTIVATED)
 
 	if err != nil || user.UserId == 0 {
-		return util.ResponseNotFound(c, "Đường dẫn không tồn tại")
+		return util.ResponseBadRequest(c, "ID không tồn tại", err)
 	}
 
-	if err := c.BodyParser(userRequest); err != nil {
+	userRequest := new(dto.UserRequest)
+	if err = c.BodyParser(userRequest); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
 	}
 
-	user = &model.User{
-		UserId:   user.UserId,
-		Name:     userRequest.Name,
-		Username: userRequest.Username,
-		Password: userRequest.Password,
-		Gender:   userRequest.Gender,
+	hash, err := util.HashPassword(userRequest.Password)
+	if err != nil {
+		return util.ResponseError(c, "Không thể mã hoá mật khẩu", err)
 	}
 
-	if err := db.Save(&user).Error; err != nil {
+	user.Name = userRequest.Name
+	user.Username = userRequest.Username
+	user.Password = hash
+	user.Gender = userRequest.Gender
+
+	if _, err = repository.SaveUser(*user); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
 	}
 
@@ -97,33 +98,19 @@ func UpdateUserById(c *fiber.Ctx) error {
 
 // DeleteUserById : Delete user by User_Id and Status = 1
 func DeleteUserById(c *fiber.Ctx) error {
-	var err error
-	db := database.GetDB()
-
-	user := new(model.User)
-
 	userId := c.Params("id")
 
-	user, err = findUserByIdAndStatus(userId, db)
+	user, err := repository.FindUserByIdAndStatus(userId, util.STATUS_ACTIVATED)
 
 	if err != nil || user.UserId == 0 {
-		return util.ResponseNotFound(c, "Đường dẫn không tồn tại")
+		return util.ResponseBadRequest(c, "ID không tồn tại", err)
 	}
 
-	if result := db.Model(&user).Update("status", 0); result.Error != nil {
-		return util.ResponseError(c, result.Error.Error(), nil)
+	user.Status = util.STATUS_DELETED
+
+	if _, err = repository.SaveUser(*user); err != nil {
+		return util.ResponseError(c, err.Error(), nil)
 	}
 
 	return util.ResponseSuccess(c, "Thành công", nil)
-}
-
-// findUserByIdAndStatus : Find user by User_Id and Status = 1
-func findUserByIdAndStatus(userId string, db *gorm.DB) (*model.User, error) {
-	user := new(model.User)
-
-	if err := db.First(&user, "user_id = ? and status = ?", userId, 1).Error; err != nil {
-		return nil, err
-	}
-
-	return user, nil
 }

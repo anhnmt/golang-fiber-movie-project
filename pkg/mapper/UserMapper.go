@@ -5,8 +5,8 @@ import (
 	"github.com/xdorro/golang-fiber-base-project/app/model"
 )
 
-func ListUserSearch(users []model.User) []dto.SearchUserResponse {
-	var result []dto.SearchUserResponse
+func ListUserSearch(users []model.User) []dto.UserResponse {
+	result := make([]dto.UserResponse, 0)
 
 	for _, user := range users {
 		mapper := UserSearch(&user)
@@ -15,8 +15,8 @@ func ListUserSearch(users []model.User) []dto.SearchUserResponse {
 	return result
 }
 
-func UserSearch(user *model.User) dto.SearchUserResponse {
-	return dto.SearchUserResponse{
+func UserSearch(user *model.User) dto.UserResponse {
+	return dto.UserResponse{
 		UserId:   user.UserId,
 		Name:     user.Name,
 		Username: user.Username,

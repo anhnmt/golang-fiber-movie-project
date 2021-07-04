@@ -1,32 +1,37 @@
-# Building the binary of the App
-FROM golang:1.16 AS build
+# ./Dockerfile
 
-# `base-project` should be replaced with your project name
-WORKDIR /go/src/base-project
+FROM golang:1.16-alpine AS builder
 
-# Copy all the Code and stuff to compile everything
-COPY . .
+RUN apk add --no-cache git
 
-# Downloads all the dependencies in advance (could be left out, but it's more clear this way)
+# Move to working directory (/build).
+WORKDIR /build
+
+# Copy and download dependency using go mod.
+COPY go.mod go.sum ./
 RUN go mod download
 
-# Builds the application as a staticly linked one, to allow it to run on alpine
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o app .
+# Copy the code into the container.
+COPY . .
 
+# Set necessary environment variables needed for our image
+# and build the API server.
+ENV CGO_ENABLED=0 GOOS=linux GOARCH=amd64
+RUN go build -a -installsuffix cgo -o main .
 
-# Moving the binary to the 'final Image' to make it smaller
 FROM alpine:latest
 
-WORKDIR /app
+RUN apk --no-cache add ca-certificates
 
-# Create the `public` dir and copy all the assets into it
-RUN mkdir ./static
-COPY ./static ./static
+# Copy binary and config files from /build
+# to root folder of scratch container.
+COPY --from=builder ["/build/main", "/build/config.yml", "/"]
 
-# `base-project` should be replaced here as well
-COPY --from=build /go/src/base-project/app .
+ENV SERVER_PORT=8000 \
+    SERVER_HOST=0.0.0.0
 
-# Exposes port 3000 because our program listens on that port
-EXPOSE 3000
+# Command to run when starting the container.
+ENTRYPOINT ["./main"]
 
-CMD ["./app"]
+# Export necessary port.
+EXPOSE 8000

@@ -7,72 +7,54 @@ import (
 
 // ResponseSuccess : returning json structure for success request
 func ResponseSuccess(c *fiber.Ctx, message string, data interface{}) error {
-	if data != nil {
-		return c.JSON(&dto.DataResponse{
-			Status:  fiber.StatusOK,
-			Message: message,
-			Data:    data,
-		})
-	}
+	status := fiber.StatusOK
 
-	return c.JSON(&dto.DefaultResponse{
-		Status:  fiber.StatusOK,
-		Message: message,
-	})
+	return response(c, status, message, data)
 }
 
 // ResponseNotFound : returning json structure for notfound request
 func ResponseNotFound(c *fiber.Ctx, message string) error {
-	return c.JSON(&dto.DefaultResponse{
-		Status:  fiber.StatusNotFound,
-		Message: message,
-	})
+	status := fiber.StatusNotFound
+
+	return response(c, status, message, nil)
 }
 
 // ResponseError : returning json structure for error request
 func ResponseError(c *fiber.Ctx, message string, data interface{}) error {
-	if data != nil {
-		return c.JSON(&dto.DataResponse{
-			Status:  fiber.StatusInternalServerError,
-			Message: message,
-			Data:    data,
-		})
-	}
+	status := fiber.StatusInternalServerError
 
-	return c.JSON(&dto.DefaultResponse{
-		Status:  fiber.StatusInternalServerError,
-		Message: message,
-	})
+	return response(c, status, message, data)
 }
 
 // ResponseUnauthenticated : returning json structure for validation error request
 func ResponseUnauthenticated(c *fiber.Ctx, message string, data interface{}) error {
-	if data != nil {
-		return c.JSON(&dto.DataResponse{
-			Status:  fiber.StatusUnauthorized,
-			Message: message,
-			Data:    data,
-		})
-	}
+	status := fiber.StatusUnauthorized
 
-	return c.JSON(&dto.DataResponse{
-		Status:  fiber.StatusUnauthorized,
-		Message: message,
-	})
+	return response(c, status, message, data)
 }
 
-// ResponseBadRequestError : returning json structure for validation error request
-func ResponseBadRequestError(c *fiber.Ctx, message string, data interface{}) error {
+// ResponseBadRequest : returning json structure for validation error request
+func ResponseBadRequest(c *fiber.Ctx, message string, data interface{}) error {
+	status := fiber.StatusBadRequest
+
+	return response(c, status, message, data)
+}
+
+func response(c *fiber.Ctx, status int, message string, data interface{}) error {
+	ctx := c.Status(status)
+
 	if data != nil {
-		return c.JSON(&dto.DataResponse{
-			Status:  fiber.StatusBadRequest,
-			Message: message,
-			Data:    data,
+		return ctx.JSON(&dto.DataResponse{
+			DefaultResponse: dto.DefaultResponse{
+				Status:  status,
+				Message: message,
+			},
+			Data: data,
 		})
 	}
 
-	return c.JSON(&dto.DataResponse{
-		Status:  fiber.StatusBadRequest,
+	return ctx.JSON(&dto.DefaultResponse{
+		Status:  status,
 		Message: message,
 	})
 }

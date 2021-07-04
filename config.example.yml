@@ -1,0 +1,17 @@
+server:
+  host: localhost
+  port: 8000
+  logger: true
+  prefork: false
+
+database:
+  host: localhost
+  port: 3306
+  user: root
+  password:
+  dbname:
+  migrate: true
+  logger: true
+
+jwt:
+  secret: jwt-secret-key

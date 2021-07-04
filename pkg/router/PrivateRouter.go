@@ -5,11 +5,10 @@ import (
 	"github.com/xdorro/golang-fiber-base-project/app/controller"
 )
 
-func privateRoute(a *fiber.App) {
-	api := a.Group("/api")
+func privateRoute(a fiber.Router) {
 
 	// Tags Controller
-	tags := api.Group("/tags")
+	tags := a.Group("/tags")
 	tags.Get("/", controller.FindAllTags)
 	tags.Post("/", controller.CreateNewTag)
 	tags.Get("/:id", controller.FindTagById)
@@ -17,7 +16,7 @@ func privateRoute(a *fiber.App) {
 	tags.Delete("/:id", controller.DeleteTagById)
 
 	// Genres Controller
-	genres := api.Group("/genres")
+	genres := a.Group("/genres")
 	genres.Get("/", controller.FindAllGenres)
 	genres.Post("/", controller.CreateNewGenre)
 	genres.Get("/:id", controller.FindGenreById)
@@ -25,7 +24,7 @@ func privateRoute(a *fiber.App) {
 	genres.Delete("/:id", controller.DeleteGenreById)
 
 	// Countries Controller
-	countries := api.Group("/countries")
+	countries := a.Group("/countries")
 	countries.Get("/", controller.FindAllCountries)
 	countries.Post("/", controller.CreateNewCountry)
 	countries.Get("/:id", controller.FindCountryById)
@@ -33,10 +32,33 @@ func privateRoute(a *fiber.App) {
 	countries.Delete("/:id", controller.DeleteCountryById)
 
 	// Users Controller
-	users := api.Group("/users")
+	users := a.Group("/users")
 	users.Get("/", controller.FindAllUsers)
 	users.Post("/", controller.CreateNewUser)
 	users.Get("/:id", controller.FindUserById)
 	users.Put("/:id", controller.UpdateUserById)
 	users.Delete("/:id", controller.DeleteUserById)
+
+	// UserRoles Controller
+	//users.Get("/:id/roles", controller.FindAllUserRoles)
+
+	// Permissions Controller
+	permissions := a.Group("/permissions")
+	permissions.Get("/", controller.FindAllPermissions)
+	permissions.Post("/", controller.CreateNewPermission)
+	permissions.Get("/:id", controller.FindPermissionById)
+	permissions.Put("/:id", controller.UpdatePermissionById)
+	permissions.Delete("/:id", controller.DeletePermissionById)
+
+	// Roles Controller
+	roles := a.Group("/roles")
+	roles.Get("/", controller.FindAllRoles)
+	roles.Post("/", controller.CreateNewRole)
+	roles.Get("/:id", controller.FindRoleById)
+	roles.Put("/:id", controller.UpdateRoleById)
+	roles.Delete("/:id", controller.DeleteRoleById)
+
+	// Movies Controller
+	movies := a.Group("/movies")
+	movies.Get("/", controller.FindAllUsers)
 }

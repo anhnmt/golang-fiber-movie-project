@@ -6,7 +6,6 @@ type DefaultResponse struct {
 }
 
 type DataResponse struct {
-	Status  int         `json:"status"`
-	Message interface{} `json:"message"`
-	Data    interface{} `json:"data"`
+	DefaultResponse
+	Data interface{} `json:"data"`
 }
