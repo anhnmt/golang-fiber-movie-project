@@ -40,7 +40,23 @@ func privateRoute(a fiber.Router) {
 	users.Delete("/:id", controller.DeleteUserById)
 
 	// UserRoles Controller
-	users.Get("/:id/roles", controller.FindAllUserRoles)
+	//users.Get("/:id/roles", controller.FindAllUserRoles)
+
+	// Permissions Controller
+	permissions := a.Group("/permissions")
+	permissions.Get("/", controller.FindAllPermissions)
+	permissions.Post("/", controller.CreateNewPermission)
+	permissions.Get("/:id", controller.FindPermissionById)
+	permissions.Put("/:id", controller.UpdatePermissionById)
+	permissions.Delete("/:id", controller.DeletePermissionById)
+
+	// Roles Controller
+	roles := a.Group("/roles")
+	roles.Get("/", controller.FindAllRoles)
+	roles.Post("/", controller.CreateNewRole)
+	roles.Get("/:id", controller.FindRoleById)
+	roles.Put("/:id", controller.UpdateRoleById)
+	roles.Delete("/:id", controller.DeleteRoleById)
 
 	// Movies Controller
 	movies := a.Group("/movies")
