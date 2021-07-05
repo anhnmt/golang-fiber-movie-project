@@ -1,6 +1,8 @@
 APP_NAME = golang-fiber-base-project
 APP_VERSION = 1.0
 BUILD_DIR = ./build
+DOCKER_LOCAL = localhost:5000
+DOCKER_SERVER = 68.183.224.212:5000
 
 config:
 	cp config.example.yml config.yml
@@ -70,18 +72,18 @@ docker.sonar:
     	-d sonarqube:8-community
 
 docker.build:
-	docker build -t localhost:5000/$(APP_NAME):$(APP_VERSION) .
+	docker build -t $(DOCKER_LOCAL)/$(APP_NAME):$(APP_VERSION) .
 
 docker.push:
-	docker push localhost:5000/$(APP_NAME):$(APP_VERSION)
+	docker push $(DOCKER_LOCAL)/$(APP_NAME):$(APP_VERSION)
 
 docker.run:
-	docker run --name $(APP_NAME) -d -p 8000:8000 localhost:5000/$(APP_NAME):$(APP_VERSION) -e SERVER_PORT=8000
+	docker run --name $(APP_NAME) -d -p 8000:8000 $(DOCKER_LOCAL)/$(APP_NAME):$(APP_VERSION) -e SERVER_PORT=8000
 
 docker.deploy: docker.build docker.run
 
 docker.local: docker.build docker.push
 
 docker.server:
-	docker build -t 68.183.224.212:5000/$(APP_NAME):$(APP_VERSION) .
-	docker push 68.183.224.212:5000/$(APP_NAME):$(APP_VERSION)
+	docker build -t $(DOCKER_LOCAL)/$(APP_NAME):$(APP_VERSION) .
+	docker push $(DOCKER_LOCAL)/$(APP_NAME):$(APP_VERSION)
