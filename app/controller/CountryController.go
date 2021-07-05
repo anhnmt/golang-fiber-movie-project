@@ -10,7 +10,7 @@ import (
 
 // FindAllCountries : Find all countries by Status = 1
 func FindAllCountries(c *fiber.Ctx) error {
-	countries, err := repository.FindAllCountriesByStatus(util.STATUS_ACTIVATED)
+	countries, err := repository.FindAllCountriesByStatusNot(util.STATUS_DELETED)
 
 	if err != nil {
 		return util.ResponseError(c, err.Error(), nil)
@@ -22,7 +22,7 @@ func FindAllCountries(c *fiber.Ctx) error {
 // FindCountryById : Find country by Country_Id and Status = 1
 func FindCountryById(c *fiber.Ctx) error {
 	countryId := c.Params("id")
-	country, err := repository.FindCountryByIdAndStatus(countryId, util.STATUS_ACTIVATED)
+	country, err := repository.FindCountryByIdAndStatusNot(countryId, util.STATUS_DELETED)
 
 	if err != nil || country.CountryId == 0 {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
@@ -42,7 +42,7 @@ func CreateNewCountry(c *fiber.Ctx) error {
 	country := model.Country{
 		Name:   countryRequest.Name,
 		Slug:   countryRequest.Slug,
-		Status: util.STATUS_ACTIVATED,
+		Status: countryRequest.Status,
 	}
 
 	if _, err := repository.SaveCountry(country); err != nil {
@@ -56,7 +56,7 @@ func CreateNewCountry(c *fiber.Ctx) error {
 func UpdateCountryById(c *fiber.Ctx) error {
 	countryId := c.Params("id")
 
-	country, err := repository.FindCountryByIdAndStatus(countryId, util.STATUS_ACTIVATED)
+	country, err := repository.FindCountryByIdAndStatusNot(countryId, util.STATUS_DELETED)
 
 	if err != nil || country.CountryId == 0 {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
@@ -69,6 +69,7 @@ func UpdateCountryById(c *fiber.Ctx) error {
 
 	country.Name = countryRequest.Name
 	country.Slug = countryRequest.Slug
+	country.Status = countryRequest.Status
 
 	if _, err = repository.SaveCountry(*country); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
@@ -80,7 +81,7 @@ func UpdateCountryById(c *fiber.Ctx) error {
 // DeleteCountryById : Delete country by Country_Id and Status = 1
 func DeleteCountryById(c *fiber.Ctx) error {
 	countryId := c.Params("id")
-	country, err := repository.FindCountryByIdAndStatus(countryId, util.STATUS_ACTIVATED)
+	country, err := repository.FindCountryByIdAndStatusNot(countryId, util.STATUS_DELETED)
 
 	if err != nil || country.CountryId == 0 {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
