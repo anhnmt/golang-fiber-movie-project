@@ -8,9 +8,9 @@ import (
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
 )
 
-// FindAllTags : Find all tags by Status = 1
+// FindAllTags : Find all tags by Status Not
 func FindAllTags(c *fiber.Ctx) error {
-	tags, err := repository.FindAllTagsByStatus(util.STATUS_ACTIVATED)
+	tags, err := repository.FindAllTagsByStatusNot(util.STATUS_DELETED)
 
 	if err != nil {
 		return util.ResponseError(c, err.Error(), nil)
@@ -19,10 +19,10 @@ func FindAllTags(c *fiber.Ctx) error {
 	return util.ResponseSuccess(c, "Thành công", tags)
 }
 
-// FindTagById : Find tag by Tag_Id and Status = 1
+// FindTagById : Find tag by Tag_Id and Status Not
 func FindTagById(c *fiber.Ctx) error {
 	tagId := c.Params("id")
-	tag, err := repository.FindTagByIdAndStatus(tagId, util.STATUS_ACTIVATED)
+	tag, err := repository.FindTagByIdAndStatusNot(tagId, util.STATUS_DELETED)
 
 	if err != nil || tag.TagId == 0 {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
@@ -42,7 +42,7 @@ func CreateNewTag(c *fiber.Ctx) error {
 	tag := model.Tag{
 		Name:   tagRequest.Name,
 		Slug:   tagRequest.Slug,
-		Status: util.STATUS_ACTIVATED,
+		Status: tagRequest.Status,
 	}
 
 	if _, err := repository.SaveTag(tag); err != nil {
@@ -55,8 +55,7 @@ func CreateNewTag(c *fiber.Ctx) error {
 // UpdateTagById : Update tag by Tag_Id and Status = 1
 func UpdateTagById(c *fiber.Ctx) error {
 	tagId := c.Params("id")
-
-	tag, err := repository.FindTagByIdAndStatus(tagId, util.STATUS_ACTIVATED)
+	tag, err := repository.FindTagByIdAndStatusNot(tagId, util.STATUS_DELETED)
 
 	if err != nil || tag.TagId == 0 {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
@@ -69,6 +68,7 @@ func UpdateTagById(c *fiber.Ctx) error {
 
 	tag.Name = tagRequest.Name
 	tag.Slug = tagRequest.Slug
+	tag.Status = tagRequest.Status
 
 	if _, err = repository.SaveTag(*tag); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
@@ -80,7 +80,7 @@ func UpdateTagById(c *fiber.Ctx) error {
 // DeleteTagById : Delete tag by Tag_Id and Status = 1
 func DeleteTagById(c *fiber.Ctx) error {
 	tagId := c.Params("id")
-	tag, err := repository.FindTagByIdAndStatus(tagId, util.STATUS_ACTIVATED)
+	tag, err := repository.FindTagByIdAndStatusNot(tagId, util.STATUS_DELETED)
 
 	if err != nil || tag.TagId == 0 {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
