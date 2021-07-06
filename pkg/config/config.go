@@ -18,15 +18,24 @@ func GetConfig() *Configuration {
 
 	viper.AutomaticEnv()
 
-	var configuration Configuration
-
 	// config ENV
-	configEnv("server.port", "SERVER_PORT")
+
+	// Server
 	configEnv("server.host", "SERVER_HOST")
+	configEnv("server.port", "SERVER_PORT")
+
+	// Database
+	configEnv("database.host", "DB_HOST")
+	configEnv("database.port", "DB_PORT")
+	configEnv("database.user", "DB_USER")
+	configEnv("database.password", "DB_PASSWORD")
+	configEnv("database.dbname", "DB_NAME")
 
 	if err := viper.ReadInConfig(); err != nil {
 		log.Fatalf("Error reading config file, %s", err)
 	}
+
+	var configuration Configuration
 
 	if err := viper.Unmarshal(&configuration); err != nil {
 		log.Fatalf("unable to decode into struct, %v", err)
