@@ -5,6 +5,7 @@ import (
 	model2 "github.com/xdorro/golang-fiber-base-project/app/entity/model"
 	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-base-project/app/repository"
+	"github.com/xdorro/golang-fiber-base-project/pkg/mapper"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
 )
 
@@ -16,7 +17,9 @@ func FindAllMovies(c *fiber.Ctx) error {
 		return util.ResponseError(c, err.Error(), nil)
 	}
 
-	return util.ResponseSuccess(c, "Thành công", movies)
+	result := mapper.SearchMovies(*movies)
+
+	return util.ResponseSuccess(c, "Thành công", result)
 }
 
 // FindMovieById : Find movie by Movie_Id and Status

@@ -17,10 +17,9 @@ func SearchMovies(movies []dto.SearchMovieDTO) []response.SearchMovieResponse {
 
 func SearchMovie(movie *dto.SearchMovieDTO) response.SearchMovieResponse {
 	return response.SearchMovieResponse{
-		Name:        movie.Name,
-		Slug:        movie.Slug,
-		Description: movie.Description,
-		Status:      movie.Status,
+		Name:   movie.Name,
+		Slug:   movie.Slug,
+		Status: movie.Status,
 		MovieType: dto.MovieTypeDTO{
 			MovieTypeId: movie.MovieTypeId,
 			Name:        movie.MovieTypeName,
