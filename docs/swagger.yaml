@@ -25,9 +25,9 @@ paths:
   /api/oauth/token:
     post:
       consumes:
-      - application/json
+        - application/json
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
@@ -39,5 +39,5 @@ paths:
             $ref: '#/definitions/dto.DataResponse'
       summary: Authentication User
       tags:
-      - token
+        - token
 swagger: "2.0"

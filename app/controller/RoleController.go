@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/gofiber/fiber/v2"
-	model2 "github.com/xdorro/golang-fiber-base-project/app/entity/model"
+	model "github.com/xdorro/golang-fiber-base-project/app/entity/model"
 	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-base-project/app/repository"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
@@ -52,7 +52,7 @@ func CreateNewRole(c *fiber.Ctx) error {
 		return util.ResponseError(c, err.Error(), nil)
 	}
 
-	role := model2.Role{
+	role := model.Role{
 		Name:   roleRequest.Name,
 		Status: util.STATUS_ACTIVATED,
 	}

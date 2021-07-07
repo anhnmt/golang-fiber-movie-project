@@ -1,11 +1,11 @@
 package mapper
 
 import (
-	model2 "github.com/xdorro/golang-fiber-base-project/app/entity/model"
+	model "github.com/xdorro/golang-fiber-base-project/app/entity/model"
 	"github.com/xdorro/golang-fiber-base-project/app/entity/response"
 )
 
-func ListUserSearch(users []model2.User) []response.UserResponse {
+func ListUserSearch(users []model.User) []response.UserResponse {
 	result := make([]response.UserResponse, 0)
 
 	for _, user := range users {
@@ -15,7 +15,7 @@ func ListUserSearch(users []model2.User) []response.UserResponse {
 	return result
 }
 
-func UserSearch(user *model2.User) response.UserResponse {
+func UserSearch(user *model.User) response.UserResponse {
 	return response.UserResponse{
 		UserId:   user.UserId,
 		Name:     user.Name,

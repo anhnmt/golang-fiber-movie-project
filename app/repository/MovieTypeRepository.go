@@ -2,14 +2,14 @@ package repository
 
 import (
 	"errors"
-	model2 "github.com/xdorro/golang-fiber-base-project/app/entity/model"
+	model "github.com/xdorro/golang-fiber-base-project/app/entity/model"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
 	"gorm.io/gorm"
 )
 
 // FindAllMovieTypesByStatus : Find movieType by MovieTypeId and Status
-func FindAllMovieTypesByStatus(status int) (*[]model2.MovieType, error) {
-	movieTypes := make([]model2.MovieType, 0)
+func FindAllMovieTypesByStatus(status int) (*[]model.MovieType, error) {
+	movieTypes := make([]model.MovieType, 0)
 
 	if err := db.Find(&movieTypes, "status = ?", status).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -22,8 +22,8 @@ func FindAllMovieTypesByStatus(status int) (*[]model2.MovieType, error) {
 	return &movieTypes, nil
 }
 
-func FindAllMovieTypesByStatusNot(status int) (*[]model2.MovieType, error) {
-	movieTypes := make([]model2.MovieType, 0)
+func FindAllMovieTypesByStatusNot(status int) (*[]model.MovieType, error) {
+	movieTypes := make([]model.MovieType, 0)
 
 	if err := db.Find(&movieTypes, "status <> ?", status).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -37,10 +37,10 @@ func FindAllMovieTypesByStatusNot(status int) (*[]model2.MovieType, error) {
 }
 
 // FindMovieTypeByIdAndStatus : Find movieType by MovieTypeId and Status
-func FindMovieTypeByIdAndStatus(id string, status int) (*model2.MovieType, error) {
+func FindMovieTypeByIdAndStatus(id string, status int) (*model.MovieType, error) {
 	uid := util.ParseStringToUInt(id)
 
-	var movieType model2.MovieType
+	var movieType model.MovieType
 	if err := db.Where("movie_type_id = ? AND status = ?", uid, status).Find(&movieType).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
@@ -52,10 +52,10 @@ func FindMovieTypeByIdAndStatus(id string, status int) (*model2.MovieType, error
 	return &movieType, nil
 }
 
-func FindMovieTypeByIdAndStatusNot(id string, status int) (*model2.MovieType, error) {
+func FindMovieTypeByIdAndStatusNot(id string, status int) (*model.MovieType, error) {
 	uid := util.ParseStringToUInt(id)
 
-	var movieType model2.MovieType
+	var movieType model.MovieType
 	if err := db.Where("movie_type_id = ? AND status <> ?", uid, status).Find(&movieType).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
@@ -68,7 +68,7 @@ func FindMovieTypeByIdAndStatusNot(id string, status int) (*model2.MovieType, er
 }
 
 // SaveMovieType : Save Movie Type
-func SaveMovieType(movieType model2.MovieType) (*model2.MovieType, error) {
+func SaveMovieType(movieType model.MovieType) (*model.MovieType, error) {
 	if err := db.Save(&movieType).Error; err != nil {
 		return nil, err
 	}

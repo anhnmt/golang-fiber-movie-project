@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/gofiber/fiber/v2"
-	model2 "github.com/xdorro/golang-fiber-base-project/app/entity/model"
+	model "github.com/xdorro/golang-fiber-base-project/app/entity/model"
 	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-base-project/app/repository"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
@@ -39,7 +39,7 @@ func CreateNewCountry(c *fiber.Ctx) error {
 		return util.ResponseError(c, err.Error(), nil)
 	}
 
-	country := model2.Country{
+	country := model.Country{
 		Name:   countryRequest.Name,
 		Slug:   countryRequest.Slug,
 		Status: countryRequest.Status,

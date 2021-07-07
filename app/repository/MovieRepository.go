@@ -16,7 +16,7 @@ func FindAllMoviesByStatusNot(status int) (*[]dto.SearchMovieDTO, error) {
 		Model(&model.Movie{}).
 		Select("movies.movie_id, movies.name, movies.slug, movies.status, movies.movie_type_id, movie_types.name movie_type_name").
 		Joins("LEFT JOIN movie_types on movies.movie_type_id = movie_types.movie_type_id").
-		Where("movies.status <> ?", status).
+		Where("movies.status <> ? AND movie_types.status <> ?", status, status).
 		Find(&movies).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil

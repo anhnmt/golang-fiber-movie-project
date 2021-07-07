@@ -2,14 +2,14 @@ package repository
 
 import (
 	"errors"
-	model2 "github.com/xdorro/golang-fiber-base-project/app/entity/model"
+	model "github.com/xdorro/golang-fiber-base-project/app/entity/model"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
 	"gorm.io/gorm"
 )
 
 // FindAllPermissionsByStatus : Find permission by PermissionId and Status = 1
-func FindAllPermissionsByStatus(status int) (*[]model2.Permission, error) {
-	permissions := make([]model2.Permission, 0)
+func FindAllPermissionsByStatus(status int) (*[]model.Permission, error) {
+	permissions := make([]model.Permission, 0)
 
 	if err := db.Find(&permissions, "status = ?", status).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -23,11 +23,11 @@ func FindAllPermissionsByStatus(status int) (*[]model2.Permission, error) {
 }
 
 // FindPermissionByIdAndStatus : Find permission by PermissionId and Status = 1
-func FindPermissionByIdAndStatus(id string, status int) (*model2.Permission, error) {
+func FindPermissionByIdAndStatus(id string, status int) (*model.Permission, error) {
 	uid := util.ParseStringToUInt(id)
 
-	var permission model2.Permission
-	if err := db.Where(&model2.Permission{PermissionId: uid, Status: status}).Find(&permission).Error; err != nil {
+	var permission model.Permission
+	if err := db.Where(&model.Permission{PermissionId: uid, Status: status}).Find(&permission).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
@@ -38,7 +38,7 @@ func FindPermissionByIdAndStatus(id string, status int) (*model2.Permission, err
 	return &permission, nil
 }
 
-func SavePermission(permission model2.Permission) (*model2.Permission, error) {
+func SavePermission(permission model.Permission) (*model.Permission, error) {
 	if err := db.Save(&permission).Error; err != nil {
 		return nil, err
 	}

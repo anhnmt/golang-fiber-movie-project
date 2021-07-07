@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/gofiber/fiber/v2"
-	model2 "github.com/xdorro/golang-fiber-base-project/app/entity/model"
+	model "github.com/xdorro/golang-fiber-base-project/app/entity/model"
 	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-base-project/app/repository"
 	"github.com/xdorro/golang-fiber-base-project/pkg/mapper"
@@ -49,7 +49,7 @@ func CreateNewUser(c *fiber.Ctx) error {
 		return util.ResponseError(c, "Không thể mã hoá mật khẩu", err)
 	}
 
-	user := model2.User{
+	user := model.User{
 		Name:     userRequest.Name,
 		Username: userRequest.Username,
 		Password: hash,
