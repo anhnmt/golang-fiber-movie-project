@@ -58,13 +58,8 @@ func privateRoute(a fiber.Router) {
 	roles.Put("/:id", controller.UpdateRoleById)
 	roles.Delete("/:id", controller.DeleteRoleById)
 
-	// Movies Controller
+	// Movies Group
 	movies := a.Group("/movies")
-	movies.Get("/", controller.FindAllMovies)
-	movies.Post("/", controller.CreateNewMovie)
-	movies.Get("/:id", controller.FindMovieById)
-	movies.Put("/:id", controller.UpdateMovieById)
-	movies.Delete("/:id", controller.DeleteMovieById)
 
 	// Movies Controller
 	movieTypes := movies.Group("/types")
@@ -73,4 +68,11 @@ func privateRoute(a fiber.Router) {
 	movieTypes.Get("/:id", controller.FindMovieTypeById)
 	movieTypes.Put("/:id", controller.UpdateMovieTypeById)
 	movieTypes.Delete("/:id", controller.DeleteMovieTypeById)
+
+	// Movies Controller
+	movies.Get("/", controller.FindAllMovies)
+	movies.Post("/", controller.CreateNewMovie)
+	movies.Get("/:id", controller.FindMovieById)
+	movies.Put("/:id", controller.UpdateMovieById)
+	movies.Delete("/:id", controller.DeleteMovieById)
 }
