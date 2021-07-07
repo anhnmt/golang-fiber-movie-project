@@ -7,6 +7,6 @@ type User struct {
 	Password string `gorm:"not null" json:"password"`
 	Gender   int    `gorm:"default:1" json:"gender"`
 	Status   int    `gorm:"default:1" json:"status"`
-	RoleId   uint   `gorm:"not null" json:"role_id"`
+	RoleId   uint   `gorm:"index:,not null" json:"role_id"`
 	BaseModel
 }
