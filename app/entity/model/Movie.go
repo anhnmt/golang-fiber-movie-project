@@ -5,7 +5,7 @@ type Movie struct {
 	Name        string `gorm:"not null;unique" json:"name"`
 	Slug        string `gorm:"not null;unique" json:"slug"`
 	Description string `json:"description"`
-	MovieType   uint   `gorm:"not null" json:"movie_type"`
+	MovieTypeId uint   `gorm:"not null" json:"movie_type_id"`
 	Trailer     string `json:"trailer"`
 	ImdbId      string `json:"imdb_id"`
 	Rating      string `json:"rating"`

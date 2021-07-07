@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/gofiber/fiber/v2"
-	model2 "github.com/xdorro/golang-fiber-base-project/app/entity/model"
+	"github.com/xdorro/golang-fiber-base-project/app/entity/model"
 	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-base-project/app/repository"
 	"github.com/xdorro/golang-fiber-base-project/pkg/mapper"
@@ -42,11 +42,11 @@ func CreateNewMovie(c *fiber.Ctx) error {
 		return util.ResponseError(c, err.Error(), nil)
 	}
 
-	movie := model2.Movie{
-		Name:      movieRequest.Name,
-		Slug:      movieRequest.Slug,
-		MovieType: movieRequest.MovieType,
-		Status:    movieRequest.Status,
+	movie := model.Movie{
+		Name:        movieRequest.Name,
+		Slug:        movieRequest.Slug,
+		MovieTypeId: movieRequest.MovieTypeId,
+		Status:      movieRequest.Status,
 	}
 
 	if _, err := repository.SaveMovie(movie); err != nil {
@@ -72,7 +72,7 @@ func UpdateMovieById(c *fiber.Ctx) error {
 
 	movie.Name = movieRequest.Name
 	movie.Slug = movieRequest.Slug
-	movie.MovieType = movieRequest.MovieType
+	movie.MovieTypeId = movieRequest.MovieTypeId
 	movie.Status = movieRequest.Status
 
 	if _, err = repository.SaveMovie(*movie); err != nil {

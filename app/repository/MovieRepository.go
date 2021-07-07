@@ -8,21 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// FindAllMoviesByStatus : Find movie by MovieId and Status
-func FindAllMoviesByStatus(status int) (*[]model.Movie, error) {
-	movies := make([]model.Movie, 0)
-
-	if err := db.Find(&movies, "status = ?", status).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
-
-		return nil, err
-	}
-
-	return &movies, nil
-}
-
+// FindAllMoviesByStatusNot : Find movie by MovieId and Status NOT
 func FindAllMoviesByStatusNot(status int) (*[]dto.SearchMovieDTO, error) {
 	movies := make([]dto.SearchMovieDTO, 0)
 
@@ -40,22 +26,6 @@ func FindAllMoviesByStatusNot(status int) (*[]dto.SearchMovieDTO, error) {
 	}
 
 	return &movies, nil
-}
-
-// FindMovieByIdAndStatus : Find movie by MovieId and Status
-func FindMovieByIdAndStatus(id string, status int) (*model.Movie, error) {
-	uid := util.ParseStringToUInt(id)
-
-	var movie model.Movie
-	if err := db.Where("movie_id = ? AND status = ?", uid, status).Find(&movie).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
-
-		return nil, err
-	}
-
-	return &movie, nil
 }
 
 func FindMovieByIdAndStatusNot(id string, status int) (*model.Movie, error) {
