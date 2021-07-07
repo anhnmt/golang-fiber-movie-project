@@ -2,8 +2,8 @@ package controller
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/xdorro/golang-fiber-base-project/app/dto"
-	"github.com/xdorro/golang-fiber-base-project/app/model"
+	model2 "github.com/xdorro/golang-fiber-base-project/app/entity/model"
+	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-base-project/app/repository"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
 )
@@ -33,13 +33,13 @@ func FindGenreById(c *fiber.Ctx) error {
 
 // CreateNewGenre : Create a new genre
 func CreateNewGenre(c *fiber.Ctx) error {
-	genreRequest := new(dto.GenreRequest)
+	genreRequest := new(request.GenreRequest)
 
 	if err := c.BodyParser(genreRequest); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
 	}
 
-	genre := model.Genre{
+	genre := model2.Genre{
 		Name:   genreRequest.Name,
 		Slug:   genreRequest.Slug,
 		Status: genreRequest.Status,
@@ -62,7 +62,7 @@ func UpdateGenreById(c *fiber.Ctx) error {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
 	}
 
-	genreRequest := new(dto.GenreRequest)
+	genreRequest := new(request.GenreRequest)
 	if err = c.BodyParser(genreRequest); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
 	}

@@ -1,4 +1,4 @@
-package dto
+package request
 
 type MovieRequest struct {
 	Name      string `json:"name"`

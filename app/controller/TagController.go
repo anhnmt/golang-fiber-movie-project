@@ -2,8 +2,8 @@ package controller
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/xdorro/golang-fiber-base-project/app/dto"
-	"github.com/xdorro/golang-fiber-base-project/app/model"
+	model2 "github.com/xdorro/golang-fiber-base-project/app/entity/model"
+	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-base-project/app/repository"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
 )
@@ -33,13 +33,13 @@ func FindTagById(c *fiber.Ctx) error {
 
 // CreateNewTag : Create a new tag
 func CreateNewTag(c *fiber.Ctx) error {
-	tagRequest := new(dto.TagRequest)
+	tagRequest := new(request.TagRequest)
 
 	if err := c.BodyParser(tagRequest); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
 	}
 
-	tag := model.Tag{
+	tag := model2.Tag{
 		Name:   tagRequest.Name,
 		Slug:   tagRequest.Slug,
 		Status: tagRequest.Status,
@@ -61,7 +61,7 @@ func UpdateTagById(c *fiber.Ctx) error {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
 	}
 
-	tagRequest := new(dto.TagRequest)
+	tagRequest := new(request.TagRequest)
 	if err = c.BodyParser(tagRequest); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
 	}

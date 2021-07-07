@@ -2,14 +2,14 @@ package repository
 
 import (
 	"errors"
-	"github.com/xdorro/golang-fiber-base-project/app/model"
+	model2 "github.com/xdorro/golang-fiber-base-project/app/entity/model"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
 	"gorm.io/gorm"
 )
 
 // FindAllGenresByStatus : Find genre by GenreId and Status = 1
-func FindAllGenresByStatus(status int) (*[]model.Genre, error) {
-	genres := make([]model.Genre, 0)
+func FindAllGenresByStatus(status int) (*[]model2.Genre, error) {
+	genres := make([]model2.Genre, 0)
 
 	if err := db.Find(&genres, "status = ?", status).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -22,8 +22,8 @@ func FindAllGenresByStatus(status int) (*[]model.Genre, error) {
 	return &genres, nil
 }
 
-func FindAllGenresByStatusNot(status int) (*[]model.Genre, error) {
-	genres := make([]model.Genre, 0)
+func FindAllGenresByStatusNot(status int) (*[]model2.Genre, error) {
+	genres := make([]model2.Genre, 0)
 
 	if err := db.Find(&genres, "status <> ?", status).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -36,8 +36,8 @@ func FindAllGenresByStatusNot(status int) (*[]model.Genre, error) {
 	return &genres, nil
 }
 
-func FindAllGenresByStatusIn(status []int) (*[]model.Genre, error) {
-	genres := make([]model.Genre, 0)
+func FindAllGenresByStatusIn(status []int) (*[]model2.Genre, error) {
+	genres := make([]model2.Genre, 0)
 
 	if err := db.Find(&genres, "status IN ?", status).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -50,8 +50,8 @@ func FindAllGenresByStatusIn(status []int) (*[]model.Genre, error) {
 	return &genres, nil
 }
 
-func FindAllGenresByStatusNotIn(status []int) (*[]model.Genre, error) {
-	genres := make([]model.Genre, 0)
+func FindAllGenresByStatusNotIn(status []int) (*[]model2.Genre, error) {
+	genres := make([]model2.Genre, 0)
 
 	if err := db.Find(&genres, "status NOT IN ?", status).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -65,10 +65,10 @@ func FindAllGenresByStatusNotIn(status []int) (*[]model.Genre, error) {
 }
 
 // FindGenreByIdAndStatus : Find genre by GenreId and Status = 1
-func FindGenreByIdAndStatus(id string, status int) (*model.Genre, error) {
+func FindGenreByIdAndStatus(id string, status int) (*model2.Genre, error) {
 	uid := util.ParseStringToUInt(id)
 
-	var genre model.Genre
+	var genre model2.Genre
 	if err := db.Where("genre_id = ? AND status = ?", uid, status).Find(&genre).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
@@ -80,10 +80,10 @@ func FindGenreByIdAndStatus(id string, status int) (*model.Genre, error) {
 	return &genre, nil
 }
 
-func FindGenreByIdAndStatusNot(id string, status int) (*model.Genre, error) {
+func FindGenreByIdAndStatusNot(id string, status int) (*model2.Genre, error) {
 	uid := util.ParseStringToUInt(id)
 
-	var genre model.Genre
+	var genre model2.Genre
 	if err := db.Where("genre_id = ? AND status <> ?", uid, status).Find(&genre).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
@@ -95,7 +95,7 @@ func FindGenreByIdAndStatusNot(id string, status int) (*model.Genre, error) {
 	return &genre, nil
 }
 
-func SaveGenre(genre model.Genre) (*model.Genre, error) {
+func SaveGenre(genre model2.Genre) (*model2.Genre, error) {
 	if err := db.Save(&genre).Error; err != nil {
 		return nil, err
 	}

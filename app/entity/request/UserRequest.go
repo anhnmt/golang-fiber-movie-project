@@ -1,8 +1,8 @@
-package dto
+package request
 
-type UserResponse struct {
-	UserId   uint   `json:"user_id"`
+type UserRequest struct {
 	Name     string `json:"name"`
 	Username string `json:"username"`
+	Password string `json:"password"`
 	Gender   int    `json:"gender"`
 }

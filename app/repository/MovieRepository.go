@@ -2,14 +2,14 @@ package repository
 
 import (
 	"errors"
-	"github.com/xdorro/golang-fiber-base-project/app/model"
+	model2 "github.com/xdorro/golang-fiber-base-project/app/entity/model"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
 	"gorm.io/gorm"
 )
 
 // FindAllMoviesByStatus : Find movie by MovieId and Status
-func FindAllMoviesByStatus(status int) (*[]model.Movie, error) {
-	movies := make([]model.Movie, 0)
+func FindAllMoviesByStatus(status int) (*[]model2.Movie, error) {
+	movies := make([]model2.Movie, 0)
 
 	if err := db.Find(&movies, "status = ?", status).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -22,8 +22,8 @@ func FindAllMoviesByStatus(status int) (*[]model.Movie, error) {
 	return &movies, nil
 }
 
-func FindAllMoviesByStatusNot(status int) (*[]model.Movie, error) {
-	movies := make([]model.Movie, 0)
+func FindAllMoviesByStatusNot(status int) (*[]model2.Movie, error) {
+	movies := make([]model2.Movie, 0)
 
 	if err := db.Find(&movies, "status <> ?", status).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -37,10 +37,10 @@ func FindAllMoviesByStatusNot(status int) (*[]model.Movie, error) {
 }
 
 // FindMovieByIdAndStatus : Find movie by MovieId and Status
-func FindMovieByIdAndStatus(id string, status int) (*model.Movie, error) {
+func FindMovieByIdAndStatus(id string, status int) (*model2.Movie, error) {
 	uid := util.ParseStringToUInt(id)
 
-	var movie model.Movie
+	var movie model2.Movie
 	if err := db.Where("movie_id = ? AND status = ?", uid, status).Find(&movie).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
@@ -52,10 +52,10 @@ func FindMovieByIdAndStatus(id string, status int) (*model.Movie, error) {
 	return &movie, nil
 }
 
-func FindMovieByIdAndStatusNot(id string, status int) (*model.Movie, error) {
+func FindMovieByIdAndStatusNot(id string, status int) (*model2.Movie, error) {
 	uid := util.ParseStringToUInt(id)
 
-	var movie model.Movie
+	var movie model2.Movie
 	if err := db.Where("movie_id = ? AND status <> ?", uid, status).Find(&movie).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
@@ -68,7 +68,7 @@ func FindMovieByIdAndStatusNot(id string, status int) (*model.Movie, error) {
 }
 
 // SaveMovie : Save Movie
-func SaveMovie(movie model.Movie) (*model.Movie, error) {
+func SaveMovie(movie model2.Movie) (*model2.Movie, error) {
 	if err := db.Save(&movie).Error; err != nil {
 		return nil, err
 	}

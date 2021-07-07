@@ -1,4 +1,4 @@
-package dto
+package request
 
 type PermissionRequest struct {
 	Name string `json:"name"`

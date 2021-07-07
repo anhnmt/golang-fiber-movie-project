@@ -2,8 +2,8 @@ package controller
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/xdorro/golang-fiber-base-project/app/dto"
-	"github.com/xdorro/golang-fiber-base-project/app/model"
+	model2 "github.com/xdorro/golang-fiber-base-project/app/entity/model"
+	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-base-project/app/repository"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
 )
@@ -33,13 +33,13 @@ func FindCountryById(c *fiber.Ctx) error {
 
 // CreateNewCountry : Create a new country
 func CreateNewCountry(c *fiber.Ctx) error {
-	countryRequest := new(dto.CountryRequest)
+	countryRequest := new(request.CountryRequest)
 
 	if err := c.BodyParser(countryRequest); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
 	}
 
-	country := model.Country{
+	country := model2.Country{
 		Name:   countryRequest.Name,
 		Slug:   countryRequest.Slug,
 		Status: countryRequest.Status,
@@ -62,7 +62,7 @@ func UpdateCountryById(c *fiber.Ctx) error {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
 	}
 
-	countryRequest := new(dto.CountryRequest)
+	countryRequest := new(request.CountryRequest)
 	if err = c.BodyParser(countryRequest); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
 	}

@@ -2,8 +2,8 @@ package controller
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/xdorro/golang-fiber-base-project/app/dto"
-	"github.com/xdorro/golang-fiber-base-project/app/model"
+	model2 "github.com/xdorro/golang-fiber-base-project/app/entity/model"
+	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-base-project/app/repository"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
 )
@@ -33,13 +33,13 @@ func FindPermissionById(c *fiber.Ctx) error {
 
 // CreateNewPermission : Create a new permission
 func CreateNewPermission(c *fiber.Ctx) error {
-	permissionRequest := new(dto.PermissionRequest)
+	permissionRequest := new(request.PermissionRequest)
 
 	if err := c.BodyParser(permissionRequest); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
 	}
 
-	permission := model.Permission{
+	permission := model2.Permission{
 		Name:   permissionRequest.Name,
 		Status: util.STATUS_ACTIVATED,
 	}
@@ -61,7 +61,7 @@ func UpdatePermissionById(c *fiber.Ctx) error {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
 	}
 
-	permissionRequest := new(dto.PermissionRequest)
+	permissionRequest := new(request.PermissionRequest)
 	if err = c.BodyParser(permissionRequest); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
 	}

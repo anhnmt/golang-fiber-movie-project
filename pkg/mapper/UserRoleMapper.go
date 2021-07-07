@@ -1,11 +1,11 @@
 package mapper
 
 import (
-	"github.com/xdorro/golang-fiber-base-project/app/model"
+	model2 "github.com/xdorro/golang-fiber-base-project/app/entity/model"
 )
 
-func UserRoles(roles []model.Role) []model.Role {
-	result := make([]model.Role, 0)
+func UserRoles(roles []model2.Role) []model2.Role {
+	result := make([]model2.Role, 0)
 
 	for _, role := range roles {
 		if role.RoleId != 0 {

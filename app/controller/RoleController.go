@@ -2,8 +2,8 @@ package controller
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/xdorro/golang-fiber-base-project/app/dto"
-	"github.com/xdorro/golang-fiber-base-project/app/model"
+	model2 "github.com/xdorro/golang-fiber-base-project/app/entity/model"
+	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-base-project/app/repository"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
 )
@@ -46,13 +46,13 @@ func FindRoleById(c *fiber.Ctx) error {
 
 // CreateNewRole : Create a new role
 func CreateNewRole(c *fiber.Ctx) error {
-	roleRequest := new(dto.RoleRequest)
+	roleRequest := new(request.RoleRequest)
 
 	if err := c.BodyParser(roleRequest); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
 	}
 
-	role := model.Role{
+	role := model2.Role{
 		Name:   roleRequest.Name,
 		Status: util.STATUS_ACTIVATED,
 	}
@@ -74,7 +74,7 @@ func UpdateRoleById(c *fiber.Ctx) error {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
 	}
 
-	roleRequest := new(dto.RoleRequest)
+	roleRequest := new(request.RoleRequest)
 	if err = c.BodyParser(roleRequest); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
 	}

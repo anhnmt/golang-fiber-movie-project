@@ -2,8 +2,8 @@ package controller
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/xdorro/golang-fiber-base-project/app/dto"
-	"github.com/xdorro/golang-fiber-base-project/app/model"
+	model2 "github.com/xdorro/golang-fiber-base-project/app/entity/model"
+	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-base-project/app/repository"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
 )
@@ -33,13 +33,13 @@ func FindMovieById(c *fiber.Ctx) error {
 
 // CreateNewMovie : Create a new movie
 func CreateNewMovie(c *fiber.Ctx) error {
-	movieRequest := new(dto.MovieRequest)
+	movieRequest := new(request.MovieRequest)
 
 	if err := c.BodyParser(movieRequest); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
 	}
 
-	movie := model.Movie{
+	movie := model2.Movie{
 		Name:      movieRequest.Name,
 		Slug:      movieRequest.Slug,
 		MovieType: movieRequest.MovieType,
@@ -62,7 +62,7 @@ func UpdateMovieById(c *fiber.Ctx) error {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
 	}
 
-	movieRequest := new(dto.MovieRequest)
+	movieRequest := new(request.MovieRequest)
 	if err = c.BodyParser(movieRequest); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
 	}

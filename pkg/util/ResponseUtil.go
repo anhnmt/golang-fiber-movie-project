@@ -2,7 +2,7 @@ package util
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/xdorro/golang-fiber-base-project/app/dto"
+	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
 )
 
 // ResponseSuccess : returning json structure for success request
@@ -44,8 +44,8 @@ func response(c *fiber.Ctx, status int, message string, data interface{}) error 
 	ctx := c.Status(status)
 
 	if data != nil {
-		return ctx.JSON(&dto.DataResponse{
-			DefaultResponse: dto.DefaultResponse{
+		return ctx.JSON(&request.DataResponse{
+			DefaultResponse: request.DefaultResponse{
 				Status:  status,
 				Message: message,
 			},
@@ -53,7 +53,7 @@ func response(c *fiber.Ctx, status int, message string, data interface{}) error 
 		})
 	}
 
-	return ctx.JSON(&dto.DefaultResponse{
+	return ctx.JSON(&request.DefaultResponse{
 		Status:  status,
 		Message: message,
 	})

@@ -1,6 +1,6 @@
-package dto
+package request
 
-type CountryRequest struct {
+type GenreRequest struct {
 	Name   string `json:"name"`
 	Slug   string `json:"slug"`
 	Status int    `json:"status"`

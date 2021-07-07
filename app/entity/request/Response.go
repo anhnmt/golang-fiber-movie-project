@@ -1,4 +1,4 @@
-package dto
+package request
 
 type DefaultResponse struct {
 	Status  int         `json:"status"`

@@ -2,8 +2,8 @@ package controller
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/xdorro/golang-fiber-base-project/app/dto"
-	"github.com/xdorro/golang-fiber-base-project/app/model"
+	model2 "github.com/xdorro/golang-fiber-base-project/app/entity/model"
+	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-base-project/app/repository"
 	"github.com/xdorro/golang-fiber-base-project/pkg/mapper"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
@@ -38,7 +38,7 @@ func FindUserById(c *fiber.Ctx) error {
 
 // CreateNewUser : Create a new user
 func CreateNewUser(c *fiber.Ctx) error {
-	userRequest := new(dto.UserRequest)
+	userRequest := new(request.UserRequest)
 
 	if err := c.BodyParser(userRequest); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
@@ -49,7 +49,7 @@ func CreateNewUser(c *fiber.Ctx) error {
 		return util.ResponseError(c, "Không thể mã hoá mật khẩu", err)
 	}
 
-	user := model.User{
+	user := model2.User{
 		Name:     userRequest.Name,
 		Username: userRequest.Username,
 		Password: hash,
@@ -74,7 +74,7 @@ func UpdateUserById(c *fiber.Ctx) error {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
 	}
 
-	userRequest := new(dto.UserRequest)
+	userRequest := new(request.UserRequest)
 	if err = c.BodyParser(userRequest); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
 	}

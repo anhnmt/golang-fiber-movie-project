@@ -3,7 +3,7 @@ package controller
 import (
 	"github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
-	"github.com/xdorro/golang-fiber-base-project/app/dto"
+	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-base-project/app/repository"
 	"github.com/xdorro/golang-fiber-base-project/pkg/config"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
@@ -19,7 +19,7 @@ import (
 // @Failure 400 {object} dto.DataResponse{}
 // @Router /api/oauth/token [post]
 func AuthToken(c *fiber.Ctx) error {
-	var loginRequest dto.LoginRequest
+	var loginRequest request.LoginRequest
 
 	if err := c.BodyParser(&loginRequest); err != nil {
 		return util.ResponseBadRequest(c, "Đăng nhập không thành công", err)

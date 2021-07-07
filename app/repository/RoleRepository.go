@@ -2,7 +2,7 @@ package repository
 
 import (
 	"errors"
-	"github.com/xdorro/golang-fiber-base-project/app/model"
+	model2 "github.com/xdorro/golang-fiber-base-project/app/entity/model"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
 	"gorm.io/gorm"
 )
@@ -29,8 +29,8 @@ import (
 //}
 
 // FindAllRolesByStatus : Find role by RoleId and Status = 1
-func FindAllRolesByStatus(status int) (*[]model.Role, error) {
-	roles := make([]model.Role, 0)
+func FindAllRolesByStatus(status int) (*[]model2.Role, error) {
+	roles := make([]model2.Role, 0)
 
 	if err := db.Find(&roles, "status = ?", status).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -44,11 +44,11 @@ func FindAllRolesByStatus(status int) (*[]model.Role, error) {
 }
 
 // FindRoleByIdAndStatus : Find role by RoleId and Status = 1
-func FindRoleByIdAndStatus(id string, status int) (*model.Role, error) {
+func FindRoleByIdAndStatus(id string, status int) (*model2.Role, error) {
 	uid := util.ParseStringToUInt(id)
 
-	var role model.Role
-	if err := db.Where(&model.Role{RoleId: uid, Status: status}).Find(&role).Error; err != nil {
+	var role model2.Role
+	if err := db.Where(&model2.Role{RoleId: uid, Status: status}).Find(&role).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
@@ -59,7 +59,7 @@ func FindRoleByIdAndStatus(id string, status int) (*model.Role, error) {
 	return &role, nil
 }
 
-func SaveRole(role model.Role) (*model.Role, error) {
+func SaveRole(role model2.Role) (*model2.Role, error) {
 	if err := db.Save(&role).Error; err != nil {
 		return nil, err
 	}

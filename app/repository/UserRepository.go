@@ -2,13 +2,13 @@ package repository
 
 import (
 	"errors"
-	"github.com/xdorro/golang-fiber-base-project/app/model"
+	model2 "github.com/xdorro/golang-fiber-base-project/app/entity/model"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
 	"gorm.io/gorm"
 )
 
-func FindAllUsersByStatus(status int) (*[]model.User, error) {
-	users := make([]model.User, 0)
+func FindAllUsersByStatus(status int) (*[]model2.User, error) {
+	users := make([]model2.User, 0)
 
 	if err := db.Find(&users, "status = ?", status).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -22,10 +22,10 @@ func FindAllUsersByStatus(status int) (*[]model.User, error) {
 }
 
 // FindUserByUsernameAndStatus : Get User by Username and Status
-func FindUserByUsernameAndStatus(username string, status int) (*model.User, error) {
-	var user model.User
+func FindUserByUsernameAndStatus(username string, status int) (*model2.User, error) {
+	var user model2.User
 
-	if err := db.Where(&model.User{Username: username, Status: status}).Find(&user).Error; err != nil {
+	if err := db.Where(&model2.User{Username: username, Status: status}).Find(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
@@ -36,11 +36,11 @@ func FindUserByUsernameAndStatus(username string, status int) (*model.User, erro
 	return &user, nil
 }
 
-func FindUserByIdAndStatus(id string, status int) (*model.User, error) {
+func FindUserByIdAndStatus(id string, status int) (*model2.User, error) {
 	uid := util.ParseStringToUInt(id)
 
-	var user model.User
-	if err := db.Where(&model.User{UserId: uid, Status: status}).Find(&user).Error; err != nil {
+	var user model2.User
+	if err := db.Where(&model2.User{UserId: uid, Status: status}).Find(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
@@ -51,7 +51,7 @@ func FindUserByIdAndStatus(id string, status int) (*model.User, error) {
 	return &user, nil
 }
 
-func SaveUser(user model.User) (*model.User, error) {
+func SaveUser(user model2.User) (*model2.User, error) {
 	if err := db.Save(&user).Error; err != nil {
 		return nil, err
 	}
