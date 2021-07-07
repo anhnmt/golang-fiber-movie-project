@@ -7,11 +7,11 @@ import (
 	"gorm.io/gorm"
 )
 
-// FindAllMovieTypesByStatus : Find tag by MovieTypeId and Status
+// FindAllMovieTypesByStatus : Find movieType by MovieTypeId and Status
 func FindAllMovieTypesByStatus(status int) (*[]model.MovieType, error) {
-	tags := make([]model.MovieType, 0)
+	movieTypes := make([]model.MovieType, 0)
 
-	if err := db.Find(&tags, "status = ?", status).Error; err != nil {
+	if err := db.Find(&movieTypes, "status = ?", status).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
@@ -19,13 +19,13 @@ func FindAllMovieTypesByStatus(status int) (*[]model.MovieType, error) {
 		return nil, err
 	}
 
-	return &tags, nil
+	return &movieTypes, nil
 }
 
 func FindAllMovieTypesByStatusNot(status int) (*[]model.MovieType, error) {
-	tags := make([]model.MovieType, 0)
+	movieTypes := make([]model.MovieType, 0)
 
-	if err := db.Find(&tags, "status <> ?", status).Error; err != nil {
+	if err := db.Find(&movieTypes, "status <> ?", status).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
@@ -33,15 +33,15 @@ func FindAllMovieTypesByStatusNot(status int) (*[]model.MovieType, error) {
 		return nil, err
 	}
 
-	return &tags, nil
+	return &movieTypes, nil
 }
 
-// FindMovieTypeByIdAndStatus : Find tag by MovieTypeId and Status
+// FindMovieTypeByIdAndStatus : Find movieType by MovieTypeId and Status
 func FindMovieTypeByIdAndStatus(id string, status int) (*model.MovieType, error) {
 	uid := util.ParseStringToUInt(id)
 
-	var tag model.MovieType
-	if err := db.Where("movie_type_id = ? AND status = ?", uid, status).Find(&tag).Error; err != nil {
+	var movieType model.MovieType
+	if err := db.Where("movie_type_id = ? AND status = ?", uid, status).Find(&movieType).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
@@ -49,14 +49,14 @@ func FindMovieTypeByIdAndStatus(id string, status int) (*model.MovieType, error)
 		return nil, err
 	}
 
-	return &tag, nil
+	return &movieType, nil
 }
 
 func FindMovieTypeByIdAndStatusNot(id string, status int) (*model.MovieType, error) {
 	uid := util.ParseStringToUInt(id)
 
-	var tag model.MovieType
-	if err := db.Where("movie_type_id = ? AND status <> ?", uid, status).Find(&tag).Error; err != nil {
+	var movieType model.MovieType
+	if err := db.Where("movie_type_id = ? AND status <> ?", uid, status).Find(&movieType).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
@@ -64,14 +64,14 @@ func FindMovieTypeByIdAndStatusNot(id string, status int) (*model.MovieType, err
 		return nil, err
 	}
 
-	return &tag, nil
+	return &movieType, nil
 }
 
 // SaveMovieType : Save Movie Type
-func SaveMovieType(tag model.MovieType) (*model.MovieType, error) {
-	if err := db.Save(&tag).Error; err != nil {
+func SaveMovieType(movieType model.MovieType) (*model.MovieType, error) {
+	if err := db.Save(&movieType).Error; err != nil {
 		return nil, err
 	}
 
-	return &tag, nil
+	return &movieType, nil
 }

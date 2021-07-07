@@ -60,7 +60,11 @@ func privateRoute(a fiber.Router) {
 
 	// Movies Controller
 	movies := a.Group("/movies")
-	movies.Get("/", controller.FindAllUsers)
+	movies.Get("/", controller.FindAllMovies)
+	movies.Post("/", controller.CreateNewMovie)
+	movies.Get("/:id", controller.FindMovieById)
+	movies.Put("/:id", controller.UpdateMovieById)
+	movies.Delete("/:id", controller.DeleteMovieById)
 
 	// Movies Controller
 	movieTypes := movies.Group("/types")
