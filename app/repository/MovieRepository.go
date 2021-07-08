@@ -72,3 +72,13 @@ func SaveMovie(movie model.Movie) (*model.Movie, error) {
 
 	return &movie, nil
 }
+
+func UpdateStatusByMovieTypeId(movieTypeId uint, status int) error {
+	if err := db.Model(&model.Movie{}).
+		Where("movie_type_id = ?", movieTypeId).
+		Update("status", status).Error; err != nil {
+		return err
+	}
+
+	return nil
+}

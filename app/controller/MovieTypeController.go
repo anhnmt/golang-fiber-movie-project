@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/gofiber/fiber/v2"
-	model "github.com/xdorro/golang-fiber-base-project/app/entity/model"
+	"github.com/xdorro/golang-fiber-base-project/app/entity/model"
 	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-base-project/app/repository"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
@@ -88,7 +88,13 @@ func DeleteMovieTypeById(c *fiber.Ctx) error {
 
 	moveType.Status = util.STATUS_DELETED
 
+	// Update movieType status
 	if _, err = repository.SaveMovieType(*moveType); err != nil {
+		return util.ResponseError(c, err.Error(), nil)
+	}
+
+	// Update movie status
+	if err = repository.UpdateStatusByMovieTypeId(moveType.MovieTypeId, moveType.Status); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
 	}
 
