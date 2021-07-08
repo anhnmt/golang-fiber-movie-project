@@ -17,7 +17,7 @@ func FindAllMovies(c *fiber.Ctx) error {
 		return util.ResponseError(c, err.Error(), nil)
 	}
 
-	result := mapper.SearchMovies(*movies)
+	result := mapper.SearchMovies(movies)
 
 	return util.ResponseSuccess(c, "Thành công", result)
 }
@@ -25,13 +25,15 @@ func FindAllMovies(c *fiber.Ctx) error {
 // FindMovieById : Find movie by Movie_Id and Status
 func FindMovieById(c *fiber.Ctx) error {
 	movieId := c.Params("id")
-	movie, err := repository.FindMovieByIdAndStatusNot(movieId, util.STATUS_DELETED)
+	movie, err := repository.FindMovieByIdAndStatusNotJoinMovieType(movieId, util.STATUS_DELETED)
 
 	if err != nil || movie.MovieId == 0 {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
 	}
 
-	return util.ResponseSuccess(c, "Thành công", movie)
+	result := mapper.MovieDetail(movie)
+
+	return util.ResponseSuccess(c, "Thành công", result)
 }
 
 // CreateNewMovie : Create a new movie
