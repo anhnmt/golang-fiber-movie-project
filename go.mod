@@ -10,8 +10,8 @@ require (
 	github.com/go-openapi/jsonreference v0.19.6 // indirect
 	github.com/go-openapi/spec v0.20.3 // indirect
 	github.com/go-openapi/swag v0.19.15 // indirect
-	github.com/gofiber/fiber/v2 v2.13.0
-	github.com/gofiber/jwt/v2 v2.2.3
+	github.com/gofiber/fiber/v2 v2.14.0
+	github.com/gofiber/jwt/v2 v2.2.4
 	github.com/klauspost/compress v1.13.1 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/spf13/viper v1.8.1
