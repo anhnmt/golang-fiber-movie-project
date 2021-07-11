@@ -44,14 +44,26 @@ func CreateNewMovie(c *fiber.Ctx) error {
 		return util.ResponseError(c, err.Error(), nil)
 	}
 
-	movie := model.Movie{
+	newMovie := model.Movie{
 		Name:        movieRequest.Name,
 		Slug:        movieRequest.Slug,
 		MovieTypeId: movieRequest.MovieTypeId,
 		Status:      movieRequest.Status,
 	}
 
-	if _, err := repository.SaveMovie(movie); err != nil {
+	movie, err := repository.SaveMovie(newMovie)
+	if err != nil {
+		return util.ResponseError(c, err.Error(), nil)
+	}
+
+	if movie.MovieId == 0 {
+		return util.ResponseBadRequest(c, "Thêm mới thất bại", nil)
+	}
+
+	// Create Movie Genre
+	movieGenres := mapper.MovieGenres(&movie.MovieId, &movieRequest.GenresId)
+
+	if err = repository.CreateMovieGenreByMovieId(movieGenres); err != nil {
 		return util.ResponseError(c, err.Error(), nil)
 	}
 
