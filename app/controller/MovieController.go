@@ -1,17 +1,19 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/xdorro/golang-fiber-base-project/app/entity/model"
 	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-base-project/app/repository"
 	"github.com/xdorro/golang-fiber-base-project/pkg/mapper"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
+	"github.com/xdorro/golang-fiber-base-project/pkg/validator"
 )
 
 // FindAllMovies : Find all movies by Status
 func FindAllMovies(c *fiber.Ctx) error {
-	movies, err := repository.FindAllMoviesByStatusNot(util.STATUS_DELETED)
+	movies, err := repository.FindAllMoviesByStatusNot(util.StatusDeleted)
 
 	if err != nil {
 		return util.ResponseError(c, err.Error(), nil)
@@ -25,7 +27,7 @@ func FindAllMovies(c *fiber.Ctx) error {
 // FindMovieById : Find movie by Movie_Id and Status
 func FindMovieById(c *fiber.Ctx) error {
 	movieId := c.Params("id")
-	movie, err := repository.FindMovieByIdAndStatusNotJoinMovieType(movieId, util.STATUS_DELETED)
+	movie, err := repository.FindMovieByIdAndStatusNotJoinMovieType(movieId, util.StatusDeleted)
 
 	if err != nil || movie.MovieId == 0 {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
@@ -44,24 +46,85 @@ func CreateNewMovie(c *fiber.Ctx) error {
 		return util.ResponseError(c, err.Error(), nil)
 	}
 
-	movie := model.Movie{
+	newMovie := model.Movie{
 		Name:        movieRequest.Name,
 		Slug:        movieRequest.Slug,
 		MovieTypeId: movieRequest.MovieTypeId,
 		Status:      movieRequest.Status,
 	}
 
-	if _, err := repository.SaveMovie(movie); err != nil {
+	movie, err := repository.SaveMovie(newMovie)
+	if err != nil {
 		return util.ResponseError(c, err.Error(), nil)
+	}
+
+	if movie.MovieId == 0 {
+		return util.ResponseBadRequest(c, "Thêm mới thất bại", nil)
+	}
+
+	// Create Movie Genre
+	if err = createMovieGenres(c, &movie.MovieId, &movieRequest.GenreIds); err != nil {
+		return err
 	}
 
 	return util.ResponseSuccess(c, "Thành công", nil)
 }
 
+// createMovieGenres: Handler create movie genre
+func createMovieGenres(c *fiber.Ctx, movieId *uint, newGenreIds *[]uint) error {
+	if newGenreIds != nil {
+		// Find genreIds in Genres
+		genres, err := repository.FindAllGenresByGenreIdsInAndStatusNotIn(*newGenreIds, []int{util.StatusDeleted, util.StatusDraft})
+		if err != nil {
+			return util.ResponseError(c, err.Error(), nil)
+		}
+
+		// Validate genreIds
+		for _, genreId := range *newGenreIds {
+			if validator.ExistGenreIdInGenres(genreId, *genres) != true {
+				return util.ResponseError(c, fmt.Sprintf("Không tìm thấy genre_id=%d", genreId), nil)
+			}
+		}
+
+		// Create Movie Genre
+		movieGenres := mapper.MovieGenres(movieId, newGenreIds)
+
+		if err = repository.CreateMovieGenreByMovieId(movieGenres); err != nil {
+			return util.ResponseError(c, err.Error(), nil)
+		}
+	}
+
+	return nil
+}
+
+// updateMovieGenres: Handler update movie genre
+func updateMovieGenres(c *fiber.Ctx, movieId *uint, newGenreIds *[]uint) error {
+	if newGenreIds != nil {
+		// Find all genres by movieId
+		genres, err := repository.FindAllGenresByMovieIdAndStatusNotIn(*movieId, []int{util.StatusDeleted, util.StatusDraft})
+		if err != nil {
+			return util.ResponseError(c, err.Error(), nil)
+		}
+
+		// Get list genreIds not exist and remove
+		removeGenreIds := mapper.GetGenreIdsNotExistInNewGenreIds(*newGenreIds, *genres)
+		if err = repository.RemoveMovieGenreByMovieIdAndGenreIds(*movieId, *removeGenreIds); err != nil {
+			return util.ResponseError(c, err.Error(), nil)
+		}
+
+		//  Get list genreIds new and create
+		createGenreIds := mapper.GetNewGenreIdsNotExistInGenres(*newGenreIds, *genres)
+
+		return createMovieGenres(c, movieId, createGenreIds)
+	}
+
+	return nil
+}
+
 // UpdateMovieById : Update movie by Movie_Id and Status
 func UpdateMovieById(c *fiber.Ctx) error {
 	movieId := c.Params("id")
-	movie, err := repository.FindMovieByIdAndStatusNot(movieId, util.STATUS_DELETED)
+	movie, err := repository.FindMovieByIdAndStatusNot(movieId, util.StatusDeleted)
 
 	if err != nil || movie.MovieId == 0 {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
@@ -81,19 +144,23 @@ func UpdateMovieById(c *fiber.Ctx) error {
 		return util.ResponseError(c, err.Error(), nil)
 	}
 
+	if err = updateMovieGenres(c, &movie.MovieId, &movieRequest.GenreIds); err != nil {
+		return err
+	}
+
 	return util.ResponseSuccess(c, "Thành công", nil)
 }
 
 // DeleteMovieById : Delete movie by Movie_Id and Status = 1
 func DeleteMovieById(c *fiber.Ctx) error {
 	movieId := c.Params("id")
-	movie, err := repository.FindMovieByIdAndStatusNot(movieId, util.STATUS_DELETED)
+	movie, err := repository.FindMovieByIdAndStatusNot(movieId, util.StatusDeleted)
 
 	if err != nil || movie.MovieId == 0 {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
 	}
 
-	movie.Status = util.STATUS_DELETED
+	movie.Status = util.StatusDeleted
 
 	if _, err = repository.SaveMovie(*movie); err != nil {
 		return util.ResponseError(c, err.Error(), nil)

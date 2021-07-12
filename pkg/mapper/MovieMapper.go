@@ -12,6 +12,7 @@ func SearchMovies(movies *[]dto.SearchMovieDTO) []response.SearchMovieResponse {
 		mapper := SearchMovie(&movie)
 		result = append(result, *mapper)
 	}
+
 	return result
 }
 
