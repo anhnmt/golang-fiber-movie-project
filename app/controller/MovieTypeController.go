@@ -10,7 +10,7 @@ import (
 
 // FindAllMovieTypes : Find all moveTypes by Status = 1
 func FindAllMovieTypes(c *fiber.Ctx) error {
-	moveTypes, err := repository.FindAllMovieTypesByStatusNot(util.STATUS_DELETED)
+	moveTypes, err := repository.FindAllMovieTypesByStatusNot(util.StatusDeleted)
 
 	if err != nil {
 		return util.ResponseError(c, err.Error(), nil)
@@ -22,7 +22,7 @@ func FindAllMovieTypes(c *fiber.Ctx) error {
 // FindMovieTypeById : Find moveType by MovieType_Id and Status = 1
 func FindMovieTypeById(c *fiber.Ctx) error {
 	moveTypeId := c.Params("id")
-	moveType, err := repository.FindMovieTypeByIdAndStatusNot(moveTypeId, util.STATUS_DELETED)
+	moveType, err := repository.FindMovieTypeByIdAndStatusNot(moveTypeId, util.StatusDeleted)
 
 	if err != nil || moveType.MovieTypeId == 0 {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
@@ -55,7 +55,7 @@ func CreateNewMovieType(c *fiber.Ctx) error {
 // UpdateMovieTypeById : Update moveType by MovieType_Id and Status = 1
 func UpdateMovieTypeById(c *fiber.Ctx) error {
 	moveTypeId := c.Params("id")
-	moveType, err := repository.FindMovieTypeByIdAndStatusNot(moveTypeId, util.STATUS_DELETED)
+	moveType, err := repository.FindMovieTypeByIdAndStatusNot(moveTypeId, util.StatusDeleted)
 
 	if err != nil || moveType.MovieTypeId == 0 {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
@@ -80,13 +80,13 @@ func UpdateMovieTypeById(c *fiber.Ctx) error {
 // DeleteMovieTypeById : Delete moveType by MovieType_Id and Status = 1
 func DeleteMovieTypeById(c *fiber.Ctx) error {
 	moveTypeId := c.Params("id")
-	moveType, err := repository.FindMovieTypeByIdAndStatusNot(moveTypeId, util.STATUS_DELETED)
+	moveType, err := repository.FindMovieTypeByIdAndStatusNot(moveTypeId, util.StatusDeleted)
 
 	if err != nil || moveType.MovieTypeId == 0 {
 		return util.ResponseBadRequest(c, "ID không tồn tại", err)
 	}
 
-	moveType.Status = util.STATUS_DELETED
+	moveType.Status = util.StatusDeleted
 
 	// Update movieType status
 	if _, err = repository.SaveMovieType(*moveType); err != nil {
