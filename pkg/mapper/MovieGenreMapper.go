@@ -5,10 +5,10 @@ import (
 	"github.com/xdorro/golang-fiber-base-project/pkg/validator"
 )
 
-func MovieGenres(movieId *uint, genresId *[]uint) []model.MovieGenre {
+func MovieGenres(movieId *uint, genreIds *[]uint) []model.MovieGenre {
 	result := make([]model.MovieGenre, 0)
 
-	for _, genreId := range *genresId {
+	for _, genreId := range *genreIds {
 		mapper := MovieGenre(movieId, &genreId)
 		result = append(result, *mapper)
 	}
