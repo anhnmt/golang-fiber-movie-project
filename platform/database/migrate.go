@@ -25,6 +25,10 @@ func migrate() {
 		model.MovieCountry{},
 		model.MoviePeople{},
 		model.MovieType{},
+
+		model.Episode{},
+		model.EpisodeType{},
+		model.EpisodeDetail{},
 	); err != nil {
 		log.Println(err)
 	}

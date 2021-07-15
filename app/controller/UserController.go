@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/gofiber/fiber/v2"
-	model "github.com/xdorro/golang-fiber-base-project/app/entity/model"
+	"github.com/xdorro/golang-fiber-base-project/app/entity/model"
 	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-base-project/app/repository"
 	"github.com/xdorro/golang-fiber-base-project/pkg/mapper"

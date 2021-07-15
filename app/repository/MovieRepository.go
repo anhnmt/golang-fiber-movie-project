@@ -43,6 +43,27 @@ func FindMovieByIdAndStatusNot(id string, status int) (*model.Movie, error) {
 	return &movie, nil
 }
 
+func FindMovieByIdAndStatusNotJoinMovieType(id string, status int) (*dto.MovieDetailDTO, error) {
+	uid := util.ParseStringToUInt(id)
+
+	var movie dto.MovieDetailDTO
+
+	if err := db.
+		Model(&model.Movie{}).
+		Select("movies.*, movie_types.name movie_type_name").
+		Joins("LEFT JOIN movie_types on movies.movie_type_id = movie_types.movie_type_id").
+		Where("movie_id = ? AND movies.status <> ? AND movie_types.status <> ?", uid, status, status).
+		Find(&movie).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+
+		return nil, err
+	}
+
+	return &movie, nil
+}
+
 // SaveMovie : Save Movie
 func SaveMovie(movie model.Movie) (*model.Movie, error) {
 	if err := db.Save(&movie).Error; err != nil {
@@ -50,14 +71,4 @@ func SaveMovie(movie model.Movie) (*model.Movie, error) {
 	}
 
 	return &movie, nil
-}
-
-func UpdateStatusByMovieTypeId(movieTypeId uint, status int) error {
-	if err := db.Model(&model.Movie{}).
-		Where("movie_type_id = ?", movieTypeId).
-		Update("status", status).Error; err != nil {
-		return err
-	}
-
-	return nil
 }
