@@ -10,7 +10,7 @@ import (
 func FindAllEpisodeTypesByStatusNot(status int) (*[]model.EpisodeType, error) {
 	episodeTypes := make([]model.EpisodeType, 0)
 
-	if err := db.Find(&episodeTypes, "status <> ?", status).Error; err != nil {
+	if err := db.Model(model.EpisodeType{}).Find(&episodeTypes, "status <> ?", status).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}

@@ -83,6 +83,10 @@ func privateRoute(a fiber.Router) {
 	movieDetails.Get("/countries", controller.FindAllMovieCountryById)
 	movieDetails.Get("/tags", controller.FindMovieById)
 
+	// Episode
+
+	movieDetails.Get("/episodes", controller.FindAllEpisodesByMovieId)
+
 	// Episode Type
 	episodeTypes := a.Group("/episode/types")
 	episodeTypes.Get("/", controller.FindAllEpisodeTypes)
