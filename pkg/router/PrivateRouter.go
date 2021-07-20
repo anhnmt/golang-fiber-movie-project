@@ -86,6 +86,7 @@ func privateRoute(a fiber.Router) {
 	// Episode
 
 	movieDetails.Get("/episodes", controller.FindAllEpisodesByMovieId)
+	movieDetails.Post("/episodes", controller.CreateEpisodesByMovieId)
 
 	// Episode Type
 	episodeTypes := a.Group("/episode/types")

@@ -21,3 +21,4 @@ build/
 *.log
 
 config.yml
+/.scannerwork/

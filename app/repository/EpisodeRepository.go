@@ -21,3 +21,12 @@ func FindAllEpisodesByMovieIdAndStatusNot(id string, status int) (*[]model.Episo
 
 	return &episodes, nil
 }
+
+// SaveEpisode : Save Episode
+func SaveEpisode(episode model.Episode) (*model.Episode, error) {
+	if err := db.Model(model.Episode{}).Save(&episode).Error; err != nil {
+		return nil, err
+	}
+
+	return &episode, nil
+}
