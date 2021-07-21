@@ -30,6 +30,22 @@ func main() {
 
 	app := fiber.New(fiber.Config{
 		Prefork: serverConfig.Prefork,
+
+		// Override default error handler
+		ErrorHandler: func(c *fiber.Ctx, err error) error {
+			// Default 500 statusCode
+			code := fiber.StatusInternalServerError
+
+			if e, ok := err.(*fiber.Error); ok {
+				// Override status code if fiber.Error type
+				code = e.Code
+			}
+			// Set Content-Type: application/json; charset=utf-8
+			c.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSONCharsetUTF8)
+
+			// Return statusCode with error message
+			return c.Status(code).Send([]byte(err.Error()))
+		},
 	})
 
 	// Attach Middlewares.
