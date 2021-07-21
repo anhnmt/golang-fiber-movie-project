@@ -11,8 +11,8 @@ func FindAllMovieCountryById(c *fiber.Ctx) error {
 	countries, err := repository.FindAllCountriesByMovieIdAndStatusNotIn(movieId, []int{util.StatusDeleted, util.StatusDraft})
 
 	if err != nil {
-		return util.ResponseError(c, err.Error(), nil)
+		return util.ResponseError(err.Error(), nil)
 	}
 
-	return util.ResponseSuccess(c, "Thành công", countries)
+	return util.ResponseSuccess("Thành công", countries)
 }

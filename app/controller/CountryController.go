@@ -13,10 +13,10 @@ func FindAllCountries(c *fiber.Ctx) error {
 	countries, err := repository.FindAllCountriesByStatusNot(util.StatusDeleted)
 
 	if err != nil {
-		return util.ResponseError(c, err.Error(), nil)
+		return util.ResponseError(err.Error(), nil)
 	}
 
-	return util.ResponseSuccess(c, "Thành công", countries)
+	return util.ResponseSuccess("Thành công", countries)
 }
 
 // FindCountryById : Find country by Country_Id and Status = 1
@@ -25,10 +25,10 @@ func FindCountryById(c *fiber.Ctx) error {
 	country, err := repository.FindCountryByIdAndStatusNot(countryId, util.StatusDeleted)
 
 	if err != nil || country.CountryId == 0 {
-		return util.ResponseBadRequest(c, "ID không tồn tại", err)
+		return util.ResponseBadRequest("ID không tồn tại", err)
 	}
 
-	return util.ResponseSuccess(c, "Thành công", country)
+	return util.ResponseSuccess("Thành công", country)
 }
 
 // CreateNewCountry : Create a new country
@@ -36,7 +36,7 @@ func CreateNewCountry(c *fiber.Ctx) error {
 	countryRequest := new(request.CountryRequest)
 
 	if err := c.BodyParser(countryRequest); err != nil {
-		return util.ResponseError(c, err.Error(), nil)
+		return util.ResponseError(err.Error(), nil)
 	}
 
 	country := model.Country{
@@ -46,10 +46,10 @@ func CreateNewCountry(c *fiber.Ctx) error {
 	}
 
 	if _, err := repository.SaveCountry(country); err != nil {
-		return util.ResponseError(c, err.Error(), nil)
+		return util.ResponseError(err.Error(), nil)
 	}
 
-	return util.ResponseSuccess(c, "Thành công", nil)
+	return util.ResponseSuccess("Thành công", nil)
 }
 
 // UpdateCountryById : Update country by Country_Id and Status = 1
@@ -59,12 +59,12 @@ func UpdateCountryById(c *fiber.Ctx) error {
 	country, err := repository.FindCountryByIdAndStatusNot(countryId, util.StatusDeleted)
 
 	if err != nil || country.CountryId == 0 {
-		return util.ResponseBadRequest(c, "ID không tồn tại", err)
+		return util.ResponseBadRequest("ID không tồn tại", err)
 	}
 
 	countryRequest := new(request.CountryRequest)
 	if err = c.BodyParser(countryRequest); err != nil {
-		return util.ResponseError(c, err.Error(), nil)
+		return util.ResponseError(err.Error(), nil)
 	}
 
 	country.Name = countryRequest.Name
@@ -72,10 +72,10 @@ func UpdateCountryById(c *fiber.Ctx) error {
 	country.Status = countryRequest.Status
 
 	if _, err = repository.SaveCountry(*country); err != nil {
-		return util.ResponseError(c, err.Error(), nil)
+		return util.ResponseError(err.Error(), nil)
 	}
 
-	return util.ResponseSuccess(c, "Thành công", nil)
+	return util.ResponseSuccess("Thành công", nil)
 }
 
 // DeleteCountryById : Delete country by Country_Id and Status = 1
@@ -84,14 +84,14 @@ func DeleteCountryById(c *fiber.Ctx) error {
 	country, err := repository.FindCountryByIdAndStatusNot(countryId, util.StatusDeleted)
 
 	if err != nil || country.CountryId == 0 {
-		return util.ResponseBadRequest(c, "ID không tồn tại", err)
+		return util.ResponseBadRequest("ID không tồn tại", err)
 	}
 
 	country.Status = util.StatusDeleted
 
 	if _, err = repository.SaveCountry(*country); err != nil {
-		return util.ResponseError(c, err.Error(), nil)
+		return util.ResponseError(err.Error(), nil)
 	}
 
-	return util.ResponseSuccess(c, "Thành công", nil)
+	return util.ResponseSuccess("Thành công", nil)
 }

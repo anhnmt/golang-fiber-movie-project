@@ -30,7 +30,7 @@ func BaseRouter(app *fiber.App) {
 func notFoundRoute(a *fiber.App) {
 	a.Use(
 		func(c *fiber.Ctx) error {
-			return util.ResponseNotFound(c, "Đường dẫn không tồn tại")
+			return util.ResponseNotFound("Đường dẫn không tồn tại")
 		},
 	)
 }

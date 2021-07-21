@@ -11,8 +11,8 @@ func FindAllMovieGenreById(c *fiber.Ctx) error {
 	genres, err := repository.FindAllGenresByMovieIdAndStatusNotIn(movieId, []int{util.StatusDeleted, util.StatusDraft})
 
 	if err != nil {
-		return util.ResponseError(c, err.Error(), nil)
+		return util.ResponseError(err.Error(), nil)
 	}
 
-	return util.ResponseSuccess(c, "Thành công", genres)
+	return util.ResponseSuccess("Thành công", genres)
 }
