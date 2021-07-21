@@ -2,7 +2,6 @@ package controller
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/xdorro/golang-fiber-base-project/app/entity/dto"
 	"github.com/xdorro/golang-fiber-base-project/app/entity/model"
 	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-base-project/app/repository"
@@ -24,6 +23,27 @@ func FindAllEpisodesByMovieId(c *fiber.Ctx) error {
 	}
 
 	return util.ResponseSuccess("Thành công", episodes)
+}
+
+func FindEpisodeByMovieIdAndEpisodeId(c *fiber.Ctx) error {
+	movieId := c.Params("id")
+	episodeId := c.Params("episodeId")
+
+	if _, err := validateMovieId(movieId); err != nil {
+		return err
+	}
+
+	if _, err := validateEpisodeId(episodeId); err != nil {
+		return err
+	}
+
+	episodeDetails, err := repository.FindEpisodeDetailsByIdAndStatusNot(episodeId, []int{util.StatusDeleted})
+
+	if err != nil {
+		return util.ResponseError(err.Error(), nil)
+	}
+
+	return util.ResponseSuccess("Thành công", episodeDetails)
 }
 
 func CreateEpisodesByMovieId(c *fiber.Ctx) error {
@@ -112,18 +132,18 @@ func validateMovieId(movieId string) (*model.Movie, error) {
 	movie, err := repository.FindMovieByIdAndStatusNot(movieId, util.StatusDeleted)
 
 	if err != nil || movie.MovieId == 0 {
-		return nil, util.ResponseBadRequest("ID không tồn tại", err)
+		return nil, util.ResponseBadRequest("MovieId không tồn tại", err)
 	}
 
 	return movie, nil
 }
 
-func validateEpisodeId(movieId string) (*dto.MovieDetailDTO, error) {
-	movie, err := repository.FindMovieByIdAndStatusNotJoinMovieType(movieId, util.StatusDeleted)
+func validateEpisodeId(movieId string) (*model.Episode, error) {
+	episode, err := repository.FindEpisodeByIdAndStatusNot(movieId, util.StatusDeleted)
 
-	if err != nil || movie.MovieId == 0 {
-		return nil, util.ResponseBadRequest("ID không tồn tại", err)
+	if err != nil || episode.EpisodeId == 0 {
+		return nil, util.ResponseBadRequest("EpisodeId không tồn tại", err)
 	}
 
-	return movie, nil
+	return episode, nil
 }
