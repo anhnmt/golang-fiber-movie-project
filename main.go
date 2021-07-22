@@ -16,19 +16,21 @@ import (
 )
 
 // @title Golang Fiber Base Project
-// @version 1.0
+// @version 1.0.0
 // @description This is a sample swagger for Fiber
 // @termsOfService http://swagger.io/terms/
 // @contact.name Tuan Anh Nguyen Manh
 // @contact.email xdorro@gmail.com
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-// @host localhost:8080
+// @host localhost:8000
 // @BasePath /
 func main() {
 	serverConfig := config.GetServer()
 
 	app := fiber.New(fiber.Config{
+		AppName: serverConfig.Name,
+
 		Prefork: serverConfig.Prefork,
 
 		// Override default error handler

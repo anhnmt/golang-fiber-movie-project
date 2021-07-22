@@ -1,8 +1,8 @@
-APP_NAME = golang-fiber-base-project
-APP_VERSION = 1.0
-BUILD_DIR = ./build
-DOCKER_LOCAL = localhost:5000
-DOCKER_SERVER = 68.183.224.212:5000
+APP_NAME=golang-fiber-base-project
+APP_VERSION=1.0.0
+BUILD_DIR=./build
+DOCKER_LOCAL=localhost:5000
+DOCKER_SERVER=68.183.224.212:5000
 
 config:
 	cp config.example.yml config.yml
