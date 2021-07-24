@@ -2,7 +2,7 @@ APP_NAME=golang-fiber-base-project
 APP_VERSION=1.0.0
 BUILD_DIR=./build
 DOCKER_LOCAL=localhost:5000
-DOCKER_SERVER=68.183.224.212:5000
+DOCKER_SERVER=198.13.57.211:5000
 
 config:
 	cp config.example.yml config.yml
@@ -60,16 +60,16 @@ docker.sqlserver:
 
 docker.redis:
 	docker run --rm -d \
-	    --name demo_redis \
-	    -p 6379:6379 \
-	    -d redis:alpine
+		--name demo_redis \
+		-p 6379:6379 \
+		-d redis:alpine
 
 docker.sonar:
 	docker run --rm -d \
-    	--name demo_sonarqube \
-    	-e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true \
-    	-p 9000:9000 \
-    	-d sonarqube:8-community
+		--name demo_sonarqube \
+		-e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true \
+		-p 9000:9000 \
+		-d sonarqube:8-community
 
 docker.build:
 	docker build -t $(DOCKER_LOCAL)/$(APP_NAME):$(APP_VERSION) .
@@ -85,5 +85,5 @@ docker.deploy: docker.build docker.run
 docker.local: docker.build docker.push
 
 docker.server:
-	docker build -t $(DOCKER_LOCAL)/$(APP_NAME):$(APP_VERSION) .
-	docker push $(DOCKER_LOCAL)/$(APP_NAME):$(APP_VERSION)
+	docker tag $(DOCKER_LOCAL)/$(APP_NAME):$(APP_VERSION) $(DOCKER_SERVER)/$(APP_NAME):$(APP_VERSION)
+	docker push $(DOCKER_SERVER)/$(APP_NAME):$(APP_VERSION)

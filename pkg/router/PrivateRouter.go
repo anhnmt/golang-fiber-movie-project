@@ -8,12 +8,13 @@ import (
 func privateRoute(a fiber.Router) {
 
 	// Tags Controller
+	tagController := controller.NewTagController()
 	tags := a.Group("/tags")
-	tags.Get("/", controller.FindAllTags)
-	tags.Post("/", controller.CreateNewTag)
-	tags.Get("/:id", controller.FindTagById)
-	tags.Put("/:id", controller.UpdateTagById)
-	tags.Delete("/:id", controller.DeleteTagById)
+	tags.Get("/", tagController.FindAllTags)
+	tags.Post("/", tagController.CreateNewTag)
+	tags.Get("/:id", tagController.FindTagById)
+	tags.Put("/:id", tagController.UpdateTagById)
+	tags.Delete("/:id", tagController.DeleteTagById)
 
 	// Genres Controller
 	genres := a.Group("/genres")
