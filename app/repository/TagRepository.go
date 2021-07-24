@@ -11,12 +11,6 @@ type TagRepository struct {
 	db *gorm.DB
 }
 
-func NewTagRepository() *TagRepository {
-	return &TagRepository{
-		db: db,
-	}
-}
-
 // FindAllTagsByStatus : Find tag by TagId and Status
 func (obj TagRepository) FindAllTagsByStatus(status int) (*[]model.Tag, error) {
 	tags := make([]model.Tag, 0)

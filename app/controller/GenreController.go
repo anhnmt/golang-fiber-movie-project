@@ -8,6 +8,10 @@ import (
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
 )
 
+type GenreController struct {
+	genreRepository *repository.TagRepository
+}
+
 // FindAllGenres : Find all genres by Status = 1
 func FindAllGenres(c *fiber.Ctx) error {
 	genres, err := repository.FindAllGenresByStatusNot(util.StatusDeleted)

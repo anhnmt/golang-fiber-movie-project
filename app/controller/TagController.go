@@ -12,12 +12,6 @@ type TagController struct {
 	tagRepository *repository.TagRepository
 }
 
-func NewTagController() *TagController {
-	return &TagController{
-		tagRepository: repository.NewTagRepository(),
-	}
-}
-
 // FindAllTags : Find all tags by Status Not
 func (obj *TagController) FindAllTags(c *fiber.Ctx) error {
 	tags, err := obj.tagRepository.FindAllTagsByStatusNot(util.StatusDeleted)
