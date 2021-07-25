@@ -1,20 +1,17 @@
 package controller
 
-import (
-	"github.com/xdorro/golang-fiber-base-project/app/repository"
-)
+import "sync"
 
 var (
-	genreController = &GenreController{
-		genreRepository: repository.NewTagRepository(),
-	}
+	once *sync.Once
 
-	tagController = &TagController{
-		tagRepository: repository.NewTagRepository(),
-	}
+	tagController *TagController
 
-	episodeController = &EpisodeController{
-		episodeRepository:       repository.NewEpisodeRepository(),
-		episodeDetailRepository: repository.NewEpisodeDetailRepository(),
-	}
+	genreController *GenreController
+
+	episodeController *EpisodeController
+
+	episodeTypeController *EpisodeTypeController
+
+	movieController *MovieController
 )

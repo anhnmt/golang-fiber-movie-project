@@ -9,6 +9,8 @@ import (
 	"github.com/xdorro/golang-fiber-base-project/pkg/mapper"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
 	"github.com/xdorro/golang-fiber-base-project/pkg/validator"
+	"log"
+	"sync"
 )
 
 type EpisodeController struct {
@@ -17,6 +19,18 @@ type EpisodeController struct {
 }
 
 func NewEpisodeController() *EpisodeController {
+	if episodeController == nil {
+		once = &sync.Once{}
+
+		once.Do(func() {
+			episodeController = &EpisodeController{
+				episodeRepository:       repository.NewEpisodeRepository(),
+				episodeDetailRepository: repository.NewEpisodeDetailRepository(),
+			}
+			log.Println("Create new EpisodeController")
+		})
+	}
+
 	return episodeController
 }
 

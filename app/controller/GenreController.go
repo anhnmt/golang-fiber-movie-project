@@ -6,18 +6,28 @@ import (
 	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-base-project/app/repository"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
+	"log"
+	"sync"
 )
 
 type GenreController struct {
-	genreRepository *repository.TagRepository
 }
 
 func NewGenreController() *GenreController {
+	if genreController == nil {
+		once = &sync.Once{}
+
+		once.Do(func() {
+			genreController = &GenreController{}
+			log.Println("Create new GenreController")
+		})
+	}
+
 	return genreController
 }
 
 // FindAllGenres : Find all genres by Status = 1
-func FindAllGenres(c *fiber.Ctx) error {
+func (obj *GenreController) FindAllGenres(c *fiber.Ctx) error {
 	genres, err := repository.FindAllGenresByStatusNot(util.StatusDeleted)
 
 	if err != nil {
@@ -28,7 +38,7 @@ func FindAllGenres(c *fiber.Ctx) error {
 }
 
 // FindGenreById : Find genre by Genre_Id and Status = 1
-func FindGenreById(c *fiber.Ctx) error {
+func (obj *GenreController) FindGenreById(c *fiber.Ctx) error {
 	genreId := c.Params("id")
 	genre, err := repository.FindGenreByIdAndStatusNot(genreId, util.StatusDeleted)
 
@@ -40,7 +50,7 @@ func FindGenreById(c *fiber.Ctx) error {
 }
 
 // CreateNewGenre : Create a new genre
-func CreateNewGenre(c *fiber.Ctx) error {
+func (obj *GenreController) CreateNewGenre(c *fiber.Ctx) error {
 	genreRequest := new(request.GenreRequest)
 
 	if err := c.BodyParser(genreRequest); err != nil {
@@ -61,7 +71,7 @@ func CreateNewGenre(c *fiber.Ctx) error {
 }
 
 // UpdateGenreById : Update genre by Genre_Id and Status = 1
-func UpdateGenreById(c *fiber.Ctx) error {
+func (obj *GenreController) UpdateGenreById(c *fiber.Ctx) error {
 	genreId := c.Params("id")
 
 	genre, err := repository.FindGenreByIdAndStatusNot(genreId, util.StatusDeleted)
@@ -87,7 +97,7 @@ func UpdateGenreById(c *fiber.Ctx) error {
 }
 
 // DeleteGenreById : Delete genre by Genre_Id and Status = 1
-func DeleteGenreById(c *fiber.Ctx) error {
+func (obj *GenreController) DeleteGenreById(c *fiber.Ctx) error {
 	genreId := c.Params("id")
 	genre, err := repository.FindGenreByIdAndStatusNot(genreId, util.StatusDeleted)
 

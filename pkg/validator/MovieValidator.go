@@ -7,7 +7,9 @@ import (
 )
 
 func ValidateMovieId(movieId string) (*model.Movie, error) {
-	movie, err := repository.FindMovieByIdAndStatusNot(movieId, util.StatusDeleted)
+	movieRepository := repository.NewMovieRepository()
+
+	movie, err := movieRepository.FindMovieByIdAndStatusNot(movieId, util.StatusDeleted)
 
 	if err != nil || movie.MovieId == 0 {
 		return nil, util.ResponseBadRequest("MovieId không tồn tại", err)

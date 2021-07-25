@@ -6,6 +6,8 @@ import (
 	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-base-project/app/repository"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
+	"log"
+	"sync"
 )
 
 type TagController struct {
@@ -13,6 +15,19 @@ type TagController struct {
 }
 
 func NewTagController() *TagController {
+	if tagController == nil {
+		once := &sync.Once{}
+
+		once.Do(func() {
+			if tagController == nil {
+				tagController = &TagController{
+					tagRepository: repository.NewTagRepository(),
+				}
+				log.Println("Create new TagController")
+			}
+		})
+	}
+
 	return tagController
 }
 

@@ -1,56 +1,67 @@
 package repository
 
 import (
-	"errors"
 	"github.com/xdorro/golang-fiber-base-project/app/entity/model"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
 	"gorm.io/gorm"
+	"log"
+	"sync"
 )
 
-func FindAllEpisodeTypesByStatusNot(status int) (*[]model.EpisodeType, error) {
-	episodeTypes := make([]model.EpisodeType, 0)
-
-	if err := db.Model(model.EpisodeType{}).Find(&episodeTypes, "status <> ?", status).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
-
-		return nil, err
-	}
-
-	return &episodeTypes, nil
+type EpisodeTypeRepository struct {
+	db *gorm.DB
 }
 
-func FindEpisodeTypeByIdAndStatusNot(id string, status int) (*model.EpisodeType, error) {
+func NewEpisodeTypeRepository() *EpisodeTypeRepository {
+	if episodeTypeRepository == nil {
+		once = &sync.Once{}
+
+		once.Do(func() {
+			if episodeTypeRepository == nil {
+				episodeTypeRepository = &EpisodeTypeRepository{
+					db: db,
+				}
+
+				log.Println("Create new EpisodeTypeRepository")
+			}
+		})
+	}
+
+	return episodeTypeRepository
+}
+
+func (obj *EpisodeTypeRepository) FindAllEpisodeTypesByStatusNot(status int) (*[]model.EpisodeType, error) {
+	episodeTypes := make([]model.EpisodeType, 0)
+
+	err := obj.db.Model(model.EpisodeType{}).
+		Find(&episodeTypes, "status <> ?", status).Error
+
+	return &episodeTypes, err
+}
+
+func (obj *EpisodeTypeRepository) FindEpisodeTypeByIdAndStatusNot(id string, status int) (*model.EpisodeType, error) {
 	uid := util.ParseStringToUInt(id)
 
 	var episodeType model.EpisodeType
-	if err := db.Where("episode_type_id = ? AND status <> ?", uid, status).Find(&episodeType).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
+	err := obj.db.Model(&model.EpisodeDetail{}).
+		Where("episode_type_id = ? AND status <> ?", uid, status).
+		Find(&episodeType).Error
 
-		return nil, err
-	}
-
-	return &episodeType, nil
+	return &episodeType, err
 }
 
 // SaveEpisodeType : Save Episode Type
-func SaveEpisodeType(episodeType model.EpisodeType) (*model.EpisodeType, error) {
-	if err := db.Save(&episodeType).Error; err != nil {
-		return nil, err
-	}
+func (obj *EpisodeTypeRepository) SaveEpisodeType(episodeType model.EpisodeType) (*model.EpisodeType, error) {
+	err := obj.db.Model(&model.EpisodeDetail{}).
+		Save(&episodeType).Error
 
-	return &episodeType, nil
+	return &episodeType, err
 }
 
-func UpdateStatusByEpisodeTypeId(episodeTypeId uint, status int) error {
-	if err := db.Model(&model.EpisodeDetail{}).
+func (obj *EpisodeTypeRepository) UpdateStatusByEpisodeTypeId(episodeTypeId uint, status int) error {
+	err := obj.db.Model(&model.EpisodeDetail{}).
 		Where("episode_type_id = ?", episodeTypeId).
-		Update("status", status).Error; err != nil {
-		return err
-	}
+		Update("status", status).Error
 
-	return nil
+	return err
 }

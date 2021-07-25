@@ -3,6 +3,8 @@ package repository
 import (
 	"github.com/xdorro/golang-fiber-base-project/app/entity/model"
 	"gorm.io/gorm"
+	"log"
+	"sync"
 )
 
 type EpisodeDetailRepository struct {
@@ -10,6 +12,19 @@ type EpisodeDetailRepository struct {
 }
 
 func NewEpisodeDetailRepository() *EpisodeDetailRepository {
+	if episodeDetailRepository == nil {
+		once = &sync.Once{}
+
+		once.Do(func() {
+			if episodeDetailRepository == nil {
+				episodeDetailRepository = &EpisodeDetailRepository{
+					db: db,
+				}
+				log.Println("Create new EpisodeDetailRepository")
+			}
+		})
+	}
+
 	return episodeDetailRepository
 }
 

@@ -6,10 +6,31 @@ import (
 	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-base-project/app/repository"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
+	"log"
+	"sync"
 )
 
-func FindAllEpisodeTypes(c *fiber.Ctx) error {
-	episodeTypes, err := repository.FindAllEpisodeTypesByStatusNot(util.StatusDeleted)
+type EpisodeTypeController struct {
+	episodeTypeRepository *repository.EpisodeTypeRepository
+}
+
+func NewEpisodeTypeController() *EpisodeTypeController {
+	if episodeTypeController == nil {
+		once = &sync.Once{}
+
+		once.Do(func() {
+			episodeTypeController = &EpisodeTypeController{
+				episodeTypeRepository: repository.NewEpisodeTypeRepository(),
+			}
+			log.Println("Create new EpisodeTypeController")
+		})
+	}
+
+	return episodeTypeController
+}
+
+func (obj *EpisodeTypeController) FindAllEpisodeTypes(c *fiber.Ctx) error {
+	episodeTypes, err := obj.episodeTypeRepository.FindAllEpisodeTypesByStatusNot(util.StatusDeleted)
 
 	if err != nil {
 		return util.ResponseError(err.Error(), nil)
@@ -18,9 +39,9 @@ func FindAllEpisodeTypes(c *fiber.Ctx) error {
 	return util.ResponseSuccess("Thành công", episodeTypes)
 }
 
-func FindEpisodeTypeById(c *fiber.Ctx) error {
+func (obj *EpisodeTypeController) FindEpisodeTypeById(c *fiber.Ctx) error {
 	episodeTypeId := c.Params("id")
-	episodeType, err := repository.FindEpisodeTypeByIdAndStatusNot(episodeTypeId, util.StatusDeleted)
+	episodeType, err := obj.episodeTypeRepository.FindEpisodeTypeByIdAndStatusNot(episodeTypeId, util.StatusDeleted)
 
 	if err != nil || episodeType.EpisodeTypeId == 0 {
 		return util.ResponseBadRequest("ID không tồn tại", err)
@@ -30,7 +51,7 @@ func FindEpisodeTypeById(c *fiber.Ctx) error {
 }
 
 // CreateNewEpisodeType : Create a new episodeType
-func CreateNewEpisodeType(c *fiber.Ctx) error {
+func (obj *EpisodeTypeController) CreateNewEpisodeType(c *fiber.Ctx) error {
 	episodeTypeRequest := new(request.EpisodeTypeRequest)
 
 	if err := c.BodyParser(episodeTypeRequest); err != nil {
@@ -42,7 +63,7 @@ func CreateNewEpisodeType(c *fiber.Ctx) error {
 		Status: episodeTypeRequest.Status,
 	}
 
-	if _, err := repository.SaveEpisodeType(episodeType); err != nil {
+	if _, err := obj.episodeTypeRepository.SaveEpisodeType(episodeType); err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
@@ -50,9 +71,9 @@ func CreateNewEpisodeType(c *fiber.Ctx) error {
 }
 
 // UpdateEpisodeTypeById : Update episodeType by Episode_Type_Id and Status = 1
-func UpdateEpisodeTypeById(c *fiber.Ctx) error {
+func (obj *EpisodeTypeController) UpdateEpisodeTypeById(c *fiber.Ctx) error {
 	episodeTypeId := c.Params("id")
-	episodeType, err := repository.FindEpisodeTypeByIdAndStatusNot(episodeTypeId, util.StatusDeleted)
+	episodeType, err := obj.episodeTypeRepository.FindEpisodeTypeByIdAndStatusNot(episodeTypeId, util.StatusDeleted)
 
 	if err != nil || episodeType.EpisodeTypeId == 0 {
 		return util.ResponseBadRequest("ID không tồn tại", err)
@@ -66,7 +87,7 @@ func UpdateEpisodeTypeById(c *fiber.Ctx) error {
 	episodeType.Name = episodeTypeRequest.Name
 	episodeType.Status = episodeTypeRequest.Status
 
-	if _, err = repository.SaveEpisodeType(*episodeType); err != nil {
+	if _, err = obj.episodeTypeRepository.SaveEpisodeType(*episodeType); err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
@@ -74,9 +95,9 @@ func UpdateEpisodeTypeById(c *fiber.Ctx) error {
 }
 
 // DeleteEpisodeTypeById : Delete episodeType by EpisodeType_Id and Status = 1
-func DeleteEpisodeTypeById(c *fiber.Ctx) error {
+func (obj *EpisodeTypeController) DeleteEpisodeTypeById(c *fiber.Ctx) error {
 	episodeTypeId := c.Params("id")
-	episodeType, err := repository.FindEpisodeTypeByIdAndStatusNot(episodeTypeId, util.StatusDeleted)
+	episodeType, err := obj.episodeTypeRepository.FindEpisodeTypeByIdAndStatusNot(episodeTypeId, util.StatusDeleted)
 
 	if err != nil || episodeType.EpisodeTypeId == 0 {
 		return util.ResponseBadRequest("ID không tồn tại", err)
@@ -85,12 +106,12 @@ func DeleteEpisodeTypeById(c *fiber.Ctx) error {
 	episodeType.Status = util.StatusDeleted
 
 	// Update movieType status
-	if _, err = repository.SaveEpisodeType(*episodeType); err != nil {
+	if _, err = obj.episodeTypeRepository.SaveEpisodeType(*episodeType); err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
 	// Update movie status
-	if err = repository.UpdateStatusByEpisodeTypeId(episodeType.EpisodeTypeId, episodeType.Status); err != nil {
+	if err = obj.episodeTypeRepository.UpdateStatusByEpisodeTypeId(episodeType.EpisodeTypeId, episodeType.Status); err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 

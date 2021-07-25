@@ -6,10 +6,33 @@ import (
 	"github.com/xdorro/golang-fiber-base-project/app/entity/model"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
 	"gorm.io/gorm"
+	"log"
+	"sync"
 )
 
+type MovieRepository struct {
+	db *gorm.DB
+}
+
+func NewMovieRepository() *MovieRepository {
+	if movieRepository == nil {
+		once = &sync.Once{}
+
+		once.Do(func() {
+			if movieRepository == nil {
+				movieRepository = &MovieRepository{
+					db: db,
+				}
+				log.Println("Create new MovieRepository")
+			}
+		})
+	}
+
+	return movieRepository
+}
+
 // FindAllMoviesByStatusNot : Find movie by MovieId and Status NOT
-func FindAllMoviesByStatusNot(status int) (*[]dto.SearchMovieDTO, error) {
+func (obj *MovieRepository) FindAllMoviesByStatusNot(status int) (*[]dto.SearchMovieDTO, error) {
 	movies := make([]dto.SearchMovieDTO, 0)
 
 	if err := db.
@@ -28,7 +51,7 @@ func FindAllMoviesByStatusNot(status int) (*[]dto.SearchMovieDTO, error) {
 	return &movies, nil
 }
 
-func FindMovieByIdAndStatusNot(id string, status int) (*model.Movie, error) {
+func (obj *MovieRepository) FindMovieByIdAndStatusNot(id string, status int) (*model.Movie, error) {
 	uid := util.ParseStringToUInt(id)
 
 	var movie model.Movie
@@ -37,7 +60,7 @@ func FindMovieByIdAndStatusNot(id string, status int) (*model.Movie, error) {
 	return &movie, err
 }
 
-func FindMovieByIdAndStatusNotJoinMovieType(id string, status int) (*dto.MovieDetailDTO, error) {
+func (obj *MovieRepository) FindMovieByIdAndStatusNotJoinMovieType(id string, status int) (*dto.MovieDetailDTO, error) {
 	uid := util.ParseStringToUInt(id)
 
 	var movie dto.MovieDetailDTO
@@ -55,7 +78,7 @@ func FindMovieByIdAndStatusNotJoinMovieType(id string, status int) (*dto.MovieDe
 }
 
 // SaveMovie : Save Movie
-func SaveMovie(movie model.Movie) (*model.Movie, error) {
+func (obj *MovieRepository) SaveMovie(movie model.Movie) (*model.Movie, error) {
 	if err := db.Save(&movie).Error; err != nil {
 		return nil, err
 	}
