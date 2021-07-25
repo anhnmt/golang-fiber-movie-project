@@ -12,6 +12,10 @@ type GenreController struct {
 	genreRepository *repository.TagRepository
 }
 
+func NewGenreController() *GenreController {
+	return genreController
+}
+
 // FindAllGenres : Find all genres by Status = 1
 func FindAllGenres(c *fiber.Ctx) error {
 	genres, err := repository.FindAllGenresByStatusNot(util.StatusDeleted)

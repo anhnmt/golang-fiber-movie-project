@@ -1,35 +1,44 @@
 package repository
 
 import (
-	"errors"
 	"github.com/xdorro/golang-fiber-base-project/app/entity/model"
 	"gorm.io/gorm"
 )
 
+type EpisodeDetailRepository struct {
+	db *gorm.DB
+}
+
+func NewEpisodeDetailRepository() *EpisodeDetailRepository {
+	return episodeDetailRepository
+}
+
 // CreateEpisodeDetailsByEpisodeId : Create MovieGenre By MovieId
-func CreateEpisodeDetailsByEpisodeId(episodeDetails []model.EpisodeDetail) error {
-	err := db.Model(model.EpisodeDetail{}).Create(&episodeDetails).Error
+func (obj *EpisodeDetailRepository) CreateEpisodeDetailsByEpisodeId(episodeDetails []model.EpisodeDetail) error {
+	err := obj.db.Model(model.EpisodeDetail{}).Create(&episodeDetails).Error
 
 	return err
 }
 
-func FindEpisodeDetailsByIdAndStatusNot(id string, status []int) (*[]model.EpisodeDetail, error) {
+func (obj *EpisodeDetailRepository) FindEpisodeDetailsByIdAndStatusNot(id string, status []int) (*[]model.EpisodeDetail, error) {
 	episodeDetails := make([]model.EpisodeDetail, 0)
 
-	if err := db.
+	err := db.
 		Model(&model.Episode{}).
 		Select("episode_details.*").
 		Joins("LEFT JOIN episode_details ON episode_details.episode_id = episodes.episode_id").
 		Where("episodes.episode_id = ?", id).
 		Where("episodes.status NOT IN ?", status).
 		Where("episode_details.status NOT IN ?", status).
-		Find(&episodeDetails).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
+		Find(&episodeDetails).Error
 
-		return nil, err
-	}
+	return &episodeDetails, err
+}
 
-	return &episodeDetails, nil
+func (obj *EpisodeDetailRepository) UpdateStatusByEpisodeId(episodeId string, status int) error {
+	err := obj.db.Model(&model.Movie{}).
+		Where("episode_id = ?", episodeId).
+		Update("status", status).Error
+
+	return err
 }

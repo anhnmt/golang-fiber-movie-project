@@ -85,11 +85,12 @@ func privateRoute(a fiber.Router) {
 	movieDetails.Get("/tags", controller.FindMovieById)
 
 	// Movie Episode
-	movieDetails.Get("/episodes", controller.FindAllEpisodesByMovieId)
-	movieDetails.Post("/episodes", controller.CreateEpisodesByMovieId)
-	movieDetails.Get("/episodes/:episodeId", controller.FindEpisodeByMovieIdAndEpisodeId)
-	movieDetails.Put("/episodes/:episodeId", controller.UpdateEpisodesByMovieIdAndEpisodeId)
-	movieDetails.Delete("/episodes/:episodeId", controller.UpdateEpisodesByMovieIdAndEpisodeId)
+	episodeController := controller.NewEpisodeController()
+	movieDetails.Get("/episodes", episodeController.FindAllEpisodesByMovieId)
+	movieDetails.Post("/episodes", episodeController.CreateEpisodesByMovieId)
+	movieDetails.Get("/episodes/:episodeId", episodeController.FindEpisodeByMovieIdAndEpisodeId)
+	movieDetails.Put("/episodes/:episodeId", episodeController.UpdateEpisodesByMovieIdAndEpisodeId)
+	movieDetails.Delete("/episodes/:episodeId", episodeController.DeleteEpisodesByMovieIdAndEpisodeId)
 
 	// Episodes Group
 	episodes := a.Group("/episodes")

@@ -2,11 +2,18 @@ package repository
 
 import (
 	"github.com/xdorro/golang-fiber-base-project/app/entity/model"
-	"github.com/xdorro/golang-fiber-base-project/pkg/util"
+	"gorm.io/gorm"
 )
 
-func FindAllEpisodesByMovieIdAndStatusNot(id string, status int) (*[]model.Episode, error) {
-	movieId := util.ParseStringToUInt(id)
+type EpisodeRepository struct {
+	db *gorm.DB
+}
+
+func NewEpisodeRepository() *EpisodeRepository {
+	return episodeRepository
+}
+
+func (obj *EpisodeRepository) FindAllEpisodesByMovieIdAndStatusNot(movieId string, status int) (*[]model.Episode, error) {
 	episodes := make([]model.Episode, 0)
 
 	err := db.Model(model.Episode{}).Find(&episodes, "movie_id = ? AND status <> ?", movieId, status).Error
@@ -14,20 +21,17 @@ func FindAllEpisodesByMovieIdAndStatusNot(id string, status int) (*[]model.Episo
 	return &episodes, err
 }
 
-func FindEpisodeByIdAndStatusNot(id string, status int) (*model.Episode, error) {
-	movieId := util.ParseStringToUInt(id)
+func (obj *EpisodeRepository) FindEpisodeByIdAndStatusNot(episodeId string, status int) (*model.Episode, error) {
 	episode := new(model.Episode)
 
-	err := db.Model(model.Episode{}).Find(&episode, "episode_id = ? AND status <> ?", movieId, status).Error
+	err := db.Model(model.Episode{}).Find(&episode, "episode_id = ? AND status <> ?", episodeId, status).Error
 
 	return episode, err
 }
 
 // SaveEpisode : Save Episode
-func SaveEpisode(episode model.Episode) (*model.Episode, error) {
-	if err := db.Model(model.Episode{}).Save(&episode).Error; err != nil {
-		return nil, err
-	}
+func (obj *EpisodeRepository) SaveEpisode(episode model.Episode) (*model.Episode, error) {
+	err := db.Model(model.Episode{}).Save(&episode).Error
 
-	return &episode, nil
+	return &episode, err
 }
