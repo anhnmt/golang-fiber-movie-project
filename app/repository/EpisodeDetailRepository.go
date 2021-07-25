@@ -30,7 +30,8 @@ func NewEpisodeDetailRepository() *EpisodeDetailRepository {
 
 // CreateEpisodeDetailsByEpisodeId : Create MovieGenre By MovieId
 func (obj *EpisodeDetailRepository) CreateEpisodeDetailsByEpisodeId(episodeDetails []model.EpisodeDetail) error {
-	err := obj.db.Model(model.EpisodeDetail{}).Create(&episodeDetails).Error
+	err := obj.db.Model(model.EpisodeDetail{}).
+		Create(&episodeDetails).Error
 
 	return err
 }

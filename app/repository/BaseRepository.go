@@ -24,4 +24,6 @@ var (
 	episodeTypeRepository *EpisodeTypeRepository
 
 	movieRepository *MovieRepository
+
+	movieTypeRepository *MovieTypeRepository
 )

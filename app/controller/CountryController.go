@@ -6,10 +6,31 @@ import (
 	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-base-project/app/repository"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
+	"log"
+	"sync"
 )
 
+type CountryController struct {
+	//countryRepository *repository.CountryRepository
+}
+
+func NewCountryController() *CountryController {
+	if countryController == nil {
+		once = &sync.Once{}
+
+		once.Do(func() {
+			countryController = &CountryController{
+				//countryRepository: repository.NewCountryRepository(),
+			}
+			log.Println("Create new CountryController")
+		})
+	}
+
+	return countryController
+}
+
 // FindAllCountries : Find all countries by Status = 1
-func FindAllCountries(c *fiber.Ctx) error {
+func (obj *CountryController) FindAllCountries(c *fiber.Ctx) error {
 	countries, err := repository.FindAllCountriesByStatusNot(util.StatusDeleted)
 
 	if err != nil {
@@ -20,7 +41,7 @@ func FindAllCountries(c *fiber.Ctx) error {
 }
 
 // FindCountryById : Find country by Country_Id and Status = 1
-func FindCountryById(c *fiber.Ctx) error {
+func (obj *CountryController) FindCountryById(c *fiber.Ctx) error {
 	countryId := c.Params("id")
 	country, err := repository.FindCountryByIdAndStatusNot(countryId, util.StatusDeleted)
 
@@ -32,7 +53,7 @@ func FindCountryById(c *fiber.Ctx) error {
 }
 
 // CreateNewCountry : Create a new country
-func CreateNewCountry(c *fiber.Ctx) error {
+func (obj *CountryController) CreateNewCountry(c *fiber.Ctx) error {
 	countryRequest := new(request.CountryRequest)
 
 	if err := c.BodyParser(countryRequest); err != nil {
@@ -53,7 +74,7 @@ func CreateNewCountry(c *fiber.Ctx) error {
 }
 
 // UpdateCountryById : Update country by Country_Id and Status = 1
-func UpdateCountryById(c *fiber.Ctx) error {
+func (obj *CountryController) UpdateCountryById(c *fiber.Ctx) error {
 	countryId := c.Params("id")
 
 	country, err := repository.FindCountryByIdAndStatusNot(countryId, util.StatusDeleted)
@@ -79,7 +100,7 @@ func UpdateCountryById(c *fiber.Ctx) error {
 }
 
 // DeleteCountryById : Delete country by Country_Id and Status = 1
-func DeleteCountryById(c *fiber.Ctx) error {
+func (obj *CountryController) DeleteCountryById(c *fiber.Ctx) error {
 	countryId := c.Params("id")
 	country, err := repository.FindCountryByIdAndStatusNot(countryId, util.StatusDeleted)
 

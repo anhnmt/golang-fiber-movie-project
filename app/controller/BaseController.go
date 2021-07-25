@@ -13,5 +13,9 @@ var (
 
 	episodeTypeController *EpisodeTypeController
 
+	countryController *CountryController
+
 	movieController *MovieController
+
+	movieTypeController *MovieTypeController
 )
