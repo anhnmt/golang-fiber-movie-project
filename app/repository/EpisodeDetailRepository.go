@@ -30,7 +30,8 @@ func NewEpisodeDetailRepository() *EpisodeDetailRepository {
 
 // CreateEpisodeDetailsByEpisodeId : Create MovieGenre By MovieId
 func (obj *EpisodeDetailRepository) CreateEpisodeDetailsByEpisodeId(episodeDetails []model.EpisodeDetail) error {
-	err := obj.db.Model(model.EpisodeDetail{}).
+	err := obj.db.
+		Model(model.EpisodeDetail{}).
 		Create(&episodeDetails).Error
 
 	return err
@@ -39,7 +40,7 @@ func (obj *EpisodeDetailRepository) CreateEpisodeDetailsByEpisodeId(episodeDetai
 func (obj *EpisodeDetailRepository) FindEpisodeDetailsByIdAndStatusNot(id string, status []int) (*[]model.EpisodeDetail, error) {
 	episodeDetails := make([]model.EpisodeDetail, 0)
 
-	err := db.
+	err := obj.db.
 		Model(&model.Episode{}).
 		Select("episode_details.*").
 		Joins("LEFT JOIN episode_details ON episode_details.episode_id = episodes.episode_id").
@@ -52,7 +53,8 @@ func (obj *EpisodeDetailRepository) FindEpisodeDetailsByIdAndStatusNot(id string
 }
 
 func (obj *EpisodeDetailRepository) UpdateStatusByEpisodeId(episodeId string, status int) error {
-	err := obj.db.Model(&model.Movie{}).
+	err := obj.db.
+		Model(&model.EpisodeDetail{}).
 		Where("episode_id = ?", episodeId).
 		Update("status", status).Error
 

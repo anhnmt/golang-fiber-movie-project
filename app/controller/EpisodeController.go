@@ -174,15 +174,13 @@ func (obj *EpisodeController) DeleteEpisodesByMovieIdAndEpisodeId(c *fiber.Ctx) 
 		return err
 	}
 
-	episode, err := validator.ValidateEpisodeId(episodeId)
+	_, err = validator.ValidateEpisodeId(episodeId)
 	if err != nil {
 		return err
 	}
 
-	episode.Status = util.StatusDeleted
-
 	// Update episode status
-	if _, err = obj.episodeRepository.SaveEpisode(*episode); err != nil {
+	if err = obj.episodeRepository.UpdateStatusByEpisodeId(episodeId, util.StatusDeleted); err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 

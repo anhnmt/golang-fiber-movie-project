@@ -2,7 +2,6 @@ package repository
 
 import (
 	"github.com/xdorro/golang-fiber-base-project/app/entity/model"
-	"github.com/xdorro/golang-fiber-base-project/pkg/util"
 	"gorm.io/gorm"
 	"log"
 	"sync"
@@ -40,11 +39,10 @@ func (obj *EpisodeTypeRepository) FindAllEpisodeTypesByStatusNot(status int) (*[
 }
 
 func (obj *EpisodeTypeRepository) FindEpisodeTypeByIdAndStatusNot(id string, status int) (*model.EpisodeType, error) {
-	uid := util.ParseStringToUInt(id)
-
 	var episodeType model.EpisodeType
-	err := obj.db.Model(&model.EpisodeDetail{}).
-		Where("episode_type_id = ? AND status <> ?", uid, status).
+
+	err := obj.db.Model(&model.EpisodeType{}).
+		Where("episode_type_id = ? AND status <> ?", id, status).
 		Find(&episodeType).Error
 
 	return &episodeType, err
@@ -52,14 +50,14 @@ func (obj *EpisodeTypeRepository) FindEpisodeTypeByIdAndStatusNot(id string, sta
 
 // SaveEpisodeType : Save Episode Type
 func (obj *EpisodeTypeRepository) SaveEpisodeType(episodeType model.EpisodeType) (*model.EpisodeType, error) {
-	err := obj.db.Model(&model.EpisodeDetail{}).
+	err := obj.db.Model(&model.EpisodeType{}).
 		Save(&episodeType).Error
 
 	return &episodeType, err
 }
 
 func (obj *EpisodeTypeRepository) UpdateStatusByEpisodeTypeId(episodeTypeId uint, status int) error {
-	err := obj.db.Model(&model.EpisodeDetail{}).
+	err := obj.db.Model(&model.EpisodeType{}).
 		Where("episode_type_id = ?", episodeTypeId).
 		Update("status", status).Error
 

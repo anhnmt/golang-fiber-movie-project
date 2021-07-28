@@ -1,8 +1,7 @@
 APP_NAME=golang-fiber-base-project
 APP_VERSION=1.0.0
 BUILD_DIR=./build
-DOCKER_LOCAL=localhost:5000
-DOCKER_SERVER=198.13.57.211:5000
+DOCKER_LOCAL=ghcr.io/xdorro
 
 config:
 	cp config.example.yml config.yml
@@ -83,7 +82,3 @@ docker.run:
 docker.deploy: docker.build docker.run
 
 docker.local: docker.build docker.push
-
-docker.server:
-	docker tag $(DOCKER_LOCAL)/$(APP_NAME):$(APP_VERSION) $(DOCKER_SERVER)/$(APP_NAME):$(APP_VERSION)
-	docker push $(DOCKER_SERVER)/$(APP_NAME):$(APP_VERSION)
