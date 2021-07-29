@@ -6,7 +6,6 @@ import (
 	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-base-project/app/entity/response"
 	"github.com/xdorro/golang-fiber-base-project/app/repository"
-	"github.com/xdorro/golang-fiber-base-project/pkg/mapper"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
 	"github.com/xdorro/golang-fiber-base-project/pkg/validator"
 	"log"
@@ -50,13 +49,8 @@ func (obj *EpisodeController) FindAllEpisodesByMovieId(c *fiber.Ctx) error {
 	return util.ResponseSuccess("Thành công", episodes)
 }
 
-func (obj *EpisodeController) FindEpisodeByMovieIdAndEpisodeId(c *fiber.Ctx) error {
-	movieId := c.Params("id")
+func (obj *EpisodeController) FindEpisodeByEpisodeId(c *fiber.Ctx) error {
 	episodeId := c.Params("episodeId")
-
-	if _, err := validator.ValidateMovieId(movieId); err != nil {
-		return err
-	}
 
 	episode, err := validator.ValidateEpisodeId(episodeId)
 
@@ -111,18 +105,13 @@ func (obj *EpisodeController) CreateEpisodesByMovieId(c *fiber.Ctx) error {
 		return util.ResponseBadRequest("Thêm mới thất bại", nil)
 	}
 
-	if err = obj.createEpisodeDetails(&episode.EpisodeId, &episodeRequest.EpisodeDetail); err != nil {
-		return util.ResponseError(err.Error(), nil)
-	}
-
 	return util.ResponseSuccess("Thành công", nil)
 }
 
-func (obj *EpisodeController) UpdateEpisodesByMovieIdAndEpisodeId(c *fiber.Ctx) error {
-	movieId := c.Params("id")
-	//episodeId := c.Params("episodeId")
+func (obj *EpisodeController) UpdateEpisodesByEpisodeId(c *fiber.Ctx) error {
+	episodeId := c.Params("episodeId")
 
-	movie, err := validator.ValidateMovieId(movieId)
+	episode, err := validator.ValidateEpisodeId(episodeId)
 	if err != nil {
 		return err
 	}
@@ -132,13 +121,10 @@ func (obj *EpisodeController) UpdateEpisodesByMovieIdAndEpisodeId(c *fiber.Ctx) 
 		return util.ResponseError(err.Error(), nil)
 	}
 
-	newEpisode := model.Episode{
-		MovieId: movie.MovieId,
-		Name:    episodeRequest.Name,
-		Status:  episodeRequest.Status,
-	}
+	episode.Name = episodeRequest.Name
+	episode.Status = episodeRequest.Status
 
-	episode, err := obj.episodeRepository.SaveEpisode(newEpisode)
+	episode, err = obj.episodeRepository.UpdateEpisode(episodeId, *episode)
 	if err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
@@ -147,34 +133,13 @@ func (obj *EpisodeController) UpdateEpisodesByMovieIdAndEpisodeId(c *fiber.Ctx) 
 		return util.ResponseBadRequest("Thêm mới thất bại", nil)
 	}
 
-	if err = obj.createEpisodeDetails(&episode.EpisodeId, &episodeRequest.EpisodeDetail); err != nil {
-		return util.ResponseError(err.Error(), nil)
-	}
-
 	return util.ResponseSuccess("Thành công", nil)
 }
 
-func (obj *EpisodeController) createEpisodeDetails(episodeId *uint, newEpisodeDetails *[]request.EpisodeDetailRequest) error {
-	if len(*newEpisodeDetails) > 0 {
-		// Create Movie Genre
-		episodeDetails := mapper.EpisodeDetails(episodeId, newEpisodeDetails)
-
-		return obj.episodeDetailRepository.CreateEpisodeDetailsByEpisodeId(episodeDetails)
-	}
-
-	return nil
-}
-
-func (obj *EpisodeController) DeleteEpisodesByMovieIdAndEpisodeId(c *fiber.Ctx) error {
-	movieId := c.Params("id")
+func (obj *EpisodeController) DeleteEpisodesByEpisodeId(c *fiber.Ctx) error {
 	episodeId := c.Params("episodeId")
 
-	_, err := validator.ValidateMovieId(movieId)
-	if err != nil {
-		return err
-	}
-
-	_, err = validator.ValidateEpisodeId(episodeId)
+	_, err := validator.ValidateEpisodeId(episodeId)
 	if err != nil {
 		return err
 	}

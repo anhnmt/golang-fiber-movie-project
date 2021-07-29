@@ -18,4 +18,6 @@ var (
 	movieController *MovieController
 
 	movieTypeController *MovieTypeController
+
+	episodeDetailController *EpisodeDetailController
 )

@@ -29,12 +29,20 @@ func NewEpisodeDetailRepository() *EpisodeDetailRepository {
 }
 
 // CreateEpisodeDetailsByEpisodeId : Create MovieGenre By MovieId
-func (obj *EpisodeDetailRepository) CreateEpisodeDetailsByEpisodeId(episodeDetails []model.EpisodeDetail) error {
+func (obj *EpisodeDetailRepository) CreateEpisodeDetailsByEpisodeId(episodeDetail model.EpisodeDetail) error {
 	err := obj.db.
 		Model(model.EpisodeDetail{}).
-		Create(&episodeDetails).Error
+		Create(&episodeDetail).Error
 
 	return err
+}
+
+func (obj *EpisodeDetailRepository) UpdateEpisodeDetail(episodeDetailId string, episodeDetail model.EpisodeDetail) (*model.EpisodeDetail, error) {
+	err := db.Model(model.EpisodeDetail{}).
+		Where("episode_detail_id = ?", episodeDetailId).
+		Save(&episodeDetail).Error
+
+	return &episodeDetail, err
 }
 
 func (obj *EpisodeDetailRepository) FindEpisodeDetailsByIdAndStatusNot(id string, status []int) (*[]model.EpisodeDetail, error) {
@@ -52,10 +60,44 @@ func (obj *EpisodeDetailRepository) FindEpisodeDetailsByIdAndStatusNot(id string
 	return &episodeDetails, err
 }
 
+func (obj *EpisodeDetailRepository) FindEpisodeDetailByEpisodeIdAndEpisodeDetailIdAndStatusNot(episodeId string, episodeDetailId string, status []int) (*model.EpisodeDetail, error) {
+	episodeDetail := new(model.EpisodeDetail)
+
+	err := obj.db.
+		Model(&model.EpisodeDetail{}).
+		Where("episode_id = ?", episodeId).
+		Where("episode_detail_id = ?", episodeDetailId).
+		Where("status NOT IN ?", status).
+		Find(&episodeDetail).Error
+
+	return episodeDetail, err
+}
+
+func (obj *EpisodeDetailRepository) FindEpisodeDetailByIdAndStatusNot(episodeDetailId string, status []int) (*model.EpisodeDetail, error) {
+	episodeDetail := new(model.EpisodeDetail)
+
+	err := obj.db.
+		Model(&model.EpisodeDetail{}).
+		Where("episode_detail_id = ?", episodeDetailId).
+		Where("status NOT IN ?", status).
+		Find(&episodeDetail).Error
+
+	return episodeDetail, err
+}
+
 func (obj *EpisodeDetailRepository) UpdateStatusByEpisodeId(episodeId string, status int) error {
 	err := obj.db.
 		Model(&model.EpisodeDetail{}).
 		Where("episode_id = ?", episodeId).
+		Update("status", status).Error
+
+	return err
+}
+
+func (obj *EpisodeDetailRepository) UpdateStatusByEpisodeDetailId(episodeDetailId string, status int) error {
+	err := obj.db.
+		Model(&model.EpisodeDetail{}).
+		Where("episode_detail_id = ?", episodeDetailId).
 		Update("status", status).Error
 
 	return err

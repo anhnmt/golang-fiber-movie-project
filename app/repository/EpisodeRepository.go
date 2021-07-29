@@ -54,6 +54,14 @@ func (obj *EpisodeRepository) SaveEpisode(episode model.Episode) (*model.Episode
 	return &episode, err
 }
 
+func (obj *EpisodeRepository) UpdateEpisode(episodeId string, episode model.Episode) (*model.Episode, error) {
+	err := db.Model(model.Episode{}).
+		Where("episode_id = ?", episodeId).
+		Save(&episode).Error
+
+	return &episode, err
+}
+
 func (obj *EpisodeRepository) UpdateStatusByEpisodeId(episodeId string, status int) error {
 	err := obj.db.Model(&model.Episode{}).
 		Where("episode_id = ?", episodeId).

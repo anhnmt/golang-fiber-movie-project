@@ -92,19 +92,31 @@ func privateRoute(a fiber.Router) {
 	episodeController := controller.NewEpisodeController()
 	movieDetails.Get("/episodes", episodeController.FindAllEpisodesByMovieId)
 	movieDetails.Post("/episodes", episodeController.CreateEpisodesByMovieId)
-	movieDetails.Get("/episodes/:episodeId", episodeController.FindEpisodeByMovieIdAndEpisodeId)
-	movieDetails.Put("/episodes/:episodeId", episodeController.UpdateEpisodesByMovieIdAndEpisodeId)
-	movieDetails.Delete("/episodes/:episodeId", episodeController.DeleteEpisodesByMovieIdAndEpisodeId)
-
-	// Episodes Group
-	episodes := a.Group("/episodes")
 
 	// Episode Type
 	episodeTypeController := controller.NewEpisodeTypeController()
-	episodeTypes := episodes.Group("/types")
+	episodeTypes := a.Group("/episode-types")
 	episodeTypes.Get("/", episodeTypeController.FindAllEpisodeTypes)
 	episodeTypes.Post("/", episodeTypeController.CreateNewEpisodeType)
 	episodeTypes.Get("/:id", episodeTypeController.FindEpisodeTypeById)
 	episodeTypes.Put("/:id", episodeTypeController.UpdateEpisodeTypeById)
 	episodeTypes.Delete("/:id", episodeTypeController.DeleteEpisodeTypeById)
+
+	// Episodes Group
+	episodes := a.Group("/episodes")
+
+	episodeDetail := episodes.Group("/:episodeId")
+
+	episodeDetail.Get("/", episodeController.FindEpisodeByEpisodeId)
+	episodeDetail.Put("/", episodeController.UpdateEpisodesByEpisodeId)
+	episodeDetail.Delete("/", episodeController.DeleteEpisodesByEpisodeId)
+
+	// Episode Detail
+	episodeDetailController := controller.NewEpisodeDetailController()
+	episodeDetail.Post("/", episodeDetailController.CreateEpisodeDetailById)
+
+	episodeDetails := episodeDetail.Group("/details")
+	episodeDetails.Get("/:episodeDetailId", episodeDetailController.FindEpisodeDetailById)
+	episodeDetails.Put("/:episodeDetailId", episodeDetailController.UpdateEpisodeDetailById)
+	episodeDetails.Delete("/:episodeDetailId", episodeDetailController.DeleteEpisodeDetailById)
 }
