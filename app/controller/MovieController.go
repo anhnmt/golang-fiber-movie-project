@@ -78,21 +78,35 @@ func (obj *MovieController) ClientTopMovieSidebar(c *fiber.Ctx) error {
 func (obj *MovieController) ClientTopMoviesBody(c *fiber.Ctx) error {
 	status := []int{util.StatusDraft, util.StatusDeleted}
 
-	movies, err := obj.movieRepository.FindAllTopMoviesByMovieTypeIdAndStatusNotInAndLimit(1, status, 5)
+	movies, err := obj.movieRepository.FindAllTopMoviesByGenreIdAndStatusNotInAndLimit(1, status, 5)
 
 	if err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
-	series, err := obj.movieRepository.FindAllTopMoviesByMovieTypeIdAndStatusNotInAndLimit(2, status, 5)
+	series, err := obj.movieRepository.FindAllTopMoviesByGenreIdAndStatusNotInAndLimit(2, status, 5)
 
 	if err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
-	result := response.TopMovieSidebarResponse{
-		Movies: *movies,
-		Series: *series,
+	cinemas, err := obj.movieRepository.FindAllTopMoviesByGenreIdAndStatusNotInAndLimit(2, status, 5)
+
+	if err != nil {
+		return util.ResponseError(err.Error(), nil)
+	}
+
+	cartoons, err := obj.movieRepository.FindAllTopMoviesByGenreIdAndStatusNotInAndLimit(2, status, 5)
+
+	if err != nil {
+		return util.ResponseError(err.Error(), nil)
+	}
+
+	result := response.TopMovieBodyResponse{
+		Cinemas:  *cinemas,
+		Movies:   *movies,
+		Series:   *series,
+		Cartoons: *cartoons,
 	}
 
 	return util.ResponseSuccess("Thành công", result)

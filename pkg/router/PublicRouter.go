@@ -18,5 +18,6 @@ func publicRoute(a fiber.Router) {
 
 	// Movie Controller
 	movieController := controller.NewMovieController()
-	clients.Get("/top-movies", movieController.ClientTopMovieSidebar)
+	clients.Get("/top-movies-sidebar", movieController.ClientTopMovieSidebar)
+	clients.Get("/top-movies-body", movieController.ClientTopMoviesBody)
 }
