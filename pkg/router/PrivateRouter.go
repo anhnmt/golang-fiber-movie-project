@@ -6,6 +6,8 @@ import (
 )
 
 func privateRoute(a fiber.Router) {
+	// Using Protected
+	//private := a.Group("/", middleware.Protected())
 
 	// Tags Controller
 	tagController := controller.NewTagController()

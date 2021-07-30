@@ -26,8 +26,8 @@ func ResponseError(message string, data interface{}) error {
 	return jsonResponse(status, message, data)
 }
 
-// ResponseUnauthenticated : returning json structure for validation error request
-func ResponseUnauthenticated(message string, data interface{}) error {
+// ResponseUnauthorized : returning json structure for validation error request
+func ResponseUnauthorized(message string, data interface{}) error {
 	status := fiber.StatusUnauthorized
 
 	return jsonResponse(status, message, data)
