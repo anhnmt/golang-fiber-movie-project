@@ -75,6 +75,29 @@ func (obj *MovieController) ClientTopMovieSidebar(c *fiber.Ctx) error {
 	return util.ResponseSuccess("Thành công", result)
 }
 
+func (obj *MovieController) ClientTopMoviesBody(c *fiber.Ctx) error {
+	status := []int{util.StatusDraft, util.StatusDeleted}
+
+	movies, err := obj.movieRepository.FindAllTopMoviesByMovieTypeIdAndStatusNotInAndLimit(1, status, 5)
+
+	if err != nil {
+		return util.ResponseError(err.Error(), nil)
+	}
+
+	series, err := obj.movieRepository.FindAllTopMoviesByMovieTypeIdAndStatusNotInAndLimit(2, status, 5)
+
+	if err != nil {
+		return util.ResponseError(err.Error(), nil)
+	}
+
+	result := response.TopMovieSidebarResponse{
+		Movies: *movies,
+		Series: *series,
+	}
+
+	return util.ResponseSuccess("Thành công", result)
+}
+
 // FindMovieById : Find movie by Movie_Id and Status
 func (obj *MovieController) FindMovieById(c *fiber.Ctx) error {
 	movieId := c.Params("id")

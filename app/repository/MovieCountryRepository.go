@@ -7,7 +7,7 @@ import (
 // CreateMovieCountryByMovieId : Create MovieCountry By MovieId
 func CreateMovieCountryByMovieId(movieCountries []model.MovieCountry) error {
 	err := db.
-		Model(&model.Country{}).
+		Model(&model.MovieCountry{}).
 		Create(&movieCountries).Error
 
 	return err
