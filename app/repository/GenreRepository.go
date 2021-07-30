@@ -3,9 +3,34 @@ package repository
 import (
 	"github.com/xdorro/golang-fiber-base-project/app/entity/model"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
+	"gorm.io/gorm"
+	"log"
+	"sync"
 )
 
-func FindAllGenresByStatusNot(status int) (*[]model.Genre, error) {
+type GenreRepository struct {
+	db *gorm.DB
+}
+
+func NewGenreRepository() *GenreRepository {
+	if genreRepository == nil {
+		once = &sync.Once{}
+
+		once.Do(func() {
+			if genreRepository == nil {
+				genreRepository = &GenreRepository{
+					db: db,
+				}
+
+				log.Println("Create new GenreRepository")
+			}
+		})
+	}
+
+	return genreRepository
+}
+
+func (obj *GenreRepository) FindAllGenresByStatusNot(status int) (*[]model.Genre, error) {
 	genres := make([]model.Genre, 0)
 
 	err := db.Model(model.Genre{}).
@@ -14,7 +39,16 @@ func FindAllGenresByStatusNot(status int) (*[]model.Genre, error) {
 	return &genres, err
 }
 
-func FindAllGenresByGenreIdsInAndStatusNotIn(genreIds []uint, status []int) (*[]model.Genre, error) {
+func (obj *GenreRepository) FindAllGenresByStatusNotIn(status []int) (*[]model.Genre, error) {
+	genres := make([]model.Genre, 0)
+
+	err := db.Model(model.Genre{}).
+		Find(&genres, "status NOT IN ?", status).Error
+
+	return &genres, err
+}
+
+func (obj *GenreRepository) FindAllGenresByGenreIdsInAndStatusNotIn(genreIds []uint, status []int) (*[]model.Genre, error) {
 	genres := make([]model.Genre, 0)
 
 	err := db.Model(model.Genre{}).
@@ -23,7 +57,7 @@ func FindAllGenresByGenreIdsInAndStatusNotIn(genreIds []uint, status []int) (*[]
 	return &genres, err
 }
 
-func FindGenreByIdAndStatusNot(id string, status int) (*model.Genre, error) {
+func (obj *GenreRepository) FindGenreByIdAndStatusNot(id string, status int) (*model.Genre, error) {
 	uid := util.ParseStringToUInt(id)
 
 	var genre model.Genre
@@ -34,7 +68,7 @@ func FindGenreByIdAndStatusNot(id string, status int) (*model.Genre, error) {
 	return &genre, err
 }
 
-func SaveGenre(genre model.Genre) (*model.Genre, error) {
+func (obj *GenreRepository) SaveGenre(genre model.Genre) (*model.Genre, error) {
 	err := db.Model(model.Genre{}).
 		Save(&genre).Error
 

@@ -26,4 +26,8 @@ var (
 	movieRepository *MovieRepository
 
 	movieTypeRepository *MovieTypeRepository
+
+	countryRepository *CountryRepository
+
+	genreRepository *GenreRepository
 )

@@ -11,7 +11,7 @@ import (
 )
 
 type CountryController struct {
-	//countryRepository *repository.CountryRepository
+	countryRepository *repository.CountryRepository
 }
 
 func NewCountryController() *CountryController {
@@ -20,7 +20,7 @@ func NewCountryController() *CountryController {
 
 		once.Do(func() {
 			countryController = &CountryController{
-				//countryRepository: repository.NewCountryRepository(),
+				countryRepository: repository.NewCountryRepository(),
 			}
 			log.Println("Create new CountryController")
 		})
@@ -31,7 +31,17 @@ func NewCountryController() *CountryController {
 
 // FindAllCountries : Find all countries by Status = 1
 func (obj *CountryController) FindAllCountries(c *fiber.Ctx) error {
-	countries, err := repository.FindAllCountriesByStatusNot(util.StatusDeleted)
+	countries, err := obj.countryRepository.FindAllCountriesByStatusNot(util.StatusDeleted)
+
+	if err != nil {
+		return util.ResponseError(err.Error(), nil)
+	}
+
+	return util.ResponseSuccess("Thành công", countries)
+}
+
+func (obj *CountryController) ClientFindAllCountries(c *fiber.Ctx) error {
+	countries, err := obj.countryRepository.FindAllCountriesByStatusNotIn([]int{util.StatusDraft, util.StatusDeleted})
 
 	if err != nil {
 		return util.ResponseError(err.Error(), nil)
@@ -43,7 +53,7 @@ func (obj *CountryController) FindAllCountries(c *fiber.Ctx) error {
 // FindCountryById : Find country by Country_Id and Status = 1
 func (obj *CountryController) FindCountryById(c *fiber.Ctx) error {
 	countryId := c.Params("id")
-	country, err := repository.FindCountryByIdAndStatusNot(countryId, util.StatusDeleted)
+	country, err := obj.countryRepository.FindCountryByIdAndStatusNot(countryId, util.StatusDeleted)
 
 	if err != nil || country.CountryId == 0 {
 		return util.ResponseBadRequest("ID không tồn tại", err)
@@ -66,7 +76,7 @@ func (obj *CountryController) CreateNewCountry(c *fiber.Ctx) error {
 		Status: countryRequest.Status,
 	}
 
-	if _, err := repository.SaveCountry(country); err != nil {
+	if _, err := obj.countryRepository.SaveCountry(country); err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
@@ -77,7 +87,7 @@ func (obj *CountryController) CreateNewCountry(c *fiber.Ctx) error {
 func (obj *CountryController) UpdateCountryById(c *fiber.Ctx) error {
 	countryId := c.Params("id")
 
-	country, err := repository.FindCountryByIdAndStatusNot(countryId, util.StatusDeleted)
+	country, err := obj.countryRepository.FindCountryByIdAndStatusNot(countryId, util.StatusDeleted)
 
 	if err != nil || country.CountryId == 0 {
 		return util.ResponseBadRequest("ID không tồn tại", err)
@@ -92,7 +102,7 @@ func (obj *CountryController) UpdateCountryById(c *fiber.Ctx) error {
 	country.Slug = countryRequest.Slug
 	country.Status = countryRequest.Status
 
-	if _, err = repository.SaveCountry(*country); err != nil {
+	if _, err = obj.countryRepository.SaveCountry(*country); err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
@@ -102,7 +112,7 @@ func (obj *CountryController) UpdateCountryById(c *fiber.Ctx) error {
 // DeleteCountryById : Delete country by Country_Id and Status = 1
 func (obj *CountryController) DeleteCountryById(c *fiber.Ctx) error {
 	countryId := c.Params("id")
-	country, err := repository.FindCountryByIdAndStatusNot(countryId, util.StatusDeleted)
+	country, err := obj.countryRepository.FindCountryByIdAndStatusNot(countryId, util.StatusDeleted)
 
 	if err != nil || country.CountryId == 0 {
 		return util.ResponseBadRequest("ID không tồn tại", err)
@@ -110,7 +120,7 @@ func (obj *CountryController) DeleteCountryById(c *fiber.Ctx) error {
 
 	country.Status = util.StatusDeleted
 
-	if _, err = repository.SaveCountry(*country); err != nil {
+	if _, err = obj.countryRepository.SaveCountry(*country); err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 

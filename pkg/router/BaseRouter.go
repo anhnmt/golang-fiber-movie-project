@@ -18,7 +18,12 @@ func BaseRouter(app *fiber.App) {
 	app.Get("/swagger/*", swagger.Handler)
 
 	api := app.Group("/api")
+
+	// Private router
 	privateRoute(api)
+
+	// Public router
+	publicRoute(api)
 
 	// Auth Router
 	authRouter(api)

@@ -14,7 +14,9 @@ import (
 )
 
 type MovieController struct {
-	movieRepository *repository.MovieRepository
+	movieRepository   *repository.MovieRepository
+	countryRepository *repository.CountryRepository
+	genreRepository   *repository.GenreRepository
 }
 
 func NewMovieController() *MovieController {
@@ -24,7 +26,9 @@ func NewMovieController() *MovieController {
 		once.Do(func() {
 			if movieController == nil {
 				movieController = &MovieController{
-					movieRepository: repository.NewMovieRepository(),
+					movieRepository:   repository.NewMovieRepository(),
+					countryRepository: repository.NewCountryRepository(),
+					genreRepository:   repository.NewGenreRepository(),
 				}
 				log.Println("Create new MovieController")
 			}
@@ -156,7 +160,7 @@ func (obj *MovieController) DeleteMovieById(c *fiber.Ctx) error {
 func (obj *MovieController) createMovieGenres(movieId *uint, newGenreIds *[]uint) error {
 	if len(*newGenreIds) > 0 {
 		// Find genreIds in Genres
-		genres, err := repository.FindAllGenresByGenreIdsInAndStatusNotIn(*newGenreIds, []int{util.StatusDeleted, util.StatusDraft})
+		genres, err := obj.genreRepository.FindAllGenresByGenreIdsInAndStatusNotIn(*newGenreIds, []int{util.StatusDeleted, util.StatusDraft})
 		if err != nil {
 			return util.ResponseError(err.Error(), nil)
 		}
@@ -211,7 +215,7 @@ func (obj *MovieController) updateMovieGenres(movieId *uint, newGenreIds *[]uint
 func (obj *MovieController) createMovieCountries(movieId *uint, newCountryIds *[]uint) error {
 	if len(*newCountryIds) > 0 {
 		// Find countryIds in Countries
-		countries, err := repository.FindAllCountriesByCountryIdsInAndStatusNotIn(*newCountryIds, []int{util.StatusDeleted, util.StatusDraft})
+		countries, err := obj.countryRepository.FindAllCountriesByCountryIdsInAndStatusNotIn(*newCountryIds, []int{util.StatusDeleted, util.StatusDraft})
 		if err != nil {
 			return util.ResponseError(err.Error(), nil)
 		}

@@ -11,6 +11,7 @@ import (
 )
 
 type GenreController struct {
+	genreRepository *repository.GenreRepository
 }
 
 func NewGenreController() *GenreController {
@@ -18,7 +19,9 @@ func NewGenreController() *GenreController {
 		once = &sync.Once{}
 
 		once.Do(func() {
-			genreController = &GenreController{}
+			genreController = &GenreController{
+				genreRepository: repository.NewGenreRepository(),
+			}
 			log.Println("Create new GenreController")
 		})
 	}
@@ -28,7 +31,17 @@ func NewGenreController() *GenreController {
 
 // FindAllGenres : Find all genres by Status = 1
 func (obj *GenreController) FindAllGenres(c *fiber.Ctx) error {
-	genres, err := repository.FindAllGenresByStatusNot(util.StatusDeleted)
+	genres, err := obj.genreRepository.FindAllGenresByStatusNot(util.StatusDeleted)
+
+	if err != nil {
+		return util.ResponseError(err.Error(), nil)
+	}
+
+	return util.ResponseSuccess("Thành công", genres)
+}
+
+func (obj *GenreController) ClientFindAllGenres(c *fiber.Ctx) error {
+	genres, err := obj.genreRepository.FindAllGenresByStatusNotIn([]int{util.StatusDraft, util.StatusDeleted})
 
 	if err != nil {
 		return util.ResponseError(err.Error(), nil)
@@ -40,7 +53,7 @@ func (obj *GenreController) FindAllGenres(c *fiber.Ctx) error {
 // FindGenreById : Find genre by Genre_Id and Status = 1
 func (obj *GenreController) FindGenreById(c *fiber.Ctx) error {
 	genreId := c.Params("id")
-	genre, err := repository.FindGenreByIdAndStatusNot(genreId, util.StatusDeleted)
+	genre, err := obj.genreRepository.FindGenreByIdAndStatusNot(genreId, util.StatusDeleted)
 
 	if err != nil || genre.GenreId == 0 {
 		return util.ResponseBadRequest("ID không tồn tại", err)
@@ -63,7 +76,7 @@ func (obj *GenreController) CreateNewGenre(c *fiber.Ctx) error {
 		Status: genreRequest.Status,
 	}
 
-	if _, err := repository.SaveGenre(genre); err != nil {
+	if _, err := obj.genreRepository.SaveGenre(genre); err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
@@ -74,7 +87,7 @@ func (obj *GenreController) CreateNewGenre(c *fiber.Ctx) error {
 func (obj *GenreController) UpdateGenreById(c *fiber.Ctx) error {
 	genreId := c.Params("id")
 
-	genre, err := repository.FindGenreByIdAndStatusNot(genreId, util.StatusDeleted)
+	genre, err := obj.genreRepository.FindGenreByIdAndStatusNot(genreId, util.StatusDeleted)
 
 	if err != nil || genre.GenreId == 0 {
 		return util.ResponseBadRequest("ID không tồn tại", err)
@@ -89,7 +102,7 @@ func (obj *GenreController) UpdateGenreById(c *fiber.Ctx) error {
 	genre.Slug = genreRequest.Slug
 	genre.Status = genreRequest.Status
 
-	if _, err = repository.SaveGenre(*genre); err != nil {
+	if _, err = obj.genreRepository.SaveGenre(*genre); err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
@@ -99,7 +112,7 @@ func (obj *GenreController) UpdateGenreById(c *fiber.Ctx) error {
 // DeleteGenreById : Delete genre by Genre_Id and Status = 1
 func (obj *GenreController) DeleteGenreById(c *fiber.Ctx) error {
 	genreId := c.Params("id")
-	genre, err := repository.FindGenreByIdAndStatusNot(genreId, util.StatusDeleted)
+	genre, err := obj.genreRepository.FindGenreByIdAndStatusNot(genreId, util.StatusDeleted)
 
 	if err != nil || genre.GenreId == 0 {
 		return util.ResponseBadRequest("ID không tồn tại", err)
@@ -107,7 +120,7 @@ func (obj *GenreController) DeleteGenreById(c *fiber.Ctx) error {
 
 	genre.Status = util.StatusDeleted
 
-	if _, err = repository.SaveGenre(*genre); err != nil {
+	if _, err = obj.genreRepository.SaveGenre(*genre); err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
