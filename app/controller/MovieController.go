@@ -5,6 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/xdorro/golang-fiber-base-project/app/entity/model"
 	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
+	"github.com/xdorro/golang-fiber-base-project/app/entity/response"
 	"github.com/xdorro/golang-fiber-base-project/app/repository"
 	"github.com/xdorro/golang-fiber-base-project/pkg/mapper"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
@@ -47,6 +48,29 @@ func (obj *MovieController) FindAllMovies(c *fiber.Ctx) error {
 	}
 
 	result := mapper.SearchMovies(movies)
+
+	return util.ResponseSuccess("Thành công", result)
+}
+
+func (obj *MovieController) ClientTopMovieSidebar(c *fiber.Ctx) error {
+	status := []int{util.StatusDraft, util.StatusDeleted}
+
+	movies, err := obj.movieRepository.FindAllTopMoviesByMovieTypeIdAndStatusNotInAndLimit(1, status, 5)
+
+	if err != nil {
+		return util.ResponseError(err.Error(), nil)
+	}
+
+	series, err := obj.movieRepository.FindAllTopMoviesByMovieTypeIdAndStatusNotInAndLimit(2, status, 5)
+
+	if err != nil {
+		return util.ResponseError(err.Error(), nil)
+	}
+
+	result := response.TopMovieSidebarResponse{
+		Movies: *movies,
+		Series: *series,
+	}
 
 	return util.ResponseSuccess("Thành công", result)
 }

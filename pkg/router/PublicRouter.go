@@ -15,4 +15,8 @@ func publicRoute(a fiber.Router) {
 	// Genres Controller
 	genreController := controller.NewGenreController()
 	clients.Get("/genres", genreController.ClientFindAllGenres)
+
+	// Movie Controller
+	movieController := controller.NewMovieController()
+	clients.Get("/top-movies", movieController.ClientTopMovieSidebar)
 }

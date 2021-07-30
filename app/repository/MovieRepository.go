@@ -44,6 +44,23 @@ func (obj *MovieRepository) FindAllMoviesByStatusNot(status int) (*[]dto.SearchM
 	return &movies, err
 }
 
+func (obj *MovieRepository) FindAllTopMoviesByMovieTypeIdAndStatusNotInAndLimit(movieTypeId uint, status []int, limit int) (*[]dto.SearchMovieDTO, error) {
+	movies := make([]dto.SearchMovieDTO, 0)
+
+	err := db.
+		Model(&model.Movie{}).
+		Select("movies.movie_id, movies.name, movies.slug, movies.status, movies.movie_type_id, movie_types.name movie_type_name").
+		Joins("LEFT JOIN movie_types on movies.movie_type_id = movie_types.movie_type_id").
+		Where("movies.status NOT IN ?", status).
+		Where("movie_types.status NOT IN ?", status).
+		Where("movies.movie_type_id = ?", movieTypeId).
+		Order("movies.updated_at DESC").
+		Limit(limit).
+		Find(&movies).Error
+
+	return &movies, err
+}
+
 func (obj *MovieRepository) FindMovieByIdAndStatusNot(id string, status int) (*model.Movie, error) {
 	uid := util.ParseStringToUInt(id)
 
