@@ -1,99 +1,66 @@
 package repository
 
 import (
-	"errors"
-	"github.com/xdorro/golang-fiber-base-project/app/entity/dto"
-	model "github.com/xdorro/golang-fiber-base-project/app/entity/model"
+	"github.com/xdorro/golang-fiber-base-project/app/entity/model"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
 	"gorm.io/gorm"
+	"log"
+	"sync"
 )
 
-// FindAllMovieTypesByStatus : Find movieType by MovieTypeId and Status
-func FindAllMovieTypesByStatus(status int) (*[]model.MovieType, error) {
-	movieTypes := make([]model.MovieType, 0)
-
-	if err := db.Find(&movieTypes, "status = ?", status).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
-
-		return nil, err
-	}
-
-	return &movieTypes, nil
+type MovieTypeRepository struct {
+	db *gorm.DB
 }
 
-func FindAllMovieTypesByStatusNot(status int) (*[]model.MovieType, error) {
-	movieTypes := make([]model.MovieType, 0)
+func NewMovieTypeRepository() *MovieTypeRepository {
+	if movieTypeRepository == nil {
+		once = &sync.Once{}
 
-	if err := db.Find(&movieTypes, "status <> ?", status).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
-
-		return nil, err
+		once.Do(func() {
+			if movieTypeRepository == nil {
+				movieTypeRepository = &MovieTypeRepository{
+					db: db,
+				}
+				log.Println("Create new MovieTypeRepository")
+			}
+		})
 	}
 
-	return &movieTypes, nil
+	return movieTypeRepository
 }
 
-// FindMovieTypeByIdAndStatus : Find movieType by MovieTypeId and Status
-func FindMovieTypeByIdAndStatus(id string, status int) (*model.MovieType, error) {
+func (obj *MovieTypeRepository) FindAllMovieTypesByStatusNot(status int) (*[]model.MovieType, error) {
+	movieTypes := make([]model.MovieType, 0)
+
+	err := db.Model(&model.MovieType{}).
+		Find(&movieTypes, "status <> ?", status).Error
+
+	return &movieTypes, err
+}
+
+func (obj *MovieTypeRepository) FindMovieTypeByIdAndStatusNot(id string, status int) (*model.MovieType, error) {
 	uid := util.ParseStringToUInt(id)
 
 	var movieType model.MovieType
-	if err := db.Where("movie_type_id = ? AND status = ?", uid, status).Find(&movieType).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
+	err := db.Model(&model.MovieType{}).
+		Where("movie_type_id = ? AND status <> ?", uid, status).
+		Find(&movieType).Error
 
-		return nil, err
-	}
-
-	return &movieType, nil
-}
-
-func FindMovieTypeByIdAndStatusNot(id string, status int) (*model.MovieType, error) {
-	uid := util.ParseStringToUInt(id)
-
-	var movieType model.MovieType
-	if err := db.Where("movie_type_id = ? AND status <> ?", uid, status).Find(&movieType).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
-
-		return nil, err
-	}
-
-	return &movieType, nil
-}
-
-func FindMovieByIdAndStatusNotJoinMovieType(id string, status int) (*dto.MovieDetailDTO, error) {
-	uid := util.ParseStringToUInt(id)
-
-	var movie dto.MovieDetailDTO
-
-	if err := db.
-		Model(&model.Movie{}).
-		Select("movies.*, movie_types.name movie_type_name").
-		Joins("LEFT JOIN movie_types on movies.movie_type_id = movie_types.movie_type_id").
-		Where("movie_id = ? AND movies.status <> ? AND movie_types.status <> ?", uid, status, status).
-		Find(&movie).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
-
-		return nil, err
-	}
-
-	return &movie, nil
+	return &movieType, err
 }
 
 // SaveMovieType : Save Movie Type
-func SaveMovieType(movieType model.MovieType) (*model.MovieType, error) {
-	if err := db.Save(&movieType).Error; err != nil {
-		return nil, err
-	}
+func (obj *MovieTypeRepository) SaveMovieType(movieType model.MovieType) (*model.MovieType, error) {
+	err := db.Model(&model.MovieType{}).
+		Save(&movieType).Error
 
-	return &movieType, nil
+	return &movieType, err
+}
+
+func (obj *MovieTypeRepository) UpdateStatusByMovieTypeId(movieTypeId uint, status int) error {
+	err := db.Model(&model.Movie{}).
+		Where("movie_type_id = ?", movieTypeId).
+		Update("status", status).Error
+
+	return err
 }

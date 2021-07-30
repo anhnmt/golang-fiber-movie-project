@@ -16,20 +16,38 @@ import (
 )
 
 // @title Golang Fiber Base Project
-// @version 1.0
+// @version 1.0.0
 // @description This is a sample swagger for Fiber
 // @termsOfService http://swagger.io/terms/
 // @contact.name Tuan Anh Nguyen Manh
 // @contact.email xdorro@gmail.com
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-// @host localhost:8080
+// @host localhost:8000
 // @BasePath /
 func main() {
 	serverConfig := config.GetServer()
 
 	app := fiber.New(fiber.Config{
+		AppName: serverConfig.Name,
+
 		Prefork: serverConfig.Prefork,
+
+		// Override default error handler
+		ErrorHandler: func(c *fiber.Ctx, err error) error {
+			// Default 500 statusCode
+			code := fiber.StatusInternalServerError
+
+			if e, ok := err.(*fiber.Error); ok {
+				// Override status code if fiber.Error type
+				code = e.Code
+			}
+			// Set Content-Type: application/json; charset=utf-8
+			c.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSONCharsetUTF8)
+
+			// Return statusCode with error message
+			return c.Status(code).Send([]byte(err.Error()))
+		},
 	})
 
 	// Attach Middlewares.

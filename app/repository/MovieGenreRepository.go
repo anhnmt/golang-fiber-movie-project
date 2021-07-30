@@ -1,42 +1,36 @@
 package repository
 
 import (
-	"errors"
 	"github.com/xdorro/golang-fiber-base-project/app/entity/model"
-	"gorm.io/gorm"
 )
 
 // CreateMovieGenreByMovieId : Create MovieGenre By MovieId
 func CreateMovieGenreByMovieId(movieGenres []model.MovieGenre) error {
-	err := db.Create(&movieGenres).Error
+	err := db.
+		Model(&model.Genre{}).
+		Create(&movieGenres).Error
 
 	return err
 }
 
 func RemoveMovieGenreByMovieIdAndGenreIds(movieId uint, genreIds []uint) error {
-	if err := db.Where("movie_id = ? AND genre_id IN ?", movieId, genreIds).
-		Delete(&model.MovieGenre{}).Error; err != nil {
-		return err
-	}
+	err := db.
+		Model(&model.Genre{}).
+		Where("movie_id = ? AND genre_id IN ?", movieId, genreIds).
+		Delete(&model.MovieGenre{}).Error
 
-	return nil
+	return err
 }
 
 func FindAllGenresByMovieIdAndStatusNotIn(movieId uint, status []int) (*[]model.Genre, error) {
 	genres := make([]model.Genre, 0)
 
-	if err := db.
+	err := db.
 		Model(&model.Genre{}).
 		Select("genres.*").
 		Joins("LEFT JOIN movie_genres ON genres.genre_id = movie_genres.genre_id").
 		Where("movie_genres.movie_id = ? AND genres.status NOT IN ?", movieId, status).
-		Find(&genres).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
+		Find(&genres).Error
 
-		return nil, err
-	}
-
-	return &genres, nil
+	return &genres, err
 }

@@ -1,63 +1,78 @@
 package repository
 
 import (
-	"errors"
 	"github.com/xdorro/golang-fiber-base-project/app/entity/dto"
 	"github.com/xdorro/golang-fiber-base-project/app/entity/model"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
 	"gorm.io/gorm"
+	"log"
+	"sync"
 )
 
+type MovieRepository struct {
+	db *gorm.DB
+}
+
+func NewMovieRepository() *MovieRepository {
+	if movieRepository == nil {
+		once = &sync.Once{}
+
+		once.Do(func() {
+			if movieRepository == nil {
+				movieRepository = &MovieRepository{
+					db: db,
+				}
+				log.Println("Create new MovieRepository")
+			}
+		})
+	}
+
+	return movieRepository
+}
+
 // FindAllMoviesByStatusNot : Find movie by MovieId and Status NOT
-func FindAllMoviesByStatusNot(status int) (*[]dto.SearchMovieDTO, error) {
+func (obj *MovieRepository) FindAllMoviesByStatusNot(status int) (*[]dto.SearchMovieDTO, error) {
 	movies := make([]dto.SearchMovieDTO, 0)
 
-	if err := db.
+	err := db.
 		Model(&model.Movie{}).
 		Select("movies.movie_id, movies.name, movies.slug, movies.status, movies.movie_type_id, movie_types.name movie_type_name").
 		Joins("LEFT JOIN movie_types on movies.movie_type_id = movie_types.movie_type_id").
 		Where("movies.status <> ? AND movie_types.status <> ?", status, status).
-		Find(&movies).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
+		Find(&movies).Error
 
-		return nil, err
-	}
-
-	return &movies, nil
+	return &movies, err
 }
 
-func FindMovieByIdAndStatusNot(id string, status int) (*model.Movie, error) {
+func (obj *MovieRepository) FindMovieByIdAndStatusNot(id string, status int) (*model.Movie, error) {
 	uid := util.ParseStringToUInt(id)
 
 	var movie model.Movie
-	if err := db.Where("movie_id = ? AND status <> ?", uid, status).Find(&movie).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
+	err := db.Model(model.Movie{}).
+		Where("movie_id = ? AND status <> ?", uid, status).
+		Find(&movie).Error
 
-		return nil, err
-	}
+	return &movie, err
+}
 
-	return &movie, nil
+func (obj *MovieRepository) FindMovieByIdAndStatusNotJoinMovieType(id string, status int) (*dto.MovieDetailDTO, error) {
+	uid := util.ParseStringToUInt(id)
+
+	var movie dto.MovieDetailDTO
+
+	err := db.
+		Model(&model.Movie{}).
+		Select("movies.*, movie_types.name movie_type_name").
+		Joins("LEFT JOIN movie_types on movies.movie_type_id = movie_types.movie_type_id").
+		Where("movie_id = ? AND movies.status <> ? AND movie_types.status <> ?", uid, status, status).
+		Find(&movie).Error
+
+	return &movie, err
 }
 
 // SaveMovie : Save Movie
-func SaveMovie(movie model.Movie) (*model.Movie, error) {
-	if err := db.Save(&movie).Error; err != nil {
-		return nil, err
-	}
+func (obj *MovieRepository) SaveMovie(movie model.Movie) (*model.Movie, error) {
+	err := db.Save(&movie).Error
 
-	return &movie, nil
-}
-
-func UpdateStatusByMovieTypeId(movieTypeId uint, status int) error {
-	if err := db.Model(&model.Movie{}).
-		Where("movie_type_id = ?", movieTypeId).
-		Update("status", status).Error; err != nil {
-		return err
-	}
-
-	return nil
+	return &movie, err
 }

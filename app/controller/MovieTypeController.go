@@ -6,37 +6,60 @@ import (
 	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-base-project/app/repository"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
+	"log"
+	"sync"
 )
 
-// FindAllMovieTypes : Find all moveTypes by Status = 1
-func FindAllMovieTypes(c *fiber.Ctx) error {
-	moveTypes, err := repository.FindAllMovieTypesByStatusNot(util.StatusDeleted)
+type MovieTypeController struct {
+	movieTypeRepository *repository.MovieTypeRepository
+}
 
-	if err != nil {
-		return util.ResponseError(c, err.Error(), nil)
+func NewMovieTypeController() *MovieTypeController {
+	if movieTypeController == nil {
+		once = &sync.Once{}
+
+		once.Do(func() {
+			if movieTypeController == nil {
+				movieTypeController = &MovieTypeController{
+					movieTypeRepository: repository.NewMovieTypeRepository(),
+				}
+				log.Println("Create new MovieTypeController")
+			}
+		})
 	}
 
-	return util.ResponseSuccess(c, "Thành công", moveTypes)
+	return movieTypeController
+}
+
+// FindAllMovieTypes : Find all moveTypes by Status = 1
+func (obj *MovieTypeController) FindAllMovieTypes(c *fiber.Ctx) error {
+	moveTypes, err := obj.movieTypeRepository.FindAllMovieTypesByStatusNot(util.StatusDeleted)
+
+	if err != nil {
+		return util.ResponseError(err.Error(), nil)
+	}
+
+	return util.ResponseSuccess("Thành công", moveTypes)
 }
 
 // FindMovieTypeById : Find moveType by MovieType_Id and Status = 1
-func FindMovieTypeById(c *fiber.Ctx) error {
+func (obj *MovieTypeController) FindMovieTypeById(c *fiber.Ctx) error {
 	moveTypeId := c.Params("id")
-	moveType, err := repository.FindMovieTypeByIdAndStatusNot(moveTypeId, util.StatusDeleted)
+	moveType, err := obj.movieTypeRepository.FindMovieTypeByIdAndStatusNot(moveTypeId, util.StatusDeleted)
 
 	if err != nil || moveType.MovieTypeId == 0 {
-		return util.ResponseBadRequest(c, "ID không tồn tại", err)
+		return util.ResponseBadRequest("ID không tồn tại", err)
 	}
 
-	return util.ResponseSuccess(c, "Thành công", moveType)
+	return util.ResponseSuccess("Thành công", moveType)
 }
 
 // CreateNewMovieType : Create a new moveType
-func CreateNewMovieType(c *fiber.Ctx) error {
+func (obj *MovieTypeController) CreateNewMovieType(c *fiber.Ctx) error {
 	moveTypeRequest := new(request.MovieTypeRequest)
 
 	if err := c.BodyParser(moveTypeRequest); err != nil {
-		return util.ResponseError(c, err.Error(), nil)
+		return util.ResponseError(err.Error(), nil)
 	}
 
 	moveType := model.MovieType{
@@ -45,58 +68,58 @@ func CreateNewMovieType(c *fiber.Ctx) error {
 		Status: moveTypeRequest.Status,
 	}
 
-	if _, err := repository.SaveMovieType(moveType); err != nil {
-		return util.ResponseError(c, err.Error(), nil)
+	if _, err := obj.movieTypeRepository.SaveMovieType(moveType); err != nil {
+		return util.ResponseError(err.Error(), nil)
 	}
 
-	return util.ResponseSuccess(c, "Thành công", nil)
+	return util.ResponseSuccess("Thành công", nil)
 }
 
 // UpdateMovieTypeById : Update moveType by MovieType_Id and Status = 1
-func UpdateMovieTypeById(c *fiber.Ctx) error {
+func (obj *MovieTypeController) UpdateMovieTypeById(c *fiber.Ctx) error {
 	moveTypeId := c.Params("id")
-	moveType, err := repository.FindMovieTypeByIdAndStatusNot(moveTypeId, util.StatusDeleted)
+	moveType, err := obj.movieTypeRepository.FindMovieTypeByIdAndStatusNot(moveTypeId, util.StatusDeleted)
 
 	if err != nil || moveType.MovieTypeId == 0 {
-		return util.ResponseBadRequest(c, "ID không tồn tại", err)
+		return util.ResponseBadRequest("ID không tồn tại", err)
 	}
 
 	moveTypeRequest := new(request.MovieTypeRequest)
 	if err = c.BodyParser(moveTypeRequest); err != nil {
-		return util.ResponseError(c, err.Error(), nil)
+		return util.ResponseError(err.Error(), nil)
 	}
 
 	moveType.Name = moveTypeRequest.Name
 	moveType.Slug = moveTypeRequest.Slug
 	moveType.Status = moveTypeRequest.Status
 
-	if _, err = repository.SaveMovieType(*moveType); err != nil {
-		return util.ResponseError(c, err.Error(), nil)
+	if _, err = obj.movieTypeRepository.SaveMovieType(*moveType); err != nil {
+		return util.ResponseError(err.Error(), nil)
 	}
 
-	return util.ResponseSuccess(c, "Thành công", nil)
+	return util.ResponseSuccess("Thành công", nil)
 }
 
 // DeleteMovieTypeById : Delete moveType by MovieType_Id and Status = 1
-func DeleteMovieTypeById(c *fiber.Ctx) error {
+func (obj *MovieTypeController) DeleteMovieTypeById(c *fiber.Ctx) error {
 	moveTypeId := c.Params("id")
-	moveType, err := repository.FindMovieTypeByIdAndStatusNot(moveTypeId, util.StatusDeleted)
+	moveType, err := obj.movieTypeRepository.FindMovieTypeByIdAndStatusNot(moveTypeId, util.StatusDeleted)
 
 	if err != nil || moveType.MovieTypeId == 0 {
-		return util.ResponseBadRequest(c, "ID không tồn tại", err)
+		return util.ResponseBadRequest("ID không tồn tại", err)
 	}
 
 	moveType.Status = util.StatusDeleted
 
 	// Update movieType status
-	if _, err = repository.SaveMovieType(*moveType); err != nil {
-		return util.ResponseError(c, err.Error(), nil)
+	if _, err = obj.movieTypeRepository.SaveMovieType(*moveType); err != nil {
+		return util.ResponseError(err.Error(), nil)
 	}
 
 	// Update movie status
-	if err = repository.UpdateStatusByMovieTypeId(moveType.MovieTypeId, moveType.Status); err != nil {
-		return util.ResponseError(c, err.Error(), nil)
+	if err = obj.movieTypeRepository.UpdateStatusByMovieTypeId(moveType.MovieTypeId, moveType.Status); err != nil {
+		return util.ResponseError(err.Error(), nil)
 	}
 
-	return util.ResponseSuccess(c, "Thành công", nil)
+	return util.ResponseSuccess("Thành công", nil)
 }
