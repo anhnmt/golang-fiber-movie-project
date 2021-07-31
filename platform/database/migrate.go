@@ -10,20 +10,17 @@ func migrate() {
 	if err = db.AutoMigrate(
 		model.User{},
 		model.Role{},
-		model.Permission{},
-		model.RolePermission{},
-		model.UserPermission{},
 
-		model.Tag{},
+		//model.Tag{},
 		model.Genre{},
 		model.Country{},
-		model.People{},
+		//model.People{},
 
 		model.Movie{},
-		model.MovieTag{},
+		//model.MovieTag{},
 		model.MovieGenre{},
 		model.MovieCountry{},
-		model.MoviePeople{},
+		//model.MoviePeople{},
 		model.MovieType{},
 
 		model.Episode{},

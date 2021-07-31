@@ -47,14 +47,6 @@ func privateRoute(a fiber.Router) {
 	// UserRoles Controller
 	//users.Get("/:id/roles", controller.FindAllUserRoles)
 
-	// Permissions Controller
-	permissions := a.Group("/permissions")
-	permissions.Get("/", controller.FindAllPermissions)
-	permissions.Post("/", controller.CreateNewPermission)
-	permissions.Get("/:id", controller.FindPermissionById)
-	permissions.Put("/:id", controller.UpdatePermissionById)
-	permissions.Delete("/:id", controller.DeletePermissionById)
-
 	// Roles Controller
 	roles := a.Group("/roles")
 	roles.Get("/", controller.FindAllRoles)
