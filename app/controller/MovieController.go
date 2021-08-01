@@ -135,8 +135,18 @@ func (obj *MovieController) CreateNewMovie(c *fiber.Ctx) error {
 	}
 
 	newMovie := model.Movie{
+		OriginName:  movieRequest.OriginName,
 		Name:        movieRequest.Name,
 		Slug:        movieRequest.Slug,
+		Description: movieRequest.Description,
+		Trailer:     movieRequest.Trailer,
+		ImdbId:      movieRequest.ImdbId,
+		Rating:      movieRequest.Rating,
+		ReleaseDate: movieRequest.ReleaseDate,
+		Runtime:     movieRequest.Runtime,
+		Poster:      movieRequest.Poster,
+		SeoTitle:    movieRequest.SeoTitle,
+		SeoKeywords: movieRequest.SeoKeywords,
 		MovieTypeId: movieRequest.MovieTypeId,
 		Status:      movieRequest.Status,
 	}
@@ -177,8 +187,18 @@ func (obj *MovieController) UpdateMovieById(c *fiber.Ctx) error {
 		return util.ResponseError(err.Error(), nil)
 	}
 
+	movie.OriginName = movieRequest.OriginName
 	movie.Name = movieRequest.Name
 	movie.Slug = movieRequest.Slug
+	movie.Description = movieRequest.Description
+	movie.Trailer = movieRequest.Trailer
+	movie.ImdbId = movieRequest.ImdbId
+	movie.Rating = movieRequest.Rating
+	movie.ReleaseDate = movieRequest.ReleaseDate
+	movie.Runtime = movieRequest.Runtime
+	movie.Poster = movieRequest.Poster
+	movie.SeoTitle = movieRequest.SeoTitle
+	movie.SeoKeywords = movieRequest.SeoKeywords
 	movie.MovieTypeId = movieRequest.MovieTypeId
 	movie.Status = movieRequest.Status
 

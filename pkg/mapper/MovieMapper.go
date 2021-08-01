@@ -18,10 +18,20 @@ func SearchMovies(movies *[]dto.SearchMovieDTO) []response.SearchMovieResponse {
 
 func SearchMovie(movie *dto.SearchMovieDTO) *response.SearchMovieResponse {
 	return &response.SearchMovieResponse{
-		MovieId: movie.MovieId,
-		Name:    movie.Name,
-		Slug:    movie.Slug,
-		Status:  movie.Status,
+		MovieId:     movie.MovieId,
+		OriginName:  movie.OriginName,
+		Name:        movie.Name,
+		Slug:        movie.Slug,
+		Description: movie.Description,
+		Trailer:     movie.Trailer,
+		ImdbId:      movie.ImdbId,
+		Rating:      movie.Rating,
+		ReleaseDate: movie.ReleaseDate,
+		Runtime:     movie.Runtime,
+		Poster:      movie.Poster,
+		SeoTitle:    movie.SeoTitle,
+		SeoKeywords: movie.SeoKeywords,
+		Status:      movie.Status,
 		MovieType: dto.MovieTypeDTO{
 			MovieTypeId: movie.MovieTypeId,
 			Name:        movie.MovieTypeName,
@@ -32,6 +42,7 @@ func SearchMovie(movie *dto.SearchMovieDTO) *response.SearchMovieResponse {
 func MovieDetail(movie *dto.MovieDetailDTO) *response.MovieDetailResponse {
 	return &response.MovieDetailResponse{
 		MovieId:     movie.MovieId,
+		OriginName:  movie.OriginName,
 		Name:        movie.Name,
 		Slug:        movie.Slug,
 		Description: movie.Description,
@@ -40,6 +51,7 @@ func MovieDetail(movie *dto.MovieDetailDTO) *response.MovieDetailResponse {
 		Rating:      movie.Rating,
 		ReleaseDate: movie.ReleaseDate,
 		Runtime:     movie.Runtime,
+		Poster:      movie.Poster,
 		SeoTitle:    movie.SeoTitle,
 		SeoKeywords: movie.SeoKeywords,
 		Status:      movie.Status,

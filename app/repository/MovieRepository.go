@@ -36,7 +36,7 @@ func (obj *MovieRepository) FindAllMoviesByStatusNot(status int) (*[]dto.SearchM
 
 	err := db.
 		Model(&model.Movie{}).
-		Select("movies.movie_id, movies.name, movies.slug, movies.status, movies.movie_type_id, movie_types.name movie_type_name").
+		Select("movies.*, movie_types.name movie_type_name").
 		Joins("LEFT JOIN movie_types on movies.movie_type_id = movie_types.movie_type_id").
 		Where("movies.status <> ? AND movie_types.status <> ?", status, status).
 		Find(&movies).Error
@@ -49,7 +49,7 @@ func (obj *MovieRepository) FindAllTopMoviesByMovieTypeIdAndStatusNotInAndLimit(
 
 	err := db.
 		Model(&model.Movie{}).
-		Select("movies.movie_id, movies.name, movies.slug, movies.status, movies.movie_type_id, movie_types.name movie_type_name").
+		Select("movies.*, movie_types.name movie_type_name").
 		Joins("LEFT JOIN movie_types on movies.movie_type_id = movie_types.movie_type_id").
 		Where("movies.status NOT IN ?", status).
 		Where("movie_types.status NOT IN ?", status).
