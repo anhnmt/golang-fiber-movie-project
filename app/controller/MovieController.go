@@ -198,9 +198,26 @@ func (obj *MovieController) UpdateMovieById(c *fiber.Ctx) error {
 		return util.ResponseBadRequest("ID không tồn tại", err)
 	}
 
+	movieForm := c.FormValue("movie")
+
 	movieRequest := new(request.MovieRequest)
-	if err = c.BodyParser(movieRequest); err != nil {
+
+	if err = util.JSONUnmarshal([]byte(movieForm), movieRequest); err != nil {
 		return util.ResponseError(err.Error(), nil)
+	}
+
+	// Get first file from form field "poster":
+	file, err := c.FormFile("poster")
+
+	if file != nil {
+		// 👷 Save file inside uploads folder under current working directory:
+		poster := util.StoragePoster(file.Filename)
+
+		if err = c.SaveFile(file, util.Storage(poster)); err != nil {
+			return err
+		}
+
+		movieRequest.Poster = poster
 	}
 
 	movie.OriginName = movieRequest.OriginName
