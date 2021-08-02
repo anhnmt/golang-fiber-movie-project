@@ -19,5 +19,5 @@ func StorageFilename(filename string) string {
 }
 
 func Storage(url string) string {
-	return fmt.Sprintf("./%s", url)
+	return fmt.Sprintf(".%s", url)
 }

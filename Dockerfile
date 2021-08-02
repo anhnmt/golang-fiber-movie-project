@@ -27,6 +27,8 @@ RUN apk --no-cache add ca-certificates
 # to root folder of scratch container.
 COPY --from=builder ["/build/main", "/build/config.yml", "/"]
 
+RUN mkdir -p /storage && mkdir -p /storage/banner && mkdir -p /storage/poster
+
 ENV SERVER_PORT=8000 \
     SERVER_HOST=0.0.0.0
 
