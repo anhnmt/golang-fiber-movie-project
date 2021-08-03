@@ -112,6 +112,21 @@ func (obj *MovieController) ClientTopMoviesBody(c *fiber.Ctx) error {
 	return util.ResponseSuccess("Thành công", result)
 }
 
+func (obj *MovieController) ClientFindMovieDetail(c *fiber.Ctx) error {
+	movieSlug := c.Params("movieSlug")
+	status := []int{util.StatusDraft, util.StatusDeleted}
+
+	movie, err := obj.movieRepository.FindMovieBySlugAndStatusNotInAndJoinMovieType(movieSlug, status)
+
+	if err != nil {
+		return util.ResponseError(err.Error(), nil)
+	}
+
+	result := mapper.MovieDetail(movie)
+
+	return util.ResponseSuccess("Thành công", result)
+}
+
 // FindMovieById : Find movie by Movie_Id and Status
 func (obj *MovieController) FindMovieById(c *fiber.Ctx) error {
 	movieId := c.Params("id")

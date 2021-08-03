@@ -107,16 +107,27 @@ func (obj *MovieRepository) FindMovieByIdAndStatusNot(id string, status int) (*m
 	return &movie, err
 }
 
-func (obj *MovieRepository) FindMovieByIdAndStatusNotJoinMovieType(id string, status int) (*dto.MovieDetailDTO, error) {
-	uid := util.ParseStringToUInt(id)
-
+func (obj *MovieRepository) FindMovieByIdAndStatusNotJoinMovieType(movieId string, status int) (*dto.MovieDetailDTO, error) {
 	var movie dto.MovieDetailDTO
 
 	err := db.
 		Model(&model.Movie{}).
 		Select("movies.*, movie_types.name movie_type_name").
 		Joins("LEFT JOIN movie_types on movies.movie_type_id = movie_types.movie_type_id").
-		Where("movie_id = ? AND movies.status <> ? AND movie_types.status <> ?", uid, status, status).
+		Where("movie_id = ? AND movies.status <> ? AND movie_types.status <> ?", movieId, status, status).
+		Find(&movie).Error
+
+	return &movie, err
+}
+
+func (obj *MovieRepository) FindMovieBySlugAndStatusNotInAndJoinMovieType(movieSlug string, status []int) (*dto.MovieDetailDTO, error) {
+	var movie dto.MovieDetailDTO
+
+	err := db.
+		Model(&model.Movie{}).
+		Select("movies.*, movie_types.name movie_type_name").
+		Joins("LEFT JOIN movie_types on movies.movie_type_id = movie_types.movie_type_id").
+		Where("movies.slug LIKE ? AND movies.status NOT IN ? AND movie_types.status NOT IN ?", movieSlug, status, status).
 		Find(&movie).Error
 
 	return &movie, err
