@@ -4,7 +4,7 @@ type Movie struct {
 	MovieId     uint   `gorm:"primaryKey" json:"movie_id"`
 	OriginName  string `gorm:"not null" json:"origin_name"`
 	Name        string `gorm:"not null" json:"name"`
-	Slug        string `gorm:"not null" json:"slug"`
+	Slug        string `gorm:"index:,not null" json:"slug"`
 	Description string `json:"description"`
 	Trailer     string `json:"trailer"`
 	ImdbId      string `json:"imdb_id"`

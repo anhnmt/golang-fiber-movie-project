@@ -61,17 +61,34 @@ func (obj *MovieRepository) FindAllTopMoviesByMovieTypeIdAndStatusNotInAndLimit(
 	return &movies, err
 }
 
-func (obj *MovieRepository) FindAllTopMoviesByGenreIdAndStatusNotInAndLimit(genreId uint, status []int, limit int) (*[]dto.SearchMovieDTO, error) {
+func (obj *MovieRepository) FindAllTopMoviesByGenreSlugAndStatusNotInAndLimit(slug string, status []int, limit int) (*[]dto.SearchMovieDTO, error) {
 	movies := make([]dto.SearchMovieDTO, 0)
 
 	err := db.
 		Model(&model.Movie{}).
-		Select("movies.movie_id, movies.name, movies.slug, movies.status, movies.movie_type_id").
+		Select("movies.*").
 		Joins("JOIN movie_genres on movie_genres.movie_id = movies.movie_id").
 		Joins("JOIN genres on genres.genre_id = movie_genres.genre_id").
 		Where("movies.status NOT IN ?", status).
 		Where("genres.status NOT IN ?", status).
-		Where("movie_genres.genre_id = ?", genreId).
+		Where("genres.slug LIKE ?", slug).
+		Order("movies.updated_at DESC").
+		Limit(limit).
+		Find(&movies).Error
+
+	return &movies, err
+}
+
+func (obj *MovieRepository) FindAllTopMoviesByMovieTypeSlugAndStatusNotInAndLimit(slug string, status []int, limit int) (*[]dto.SearchMovieDTO, error) {
+	movies := make([]dto.SearchMovieDTO, 0)
+
+	err := db.
+		Model(&model.Movie{}).
+		Select("movies.*").
+		Joins("JOIN movie_types on movie_types.movie_type_id = movies.movie_type_id").
+		Where("movies.status NOT IN ?", status).
+		Where("movie_types.status NOT IN ?", status).
+		Where("movie_types.slug LIKE ?", slug).
 		Order("movies.updated_at DESC").
 		Limit(limit).
 		Find(&movies).Error
@@ -107,7 +124,17 @@ func (obj *MovieRepository) FindMovieByIdAndStatusNotJoinMovieType(id string, st
 
 // SaveMovie : Save Movie
 func (obj *MovieRepository) SaveMovie(movie model.Movie) (*model.Movie, error) {
-	err := db.Save(&movie).Error
+	err := db.
+		Model(&model.Movie{}).
+		Save(&movie).Error
+
+	return &movie, err
+}
+
+func (obj *MovieRepository) UpdateMovie(movieId string, movie model.Movie) (*model.Movie, error) {
+	err := db.Model(model.Movie{}).
+		Where("movie_id = ?", movieId).
+		Save(&movie).Error
 
 	return &movie, err
 }

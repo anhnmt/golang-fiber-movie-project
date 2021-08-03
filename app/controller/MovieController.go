@@ -78,25 +78,25 @@ func (obj *MovieController) ClientTopMovieSidebar(c *fiber.Ctx) error {
 func (obj *MovieController) ClientTopMoviesBody(c *fiber.Ctx) error {
 	status := []int{util.StatusDraft, util.StatusDeleted}
 
-	movies, err := obj.movieRepository.FindAllTopMoviesByGenreIdAndStatusNotInAndLimit(1, status, 5)
+	movies, err := obj.movieRepository.FindAllTopMoviesByMovieTypeSlugAndStatusNotInAndLimit("phim-le", status, 5)
 
 	if err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
-	series, err := obj.movieRepository.FindAllTopMoviesByGenreIdAndStatusNotInAndLimit(2, status, 5)
+	series, err := obj.movieRepository.FindAllTopMoviesByMovieTypeSlugAndStatusNotInAndLimit("phim-bo", status, 5)
 
 	if err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
-	cinemas, err := obj.movieRepository.FindAllTopMoviesByGenreIdAndStatusNotInAndLimit(2, status, 5)
+	cinemas, err := obj.movieRepository.FindAllTopMoviesByGenreSlugAndStatusNotInAndLimit("phim-chieu-rap", status, 5)
 
 	if err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
-	cartoons, err := obj.movieRepository.FindAllTopMoviesByGenreIdAndStatusNotInAndLimit(2, status, 5)
+	cartoons, err := obj.movieRepository.FindAllTopMoviesByGenreSlugAndStatusNotInAndLimit("hoat-hinh", status, 5)
 
 	if err != nil {
 		return util.ResponseError(err.Error(), nil)
@@ -235,7 +235,7 @@ func (obj *MovieController) UpdateMovieById(c *fiber.Ctx) error {
 	movie.MovieTypeId = movieRequest.MovieTypeId
 	movie.Status = movieRequest.Status
 
-	if _, err = obj.movieRepository.SaveMovie(*movie); err != nil {
+	if _, err = obj.movieRepository.UpdateMovie(movieId, *movie); err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
