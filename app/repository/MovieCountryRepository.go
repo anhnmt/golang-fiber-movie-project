@@ -2,10 +2,35 @@ package repository
 
 import (
 	"github.com/xdorro/golang-fiber-base-project/app/entity/model"
+	"gorm.io/gorm"
+	"log"
+	"sync"
 )
 
+type MovieCountryRepository struct {
+	db *gorm.DB
+}
+
+func NewMovieCountryRepository() *MovieCountryRepository {
+	if movieCountryRepository == nil {
+		once = &sync.Once{}
+
+		once.Do(func() {
+			if movieCountryRepository == nil {
+				movieCountryRepository = &MovieCountryRepository{
+					db: db,
+				}
+
+				log.Println("Create new MovieCountryRepository")
+			}
+		})
+	}
+
+	return movieCountryRepository
+}
+
 // CreateMovieCountryByMovieId : Create MovieCountry By MovieId
-func CreateMovieCountryByMovieId(movieCountries []model.MovieCountry) error {
+func (obj *MovieCountryRepository) CreateMovieCountryByMovieId(movieCountries []model.MovieCountry) error {
 	err := db.
 		Model(&model.MovieCountry{}).
 		Create(&movieCountries).Error
@@ -13,7 +38,7 @@ func CreateMovieCountryByMovieId(movieCountries []model.MovieCountry) error {
 	return err
 }
 
-func RemoveMovieCountryByMovieIdAndCountryIds(movieId uint, countryIds []uint) error {
+func (obj *MovieCountryRepository) RemoveMovieCountryByMovieIdAndCountryIds(movieId uint, countryIds []uint) error {
 	err := db.
 		Model(&model.Country{}).
 		Where("movie_id = ? AND country_id IN ?", movieId, countryIds).
@@ -22,7 +47,7 @@ func RemoveMovieCountryByMovieIdAndCountryIds(movieId uint, countryIds []uint) e
 	return err
 }
 
-func FindAllCountriesByMovieIdAndStatusNotIn(movieId uint, status []int) (*[]model.Country, error) {
+func (obj *MovieCountryRepository) FindAllCountriesByMovieIdAndStatusNotIn(movieId uint, status []int) (*[]model.Country, error) {
 	countries := make([]model.Country, 0)
 
 	err := db.

@@ -66,7 +66,7 @@ func (obj *MovieRepository) FindAllTopMoviesByGenreSlugAndStatusNotInAndLimit(sl
 
 	err := db.
 		Model(&model.Movie{}).
-		Select("movies.*").
+		Select("movies.*, movie_types.name movie_type_name").
 		Joins("JOIN movie_genres on movie_genres.movie_id = movies.movie_id").
 		Joins("JOIN genres on genres.genre_id = movie_genres.genre_id").
 		Where("movies.status NOT IN ?", status).
@@ -84,7 +84,7 @@ func (obj *MovieRepository) FindAllTopMoviesByMovieTypeSlugAndStatusNotInAndLimi
 
 	err := db.
 		Model(&model.Movie{}).
-		Select("movies.*").
+		Select("movies.*, movie_types.name movie_type_name").
 		Joins("JOIN movie_types on movie_types.movie_type_id = movies.movie_type_id").
 		Where("movies.status NOT IN ?", status).
 		Where("movie_types.status NOT IN ?", status).
@@ -131,6 +131,28 @@ func (obj *MovieRepository) FindMovieBySlugAndStatusNotInAndJoinMovieType(movieS
 		Find(&movie).Error
 
 	return &movie, err
+}
+
+func (obj *MovieRepository) FindAllMoviesRelatedByMovieIdAndStatusNotInAndLimit(movieId uint, status []int, limit int) (*[]dto.SearchMovieDTO, error) {
+	movies := make([]dto.SearchMovieDTO, 0)
+
+	err := db.
+		Model(&model.Movie{}).
+		Select("DISTINCT movies.*, movie_types.name movie_type_name").
+		Joins("JOIN movie_genres on movie_genres.movie_id = ?", movieId).
+		Joins("JOIN genres on genres.genre_id = movie_genres.genre_id").
+		Joins("JOIN movie_countries on movie_countries.movie_id = ?", movieId).
+		Joins("JOIN countries on countries.country_id = movie_countries.country_id").
+		Joins("JOIN movie_types on movies.movie_type_id = movie_types.movie_type_id").
+		Where("movies.status NOT IN ?", status).
+		Where("genres.status NOT IN ?", status).
+		Where("countries.status NOT IN ?", status).
+		Where("movies.movie_id <> ?", movieId).
+		Order("movies.updated_at DESC").
+		Limit(limit).
+		Find(&movies).Error
+
+	return &movies, err
 }
 
 // SaveMovie : Save Movie

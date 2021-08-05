@@ -7,8 +7,9 @@ import (
 )
 
 func FindAllMovieCountryById(c *fiber.Ctx) error {
+	movieCountryRepository := repository.NewMovieCountryRepository()
 	movieId := util.ParseStringToUInt(c.Params("id"))
-	countries, err := repository.FindAllCountriesByMovieIdAndStatusNotIn(movieId, []int{util.StatusDeleted, util.StatusDraft})
+	countries, err := movieCountryRepository.FindAllCountriesByMovieIdAndStatusNotIn(movieId, []int{util.StatusDeleted, util.StatusDraft})
 
 	if err != nil {
 		return util.ResponseError(err.Error(), nil)

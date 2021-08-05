@@ -15,9 +15,11 @@ import (
 )
 
 type MovieController struct {
-	movieRepository   *repository.MovieRepository
-	countryRepository *repository.CountryRepository
-	genreRepository   *repository.GenreRepository
+	movieRepository        *repository.MovieRepository
+	countryRepository      *repository.CountryRepository
+	genreRepository        *repository.GenreRepository
+	movieGenreRepository   *repository.MovieGenreRepository
+	movieCountryRepository *repository.MovieCountryRepository
 }
 
 func NewMovieController() *MovieController {
@@ -27,9 +29,11 @@ func NewMovieController() *MovieController {
 		once.Do(func() {
 			if movieController == nil {
 				movieController = &MovieController{
-					movieRepository:   repository.NewMovieRepository(),
-					countryRepository: repository.NewCountryRepository(),
-					genreRepository:   repository.NewGenreRepository(),
+					movieRepository:        repository.NewMovieRepository(),
+					countryRepository:      repository.NewCountryRepository(),
+					genreRepository:        repository.NewGenreRepository(),
+					movieGenreRepository:   repository.NewMovieGenreRepository(),
+					movieCountryRepository: repository.NewMovieCountryRepository(),
 				}
 				log.Println("Create new MovieController")
 			}
@@ -122,7 +126,25 @@ func (obj *MovieController) ClientFindMovieDetail(c *fiber.Ctx) error {
 		return util.ResponseError(err.Error(), nil)
 	}
 
-	result := mapper.MovieDetail(movie)
+	movieRelated, err := obj.movieRepository.FindAllMoviesRelatedByMovieIdAndStatusNotInAndLimit(movie.MovieId, status, 12)
+
+	if err != nil {
+		return util.ResponseError(err.Error(), nil)
+	}
+
+	movieGenres, err := obj.movieGenreRepository.FindAllGenresByMovieIdAndStatusNotIn(movie.MovieId, status)
+
+	if err != nil {
+		return util.ResponseError(err.Error(), nil)
+	}
+
+	movieContries, err := obj.movieCountryRepository.FindAllCountriesByMovieIdAndStatusNotIn(movie.MovieId, status)
+
+	if err != nil {
+		return util.ResponseError(err.Error(), nil)
+	}
+
+	result := mapper.ClientMovieDetail(movie, movieRelated, movieGenres, movieContries)
 
 	return util.ResponseSuccess("Thành công", result)
 }
@@ -305,7 +327,7 @@ func (obj *MovieController) createMovieGenres(movieId *uint, newGenreIds *[]uint
 		movieGenres := mapper.MovieGenres(movieId, newGenreIds)
 
 		if len(movieGenres) > 0 {
-			if err = repository.CreateMovieGenreByMovieId(movieGenres); err != nil {
+			if err = obj.movieGenreRepository.CreateMovieGenreByMovieId(movieGenres); err != nil {
 				return util.ResponseError(err.Error(), nil)
 			}
 		}
@@ -318,7 +340,7 @@ func (obj *MovieController) createMovieGenres(movieId *uint, newGenreIds *[]uint
 func (obj *MovieController) updateMovieGenres(movieId *uint, newGenreIds *[]uint) error {
 	if len(*newGenreIds) > 0 {
 		// Find all genres by movieId
-		genres, err := repository.FindAllGenresByMovieIdAndStatusNotIn(*movieId, []int{util.StatusDeleted, util.StatusDraft})
+		genres, err := obj.movieGenreRepository.FindAllGenresByMovieIdAndStatusNotIn(*movieId, []int{util.StatusDeleted, util.StatusDraft})
 		if err != nil {
 			return util.ResponseError(err.Error(), nil)
 		}
@@ -326,7 +348,7 @@ func (obj *MovieController) updateMovieGenres(movieId *uint, newGenreIds *[]uint
 		// Get list genreIds not exist and remove
 		removeGenreIds := mapper.GetGenreIdsNotExistInNewGenreIds(*newGenreIds, *genres)
 		if len(*removeGenreIds) > 0 {
-			if err = repository.RemoveMovieGenreByMovieIdAndGenreIds(*movieId, *removeGenreIds); err != nil {
+			if err = obj.movieGenreRepository.RemoveMovieGenreByMovieIdAndGenreIds(*movieId, *removeGenreIds); err != nil {
 				return util.ResponseError(err.Error(), nil)
 			}
 		}
@@ -360,7 +382,7 @@ func (obj *MovieController) createMovieCountries(movieId *uint, newCountryIds *[
 		movieCountries := mapper.MovieCountries(movieId, newCountryIds)
 
 		if len(movieCountries) > 0 {
-			if err = repository.CreateMovieCountryByMovieId(movieCountries); err != nil {
+			if err = obj.movieCountryRepository.CreateMovieCountryByMovieId(movieCountries); err != nil {
 				return util.ResponseError(err.Error(), nil)
 			}
 		}
@@ -373,7 +395,7 @@ func (obj *MovieController) createMovieCountries(movieId *uint, newCountryIds *[
 func (obj *MovieController) updateMovieCountries(movieId *uint, newCountryIds *[]uint) error {
 	if len(*newCountryIds) > 0 {
 		// Find all genres by movieId
-		countries, err := repository.FindAllCountriesByMovieIdAndStatusNotIn(*movieId, []int{util.StatusDeleted, util.StatusDraft})
+		countries, err := obj.movieCountryRepository.FindAllCountriesByMovieIdAndStatusNotIn(*movieId, []int{util.StatusDeleted, util.StatusDraft})
 		if err != nil {
 			return util.ResponseError(err.Error(), nil)
 		}
@@ -381,7 +403,7 @@ func (obj *MovieController) updateMovieCountries(movieId *uint, newCountryIds *[
 		// Get list genreIds not exist and remove
 		removeCountryIds := mapper.GetCountryIdsNotExistInNewCountryIds(*newCountryIds, *countries)
 		if len(*removeCountryIds) > 0 {
-			if err = repository.RemoveMovieCountryByMovieIdAndCountryIds(*movieId, *removeCountryIds); err != nil {
+			if err = obj.movieCountryRepository.RemoveMovieCountryByMovieIdAndCountryIds(*movieId, *removeCountryIds); err != nil {
 				return util.ResponseError(err.Error(), nil)
 			}
 		}
