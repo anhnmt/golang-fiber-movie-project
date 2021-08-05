@@ -56,10 +56,26 @@ func (obj *BannerController) FindBannerById(c *fiber.Ctx) error {
 
 // CreateNewBanner : Create a new banner
 func (obj *BannerController) CreateNewBanner(c *fiber.Ctx) error {
+	bannerForm := c.FormValue("banner")
+
 	bannerRequest := new(request.BannerRequest)
 
-	if err := c.BodyParser(bannerRequest); err != nil {
+	if err := util.JSONUnmarshal([]byte(bannerForm), bannerRequest); err != nil {
 		return util.ResponseError(err.Error(), nil)
+	}
+
+	// Get first file from form field "image":
+	file, err := c.FormFile("image")
+
+	if file != nil {
+		// 👷 Save file inside uploads folder under current working directory:
+		image := util.StorageBanner(file.Filename)
+
+		if err = c.SaveFile(file, util.Storage(image)); err != nil {
+			return err
+		}
+
+		bannerRequest.Image = image
 	}
 
 	banner := model.Banner{
@@ -68,7 +84,7 @@ func (obj *BannerController) CreateNewBanner(c *fiber.Ctx) error {
 		Status: bannerRequest.Status,
 	}
 
-	if _, err := obj.bannerRepository.SaveBanner(banner); err != nil {
+	if _, err = obj.bannerRepository.SaveBanner(banner); err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
@@ -81,12 +97,29 @@ func (obj *BannerController) UpdateBannerById(c *fiber.Ctx) error {
 	banner, err := obj.bannerRepository.FindBannerByIdAndStatusNot(bannerId, util.StatusDeleted)
 
 	if err != nil || banner.BannerId == 0 {
-		return util.ResponseBadRequest("ID không tồn tại", err)
+		return util.ResponseBadRequest("BannerId không tồn tại", err)
 	}
 
+	bannerForm := c.FormValue("banner")
+
 	bannerRequest := new(request.BannerRequest)
-	if err = c.BodyParser(bannerRequest); err != nil {
+
+	if err = util.JSONUnmarshal([]byte(bannerForm), bannerRequest); err != nil {
 		return util.ResponseError(err.Error(), nil)
+	}
+
+	// Get first file from form field "image":
+	file, err := c.FormFile("image")
+
+	if file != nil {
+		// 👷 Save file inside uploads folder under current working directory:
+		image := util.StorageBanner(file.Filename)
+
+		if err = c.SaveFile(file, util.Storage(image)); err != nil {
+			return err
+		}
+
+		bannerRequest.Image = image
 	}
 
 	banner.Image = bannerRequest.Image
@@ -106,7 +139,7 @@ func (obj *BannerController) DeleteBannerById(c *fiber.Ctx) error {
 	banner, err := obj.bannerRepository.FindBannerByIdAndStatusNot(bannerId, util.StatusDeleted)
 
 	if err != nil || banner.BannerId == 0 {
-		return util.ResponseBadRequest("ID không tồn tại", err)
+		return util.ResponseBadRequest("BannerId không tồn tại", err)
 	}
 
 	banner.Status = util.StatusDeleted
