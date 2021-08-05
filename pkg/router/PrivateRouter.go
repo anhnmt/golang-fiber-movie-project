@@ -9,6 +9,15 @@ func privateRoute(a fiber.Router) {
 	// Using Protected
 	//private := a.Group("/", middleware.Protected())
 
+	// Banners Controller
+	bannerController := controller.NewBannerController()
+	banners := a.Group("/banners")
+	banners.Get("/", bannerController.FindAllBanners)
+	banners.Post("/", bannerController.CreateNewBanner)
+	banners.Get("/:id", bannerController.FindBannerById)
+	banners.Put("/:id", bannerController.UpdateBannerById)
+	banners.Delete("/:id", bannerController.DeleteBannerById)
+
 	// Tags Controller
 	tagController := controller.NewTagController()
 	tags := a.Group("/tags")

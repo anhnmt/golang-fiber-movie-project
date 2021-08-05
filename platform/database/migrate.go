@@ -1,7 +1,7 @@
 package database
 
 import (
-	model "github.com/xdorro/golang-fiber-base-project/app/entity/model"
+	"github.com/xdorro/golang-fiber-base-project/app/entity/model"
 	"log"
 )
 
@@ -15,6 +15,7 @@ func migrate() {
 		model.Genre{},
 		model.Country{},
 		//model.People{},
+		model.Banner{},
 
 		model.Movie{},
 		//model.MovieTag{},

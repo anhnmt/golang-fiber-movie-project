@@ -12,4 +12,5 @@ var (
 	movieController         *MovieController
 	movieTypeController     *MovieTypeController
 	episodeDetailController *EpisodeDetailController
+	bannerController        *BannerController
 )
