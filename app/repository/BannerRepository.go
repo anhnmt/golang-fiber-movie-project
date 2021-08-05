@@ -74,3 +74,11 @@ func (obj *BannerRepository) SaveBanner(banner model.Banner) (*model.Banner, err
 
 	return &banner, err
 }
+
+func (obj *BannerRepository) UpdateBanner(bannerId string, banner model.Banner) (*model.Banner, error) {
+	err := obj.db.Model(model.Banner{}).
+		Where("banner_id = ?", bannerId).
+		Save(&banner).Error
+
+	return &banner, err
+}

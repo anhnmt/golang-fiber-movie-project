@@ -126,7 +126,7 @@ func (obj *BannerController) UpdateBannerById(c *fiber.Ctx) error {
 	banner.Url = bannerRequest.Url
 	banner.Status = bannerRequest.Status
 
-	if _, err = obj.bannerRepository.SaveBanner(*banner); err != nil {
+	if _, err = obj.bannerRepository.UpdateBanner(bannerId, *banner); err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
@@ -144,7 +144,7 @@ func (obj *BannerController) DeleteBannerById(c *fiber.Ctx) error {
 
 	banner.Status = util.StatusDeleted
 
-	if _, err = obj.bannerRepository.SaveBanner(*banner); err != nil {
+	if _, err = obj.bannerRepository.UpdateBanner(bannerId, *banner); err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
