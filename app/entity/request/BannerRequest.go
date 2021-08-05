@@ -2,6 +2,6 @@ package request
 
 type BannerRequest struct {
 	Image  string `json:"image"`
-	Url    uint   `json:"url"`
+	Url    string `json:"url"`
 	Status int    `json:"status"`
 }

@@ -67,6 +67,7 @@ func (obj *MovieRepository) FindAllTopMoviesByGenreSlugAndStatusNotInAndLimit(sl
 	err := db.
 		Model(&model.Movie{}).
 		Select("movies.*, movie_types.name movie_type_name").
+		Joins("JOIN movie_types on movies.movie_type_id = movie_types.movie_type_id").
 		Joins("JOIN movie_genres on movie_genres.movie_id = movies.movie_id").
 		Joins("JOIN genres on genres.genre_id = movie_genres.genre_id").
 		Where("movies.status NOT IN ?", status).

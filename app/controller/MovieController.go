@@ -107,10 +107,10 @@ func (obj *MovieController) ClientTopMoviesBody(c *fiber.Ctx) error {
 	}
 
 	result := response.TopMovieBodyResponse{
-		Cinemas:  *cinemas,
-		Movies:   *movies,
-		Series:   *series,
-		Cartoons: *cartoons,
+		Cinemas:  mapper.SearchMovies(cinemas),
+		Movies:   mapper.SearchMovies(movies),
+		Series:   mapper.SearchMovies(series),
+		Cartoons: mapper.SearchMovies(cartoons),
 	}
 
 	return util.ResponseSuccess("Thành công", result)
