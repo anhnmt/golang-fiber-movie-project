@@ -47,6 +47,15 @@ func (obj *BannerRepository) FindAllBannersByStatusNot(status int) (*[]model.Ban
 	return &banners, err
 }
 
+func (obj *BannerRepository) FindAllBannersByStatusNotIn(status []int) (*[]model.Banner, error) {
+	banners := make([]model.Banner, 0)
+
+	err := db.Model(model.Banner{}).
+		Find(&banners, "status NOT IN ?", status).Error
+
+	return &banners, err
+}
+
 // FindBannerByIdAndStatus : Find banner by BannerId and Status
 func (obj *BannerRepository) FindBannerByIdAndStatus(id string, status int) (*model.Banner, error) {
 	var banner model.Banner

@@ -31,6 +31,16 @@ func NewBannerController() *BannerController {
 	return bannerController
 }
 
+func (obj *BannerController) ClientFindAllBanners(c *fiber.Ctx) error {
+	banners, err := obj.bannerRepository.FindAllBannersByStatusNotIn([]int{util.StatusDraft, util.StatusDeleted})
+
+	if err != nil {
+		return util.ResponseError(err.Error(), nil)
+	}
+
+	return util.ResponseSuccess("Thành công", banners)
+}
+
 // FindAllBanners : Find all banners by Status Not
 func (obj *BannerController) FindAllBanners(c *fiber.Ctx) error {
 	banners, err := obj.bannerRepository.FindAllBannersByStatusNot(util.StatusDeleted)

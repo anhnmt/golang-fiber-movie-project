@@ -21,4 +21,7 @@ func publicRoute(a fiber.Router) {
 	clients.Get("/top-movies-sidebar", movieController.ClientTopMovieSidebar)
 	clients.Get("/top-movies-body", movieController.ClientTopMoviesBody)
 	clients.Get("/find-movie-detail/:movieSlug", movieController.ClientFindMovieDetail)
+
+	bannerController := controller.NewBannerController()
+	clients.Get("/banner", bannerController.ClientFindAllBanners)
 }
