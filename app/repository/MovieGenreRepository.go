@@ -40,7 +40,7 @@ func (obj *MovieGenreRepository) CreateMovieGenreByMovieId(movieGenres []model.M
 
 func (obj *MovieGenreRepository) RemoveMovieGenreByMovieIdAndGenreIds(movieId uint, genreIds []uint) error {
 	err := db.
-		Model(&model.Genre{}).
+		Model(&model.MovieGenre{}).
 		Where("movie_id = ? AND genre_id IN ?", movieId, genreIds).
 		Delete(&model.MovieGenre{}).Error
 

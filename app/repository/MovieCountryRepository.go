@@ -40,7 +40,7 @@ func (obj *MovieCountryRepository) CreateMovieCountryByMovieId(movieCountries []
 
 func (obj *MovieCountryRepository) RemoveMovieCountryByMovieIdAndCountryIds(movieId uint, countryIds []uint) error {
 	err := db.
-		Model(&model.Country{}).
+		Model(&model.MovieCountry{}).
 		Where("movie_id = ? AND country_id IN ?", movieId, countryIds).
 		Delete(&model.MovieCountry{}).Error
 
