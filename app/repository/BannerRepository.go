@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"github.com/xdorro/golang-fiber-base-project/app/entity/dto"
 	"github.com/xdorro/golang-fiber-base-project/app/entity/model"
 	"gorm.io/gorm"
 	"log"
@@ -56,6 +57,19 @@ func (obj *BannerRepository) FindAllBannersByStatusNotIn(status []int) (*[]model
 	return &banners, err
 }
 
+func (obj *BannerRepository) FindAllBannersByStatusNotInAndJoinMovie(status []int) (*[]dto.SearchBannerDTO, error) {
+	banners := make([]dto.SearchBannerDTO, 0)
+
+	err := db.Model(model.Banner{}).
+		Select("banners.*, movies.movie_id, movies.origin_name, movies.name, movies.slug, movies.release_date").
+		Joins("JOIN movies on movies.movie_id = banners.movie_id").
+		Where("movies.status NOT IN ?", status).
+		Where("banners.status NOT IN ?", status).
+		Find(&banners).Error
+
+	return &banners, err
+}
+
 // FindBannerByIdAndStatus : Find banner by BannerId and Status
 func (obj *BannerRepository) FindBannerByIdAndStatus(id string, status int) (*model.Banner, error) {
 	var banner model.Banner
@@ -72,6 +86,20 @@ func (obj *BannerRepository) FindBannerByIdAndStatusNot(id string, status int) (
 
 	err := obj.db.Model(model.Banner{}).
 		Where("banner_id = ? AND status <> ?", id, status).
+		Find(&banner).Error
+
+	return &banner, err
+}
+
+func (obj *BannerRepository) FindBannerByIdAndStatusNotAndJoinMovie(id string, status int) (*dto.SearchBannerDTO, error) {
+	var banner dto.SearchBannerDTO
+
+	err := db.Model(model.Banner{}).
+		Select("banners.*, movies.movie_id, movies.origin_name, movies.name, movies.slug, movies.release_date").
+		Joins("JOIN movies on movies.movie_id = banners.movie_id").
+		Where("movies.status <> ?", status).
+		Where("banners.status <> ?", status).
+		Where("banners.banner_id = ?", id).
 		Find(&banner).Error
 
 	return &banner, err

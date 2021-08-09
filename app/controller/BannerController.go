@@ -5,6 +5,7 @@ import (
 	"github.com/xdorro/golang-fiber-base-project/app/entity/model"
 	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-base-project/app/repository"
+	"github.com/xdorro/golang-fiber-base-project/pkg/mapper"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
 	"github.com/xdorro/golang-fiber-base-project/pkg/validator"
 	"log"
@@ -34,36 +35,42 @@ func NewBannerController() *BannerController {
 }
 
 func (obj *BannerController) ClientFindAllBanners(c *fiber.Ctx) error {
-	banners, err := obj.bannerRepository.FindAllBannersByStatusNotIn([]int{util.StatusDraft, util.StatusDeleted})
+	banners, err := obj.bannerRepository.FindAllBannersByStatusNotInAndJoinMovie([]int{util.StatusDraft, util.StatusDeleted})
 
 	if err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
-	return util.ResponseSuccess("Thành công", banners)
+	result := mapper.SearchBannerMapper(banners)
+
+	return util.ResponseSuccess("Thành công", result)
 }
 
 // FindAllBanners : Find all banners by Status Not
 func (obj *BannerController) FindAllBanners(c *fiber.Ctx) error {
-	banners, err := obj.bannerRepository.FindAllBannersByStatusNot(util.StatusDeleted)
+	banners, err := obj.bannerRepository.FindAllBannersByStatusNotInAndJoinMovie([]int{util.StatusDeleted})
 
 	if err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
-	return util.ResponseSuccess("Thành công", banners)
+	result := mapper.SearchBannerMapper(banners)
+
+	return util.ResponseSuccess("Thành công", result)
 }
 
 // FindBannerById : Find banner by Banner_Id and Status Not
 func (obj *BannerController) FindBannerById(c *fiber.Ctx) error {
 	bannerId := c.Params("id")
-	banner, err := obj.bannerRepository.FindBannerByIdAndStatusNot(bannerId, util.StatusDeleted)
+	banner, err := obj.bannerRepository.FindBannerByIdAndStatusNotAndJoinMovie(bannerId, util.StatusDeleted)
 
 	if err != nil || banner.BannerId == 0 {
 		return util.ResponseBadRequest("ID không tồn tại", err)
 	}
 
-	return util.ResponseSuccess("Thành công", banner)
+	result := mapper.SearchBanner(banner)
+
+	return util.ResponseSuccess("Thành công", result)
 }
 
 // CreateNewBanner : Create a new banner
