@@ -11,6 +11,7 @@ import (
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
 	"github.com/xdorro/golang-fiber-base-project/pkg/validator"
 	"log"
+	"net/url"
 	"sync"
 )
 
@@ -145,6 +146,25 @@ func (obj *MovieController) ClientFindMovieDetail(c *fiber.Ctx) error {
 	}
 
 	result := mapper.ClientMovieDetail(movie, movieRelated, movieGenres, movieContries)
+
+	return util.ResponseSuccess("Thành công", result)
+}
+
+func (obj *MovieController) ClientFindMovieByName(c *fiber.Ctx) error {
+	movieName, err := url.PathUnescape(c.Params("movieName"))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	status := []int{util.StatusDraft, util.StatusDeleted}
+
+	movies, err := obj.movieRepository.FindAllMoviesByMovieNameAndStatusNotIn(movieName, status, 10)
+
+	if err != nil {
+		return util.ResponseError(err.Error(), nil)
+	}
+
+	result := mapper.SearchMovies(movies)
 
 	return util.ResponseSuccess("Thành công", result)
 }

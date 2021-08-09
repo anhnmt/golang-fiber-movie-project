@@ -134,6 +134,24 @@ func (obj *MovieRepository) FindMovieBySlugAndStatusNotInAndJoinMovieType(movieS
 	return &movie, err
 }
 
+func (obj *MovieRepository) FindAllMoviesByMovieNameAndStatusNotIn(movieName string, status []int, limit int) (*[]dto.SearchMovieDTO, error) {
+	movies := make([]dto.SearchMovieDTO, 0)
+	movieName = "%" + movieName + "%"
+
+	err := db.
+		Model(&model.Movie{}).
+		Select("movies.*, movie_types.name movie_type_name").
+		Joins("JOIN movie_types on movie_types.movie_type_id = movies.movie_type_id").
+		Where("movies.status NOT IN ?", status).
+		Where("movie_types.status NOT IN ?", status).
+		Where("movies.name LIKE ? OR movies.origin_name LIKE ?", movieName, movieName).
+		Order("movies.updated_at DESC").
+		Limit(limit).
+		Find(&movies).Error
+
+	return &movies, err
+}
+
 func (obj *MovieRepository) FindAllMoviesRelatedByMovieIdAndStatusNotInAndLimit(movieId uint, status []int, limit int) (*[]dto.SearchMovieDTO, error) {
 	movies := make([]dto.SearchMovieDTO, 0)
 

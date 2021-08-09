@@ -21,6 +21,12 @@ func BaseRouter(app *fiber.App) {
 		})
 	})
 
+	api.Post("/", func(c *fiber.Ctx) error {
+		return c.JSON(fiber.Map{
+			"msg": "Welcome to Fiber Go API!",
+		})
+	})
+
 	// Private router
 	privateRoute(api)
 

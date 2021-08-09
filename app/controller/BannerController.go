@@ -6,7 +6,9 @@ import (
 	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-base-project/app/repository"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
+	"github.com/xdorro/golang-fiber-base-project/pkg/validator"
 	"log"
+	"strconv"
 	"sync"
 )
 
@@ -88,10 +90,16 @@ func (obj *BannerController) CreateNewBanner(c *fiber.Ctx) error {
 		bannerRequest.Image = image
 	}
 
+	if bannerRequest.MovieId != 0 {
+		if _, err = validator.ValidateMovieId(strconv.Itoa(int(bannerRequest.MovieId))); err != nil {
+			return err
+		}
+	}
+
 	banner := model.Banner{
-		Image:  bannerRequest.Image,
-		Url:    bannerRequest.Url,
-		Status: bannerRequest.Status,
+		MovieId: bannerRequest.MovieId,
+		Image:   bannerRequest.Image,
+		Status:  bannerRequest.Status,
 	}
 
 	if _, err = obj.bannerRepository.SaveBanner(banner); err != nil {
@@ -132,8 +140,14 @@ func (obj *BannerController) UpdateBannerById(c *fiber.Ctx) error {
 		bannerRequest.Image = image
 	}
 
+	if bannerRequest.MovieId != 0 {
+		if _, err = validator.ValidateMovieId(strconv.Itoa(int(bannerRequest.MovieId))); err != nil {
+			return err
+		}
+	}
+
+	banner.MovieId = bannerRequest.MovieId
 	banner.Image = bannerRequest.Image
-	banner.Url = bannerRequest.Url
 	banner.Status = bannerRequest.Status
 
 	if _, err = obj.bannerRepository.UpdateBanner(bannerId, *banner); err != nil {
