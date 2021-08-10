@@ -13,21 +13,16 @@ func init() {
 }
 
 var (
-	once *sync.Once
-
-	tagRepository *TagRepository
-
-	episodeRepository *EpisodeRepository
-
+	once                    *sync.Once
+	tagRepository           *TagRepository
+	episodeRepository       *EpisodeRepository
 	episodeDetailRepository *EpisodeDetailRepository
-
-	episodeTypeRepository *EpisodeTypeRepository
-
-	movieRepository *MovieRepository
-
-	movieTypeRepository *MovieTypeRepository
-
-	countryRepository *CountryRepository
-
-	genreRepository *GenreRepository
+	episodeTypeRepository   *EpisodeTypeRepository
+	movieRepository         *MovieRepository
+	movieTypeRepository     *MovieTypeRepository
+	countryRepository       *CountryRepository
+	genreRepository         *GenreRepository
+	movieGenreRepository    *MovieGenreRepository
+	movieCountryRepository  *MovieCountryRepository
+	bannerRepository        *BannerRepository
 )

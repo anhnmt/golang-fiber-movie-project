@@ -16,7 +16,7 @@ type TagController struct {
 
 func NewTagController() *TagController {
 	if tagController == nil {
-		once := &sync.Once{}
+		once = &sync.Once{}
 
 		once.Do(func() {
 			if tagController == nil {

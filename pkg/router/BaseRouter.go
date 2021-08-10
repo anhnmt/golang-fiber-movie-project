@@ -7,17 +7,25 @@ import (
 )
 
 func BaseRouter(app *fiber.App) {
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Static("/storage", "./storage")
+
+	// Create route group.
+	app.Get("/swagger/*", swagger.Handler)
+
+	api := app.Group("/api")
+
+	api.Get("/", func(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{
 			"msg":  "Welcome to Fiber Go API!",
 			"docs": "/swagger/index.html",
 		})
 	})
 
-	// Create route group.
-	app.Get("/swagger/*", swagger.Handler)
-
-	api := app.Group("/api")
+	api.Post("/", func(c *fiber.Ctx) error {
+		return c.JSON(fiber.Map{
+			"msg": "Welcome to Fiber Go API!",
+		})
+	})
 
 	// Private router
 	privateRoute(api)
