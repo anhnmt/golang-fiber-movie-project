@@ -83,25 +83,25 @@ func (obj *MovieController) ClientTopMovieSidebar(c *fiber.Ctx) error {
 func (obj *MovieController) ClientTopMoviesBody(c *fiber.Ctx) error {
 	status := []int{util.StatusDraft, util.StatusDeleted}
 
-	movies, err := obj.movieRepository.FindAllTopMoviesByMovieTypeSlugAndStatusNotInAndLimit("phim-le", status, 5)
+	cinemas, err := obj.movieRepository.FindAllTopMoviesByGenreSlugAndStatusNotInAndLimit("phim-chieu-rap", status, 8)
 
 	if err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
-	series, err := obj.movieRepository.FindAllTopMoviesByMovieTypeSlugAndStatusNotInAndLimit("phim-bo", status, 5)
+	movies, err := obj.movieRepository.FindAllTopMoviesByMovieTypeSlugAndStatusNotInAndLimit("phim-le", status, 8)
 
 	if err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
-	cinemas, err := obj.movieRepository.FindAllTopMoviesByGenreSlugAndStatusNotInAndLimit("phim-chieu-rap", status, 5)
+	series, err := obj.movieRepository.FindAllTopMoviesByMovieTypeSlugAndStatusNotInAndLimit("phim-bo", status, 6)
 
 	if err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
-	cartoons, err := obj.movieRepository.FindAllTopMoviesByGenreSlugAndStatusNotInAndLimit("hoat-hinh", status, 5)
+	cartoons, err := obj.movieRepository.FindAllTopMoviesByGenreSlugAndStatusNotInAndLimit("hoat-hinh", status, 6)
 
 	if err != nil {
 		return util.ResponseError(err.Error(), nil)
@@ -139,13 +139,13 @@ func (obj *MovieController) ClientFindMovieDetail(c *fiber.Ctx) error {
 		return util.ResponseError(err.Error(), nil)
 	}
 
-	movieContries, err := obj.movieCountryRepository.FindAllCountriesByMovieIdAndStatusNotIn(movie.MovieId, status)
+	movieCountries, err := obj.movieCountryRepository.FindAllCountriesByMovieIdAndStatusNotIn(movie.MovieId, status)
 
 	if err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
-	result := mapper.ClientMovieDetail(movie, movieRelated, movieGenres, movieContries)
+	result := mapper.ClientMovieDetail(movie, movieRelated, movieGenres, movieCountries)
 
 	return util.ResponseSuccess("Thành công", result)
 }
@@ -159,6 +159,63 @@ func (obj *MovieController) ClientFindMovieByName(c *fiber.Ctx) error {
 	status := []int{util.StatusDraft, util.StatusDeleted}
 
 	movies, err := obj.movieRepository.FindAllMoviesByMovieNameAndStatusNotIn(movieName, status, 10)
+
+	if err != nil {
+		return util.ResponseError(err.Error(), nil)
+	}
+
+	result := mapper.SearchMovies(movies)
+
+	return util.ResponseSuccess("Thành công", result)
+}
+
+func (obj *MovieController) ClientFindMovieByMovieTypeSlug(c *fiber.Ctx) error {
+	movieType, err := url.PathUnescape(c.Params("movieType"))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	status := []int{util.StatusDraft, util.StatusDeleted}
+
+	movies, err := obj.movieRepository.FindAllMoviesByMovieTypeSlugAndStatusNotIn(movieType, status, 10)
+
+	if err != nil {
+		return util.ResponseError(err.Error(), nil)
+	}
+
+	result := mapper.SearchMovies(movies)
+
+	return util.ResponseSuccess("Thành công", result)
+}
+
+func (obj *MovieController) ClientFindMovieByMovieGenre(c *fiber.Ctx) error {
+	movieGenre, err := url.PathUnescape(c.Params("movieGenre"))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	status := []int{util.StatusDraft, util.StatusDeleted}
+
+	movies, err := obj.movieRepository.FindAllMoviesByGenreSlugAndStatusNotIn(movieGenre, status, 10)
+
+	if err != nil {
+		return util.ResponseError(err.Error(), nil)
+	}
+
+	result := mapper.SearchMovies(movies)
+
+	return util.ResponseSuccess("Thành công", result)
+}
+
+func (obj *MovieController) ClientFindMovieByMovieCountry(c *fiber.Ctx) error {
+	movieCountry, err := url.PathUnescape(c.Params("movieCountry"))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	status := []int{util.StatusDraft, util.StatusDeleted}
+
+	movies, err := obj.movieRepository.FindAllMoviesByCountrySlugAndStatusNotIn(movieCountry, status, 10)
 
 	if err != nil {
 		return util.ResponseError(err.Error(), nil)

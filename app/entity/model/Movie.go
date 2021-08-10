@@ -14,6 +14,7 @@ type Movie struct {
 	Poster      string `json:"poster"`
 	SeoTitle    string `json:"seo_title"`
 	SeoKeywords string `json:"seo_keywords"`
+	Ribbon      string `json:"ribbon"`
 	MovieTypeId uint   `gorm:"index:,not null" json:"movie_type_id"`
 	Status      int    `gorm:"index:,default:1" json:"status"`
 	BaseModel

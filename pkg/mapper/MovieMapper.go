@@ -36,6 +36,7 @@ func SearchMovie(movie *dto.SearchMovieDTO) *response.SearchMovieResponse {
 		MovieType: dto.MovieTypeDTO{
 			MovieTypeId: movie.MovieTypeId,
 			Name:        movie.MovieTypeName,
+			Slug:        movie.MovieTypeSlug,
 		},
 	}
 }
@@ -59,6 +60,7 @@ func MovieDetail(movie *dto.MovieDetailDTO) *response.MovieDetailResponse {
 		MovieType: dto.MovieTypeDTO{
 			MovieTypeId: movie.MovieTypeId,
 			Name:        movie.MovieTypeName,
+			Slug:        movie.MovieTypeSlug,
 		},
 	}
 }
@@ -84,6 +86,7 @@ func ClientMovieDetail(movie *dto.MovieDetailDTO, related *[]dto.SearchMovieDTO,
 		MovieType: dto.MovieTypeDTO{
 			MovieTypeId: movie.MovieTypeId,
 			Name:        movie.MovieTypeName,
+			Slug:        movie.MovieTypeSlug,
 		},
 		MovieRelated:   movieRelated,
 		MovieGenres:    *genres,
