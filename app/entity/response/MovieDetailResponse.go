@@ -6,7 +6,7 @@ import (
 )
 
 type MovieDetailResponse struct {
-	MovieId        uint                  `json:"movie_id"`
+	MovieId        int64                 `json:"movie_id"`
 	OriginName     string                `json:"origin_name"`
 	Name           string                `json:"name"`
 	Slug           string                `json:"slug"`

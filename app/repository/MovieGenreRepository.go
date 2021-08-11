@@ -38,7 +38,7 @@ func (obj *MovieGenreRepository) CreateMovieGenreByMovieId(movieGenres []model.M
 	return err
 }
 
-func (obj *MovieGenreRepository) RemoveMovieGenreByMovieIdAndGenreIds(movieId uint, genreIds []uint) error {
+func (obj *MovieGenreRepository) RemoveMovieGenreByMovieIdAndGenreIds(movieId int64, genreIds []int64) error {
 	err := db.
 		Model(&model.MovieGenre{}).
 		Where("movie_id = ? AND genre_id IN ?", movieId, genreIds).
@@ -47,7 +47,7 @@ func (obj *MovieGenreRepository) RemoveMovieGenreByMovieIdAndGenreIds(movieId ui
 	return err
 }
 
-func (obj *MovieGenreRepository) FindAllGenresByMovieIdAndStatusNotIn(movieId uint, status []int) (*[]model.Genre, error) {
+func (obj *MovieGenreRepository) FindAllGenresByMovieIdAndStatusNotIn(movieId int64, status []int) (*[]model.Genre, error) {
 	genres := make([]model.Genre, 0)
 
 	err := db.

@@ -6,7 +6,7 @@ import (
 )
 
 //func FindAllUserRolesByUserIdAndStatus(id string, status int) (*[]model.Role, error) {
-//	uid := util.ParseStringToUInt(id)
+//	uid := util.ParseStringToInt64(id)
 //
 //	roles := make([]model.Role, 0)
 //	if err := db.
@@ -37,7 +37,7 @@ func FindAllRolesByStatus(status int) (*[]model.Role, error) {
 
 // FindRoleByIdAndStatus : Find role by RoleId and Status = 1
 func FindRoleByIdAndStatus(id string, status int) (*model.Role, error) {
-	uid := util.ParseStringToUInt(id)
+	uid := util.ParseStringToInt64(id)
 
 	var role model.Role
 	err := db.Where(&model.Role{RoleId: uid, Status: status}).Find(&role).Error

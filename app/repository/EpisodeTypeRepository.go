@@ -56,7 +56,7 @@ func (obj *EpisodeTypeRepository) SaveEpisodeType(episodeType model.EpisodeType)
 	return &episodeType, err
 }
 
-func (obj *EpisodeTypeRepository) UpdateStatusByEpisodeTypeId(episodeTypeId uint, status int) error {
+func (obj *EpisodeTypeRepository) UpdateStatusByEpisodeTypeId(episodeTypeId int64, status int) error {
 	err := obj.db.Model(&model.EpisodeType{}).
 		Where("episode_type_id = ?", episodeTypeId).
 		Update("status", status).Error

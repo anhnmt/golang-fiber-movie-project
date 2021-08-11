@@ -1,7 +1,7 @@
 package model
 
 type Movie struct {
-	MovieId     uint   `gorm:"primaryKey" json:"movie_id"`
+	MovieId     int64  `gorm:"primaryKey" json:"movie_id"`
 	OriginName  string `gorm:"not null" json:"origin_name"`
 	Name        string `gorm:"not null" json:"name"`
 	Slug        string `gorm:"index:,not null" json:"slug"`
@@ -15,7 +15,7 @@ type Movie struct {
 	SeoTitle    string `json:"seo_title"`
 	SeoKeywords string `json:"seo_keywords"`
 	Ribbon      string `json:"ribbon"`
-	MovieTypeId uint   `gorm:"index:,not null" json:"movie_type_id"`
+	MovieTypeId int64  `gorm:"index:,not null" json:"movie_type_id"`
 	Status      int    `gorm:"index:,default:1" json:"status"`
 	BaseModel
 }

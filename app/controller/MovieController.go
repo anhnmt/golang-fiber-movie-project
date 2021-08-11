@@ -385,7 +385,7 @@ func (obj *MovieController) DeleteMovieById(c *fiber.Ctx) error {
 }
 
 // createMovieGenres: Handler create movie genre
-func (obj *MovieController) createMovieGenres(movieId *uint, newGenreIds *[]uint) error {
+func (obj *MovieController) createMovieGenres(movieId *int64, newGenreIds *[]int64) error {
 	if len(*newGenreIds) > 0 {
 		// Find genreIds in Genres
 		genres, err := obj.genreRepository.FindAllGenresByGenreIdsInAndStatusNotIn(*newGenreIds, []int{util.StatusDeleted, util.StatusDraft})
@@ -414,7 +414,7 @@ func (obj *MovieController) createMovieGenres(movieId *uint, newGenreIds *[]uint
 }
 
 // updateMovieGenres: Handler update movie genre
-func (obj *MovieController) updateMovieGenres(movieId *uint, newGenreIds *[]uint) error {
+func (obj *MovieController) updateMovieGenres(movieId *int64, newGenreIds *[]int64) error {
 	if len(*newGenreIds) > 0 {
 		// Find all genres by movieId
 		genres, err := obj.movieGenreRepository.FindAllGenresByMovieIdAndStatusNotIn(*movieId, []int{util.StatusDeleted, util.StatusDraft})
@@ -440,7 +440,7 @@ func (obj *MovieController) updateMovieGenres(movieId *uint, newGenreIds *[]uint
 }
 
 // createMovieCountries: Handler create movie genre
-func (obj *MovieController) createMovieCountries(movieId *uint, newCountryIds *[]uint) error {
+func (obj *MovieController) createMovieCountries(movieId *int64, newCountryIds *[]int64) error {
 	if len(*newCountryIds) > 0 {
 		// Find countryIds in Countries
 		countries, err := obj.countryRepository.FindAllCountriesByCountryIdsInAndStatusNotIn(*newCountryIds, []int{util.StatusDeleted, util.StatusDraft})
@@ -469,7 +469,7 @@ func (obj *MovieController) createMovieCountries(movieId *uint, newCountryIds *[
 }
 
 // updateMovieCountries: Handler update movie countries
-func (obj *MovieController) updateMovieCountries(movieId *uint, newCountryIds *[]uint) error {
+func (obj *MovieController) updateMovieCountries(movieId *int64, newCountryIds *[]int64) error {
 	if len(*newCountryIds) > 0 {
 		// Find all genres by movieId
 		countries, err := obj.movieCountryRepository.FindAllCountriesByMovieIdAndStatusNotIn(*movieId, []int{util.StatusDeleted, util.StatusDraft})

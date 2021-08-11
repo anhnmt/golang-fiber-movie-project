@@ -39,7 +39,7 @@ func (obj *MovieTypeRepository) FindAllMovieTypesByStatusNot(status int) (*[]mod
 }
 
 func (obj *MovieTypeRepository) FindMovieTypeByIdAndStatusNot(id string, status int) (*model.MovieType, error) {
-	uid := util.ParseStringToUInt(id)
+	uid := util.ParseStringToInt64(id)
 
 	var movieType model.MovieType
 	err := db.Model(&model.MovieType{}).
@@ -57,7 +57,7 @@ func (obj *MovieTypeRepository) SaveMovieType(movieType model.MovieType) (*model
 	return &movieType, err
 }
 
-func (obj *MovieTypeRepository) UpdateStatusByMovieTypeId(movieTypeId uint, status int) error {
+func (obj *MovieTypeRepository) UpdateStatusByMovieTypeId(movieTypeId int64, status int) error {
 	err := db.Model(&model.Movie{}).
 		Where("movie_type_id = ?", movieTypeId).
 		Update("status", status).Error

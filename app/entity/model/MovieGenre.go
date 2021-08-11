@@ -1,6 +1,6 @@
 package model
 
 type MovieGenre struct {
-	MovieId uint `gorm:"index:,not null" json:"movie_id"`
-	GenreId uint `gorm:"index:,not null" json:"genre_id"`
+	MovieId int64 `gorm:"index:,not null" json:"movie_id"`
+	GenreId int64 `gorm:"index:,not null" json:"genre_id"`
 }

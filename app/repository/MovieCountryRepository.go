@@ -38,7 +38,7 @@ func (obj *MovieCountryRepository) CreateMovieCountryByMovieId(movieCountries []
 	return err
 }
 
-func (obj *MovieCountryRepository) RemoveMovieCountryByMovieIdAndCountryIds(movieId uint, countryIds []uint) error {
+func (obj *MovieCountryRepository) RemoveMovieCountryByMovieIdAndCountryIds(movieId int64, countryIds []int64) error {
 	err := db.
 		Model(&model.MovieCountry{}).
 		Where("movie_id = ? AND country_id IN ?", movieId, countryIds).
@@ -47,7 +47,7 @@ func (obj *MovieCountryRepository) RemoveMovieCountryByMovieIdAndCountryIds(movi
 	return err
 }
 
-func (obj *MovieCountryRepository) FindAllCountriesByMovieIdAndStatusNotIn(movieId uint, status []int) (*[]model.Country, error) {
+func (obj *MovieCountryRepository) FindAllCountriesByMovieIdAndStatusNotIn(movieId int64, status []int) (*[]model.Country, error) {
 	countries := make([]model.Country, 0)
 
 	err := db.

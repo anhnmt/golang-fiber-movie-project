@@ -1,7 +1,7 @@
 package dto
 
 type MovieDetailDTO struct {
-	MovieId       uint   `json:"movie_id"`
+	MovieId       int64  `json:"movie_id"`
 	OriginName    string `json:"origin_name"`
 	Name          string `json:"name"`
 	Slug          string `json:"slug"`
@@ -15,7 +15,7 @@ type MovieDetailDTO struct {
 	SeoTitle      string `json:"seo_title,omitempty"`
 	SeoKeywords   string `json:"seo_keywords,omitempty"`
 	Status        int    `json:"status,omitempty"`
-	MovieTypeId   uint   `json:"movie_type_id,omitempty"`
+	MovieTypeId   int64  `json:"movie_type_id,omitempty"`
 	MovieTypeName string `json:"movie_type_name,omitempty"`
 	MovieTypeSlug string `json:"movie_type_slug,omitempty"`
 }

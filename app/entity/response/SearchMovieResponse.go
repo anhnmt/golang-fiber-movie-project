@@ -3,7 +3,7 @@ package response
 import "github.com/xdorro/golang-fiber-base-project/app/entity/dto"
 
 type SearchMovieResponse struct {
-	MovieId     uint             `json:"movie_id"`
+	MovieId     int64            `json:"movie_id"`
 	OriginName  string           `json:"origin_name"`
 	Name        string           `json:"name"`
 	Slug        string           `json:"slug"`
