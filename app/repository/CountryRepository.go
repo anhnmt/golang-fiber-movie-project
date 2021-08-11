@@ -48,7 +48,7 @@ func (obj *CountryRepository) FindAllCountriesByStatusNotIn(status []int) (*[]mo
 }
 
 func (obj *CountryRepository) FindCountryByIdAndStatusNot(id string, status int) (*model.Country, error) {
-	uid := util.ParseStringToUInt(id)
+	uid := util.ParseStringToInt64(id)
 
 	var country model.Country
 	err := db.Model(model.Country{}).
@@ -58,7 +58,7 @@ func (obj *CountryRepository) FindCountryByIdAndStatusNot(id string, status int)
 	return &country, err
 }
 
-func (obj *CountryRepository) FindAllCountriesByCountryIdsInAndStatusNotIn(countryIds []uint, status []int) (*[]model.Country, error) {
+func (obj *CountryRepository) FindAllCountriesByCountryIdsInAndStatusNotIn(countryIds []int64, status []int) (*[]model.Country, error) {
 	countries := make([]model.Country, 0)
 
 	err := db.Model(model.Country{}).

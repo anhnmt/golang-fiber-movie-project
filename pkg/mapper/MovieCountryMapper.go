@@ -5,7 +5,7 @@ import (
 	"github.com/xdorro/golang-fiber-base-project/pkg/validator"
 )
 
-func MovieCountries(movieId *uint, countryIds *[]uint) []model.MovieCountry {
+func MovieCountries(movieId *int64, countryIds *[]int64) []model.MovieCountry {
 	result := make([]model.MovieCountry, 0)
 
 	for _, countryId := range *countryIds {
@@ -16,15 +16,15 @@ func MovieCountries(movieId *uint, countryIds *[]uint) []model.MovieCountry {
 	return result
 }
 
-func MovieCountry(movieId *uint, countryId *uint) *model.MovieCountry {
+func MovieCountry(movieId *int64, countryId *int64) *model.MovieCountry {
 	return &model.MovieCountry{
 		MovieId:   *movieId,
 		CountryId: *countryId,
 	}
 }
 
-func GetCountryIdsNotExistInNewCountryIds(newCountryIds []uint, countries []model.Country) *[]uint {
-	result := make([]uint, 0)
+func GetCountryIdsNotExistInNewCountryIds(newCountryIds []int64, countries []model.Country) *[]int64 {
+	result := make([]int64, 0)
 
 	for _, country := range countries {
 		if !validator.ExistCountryIdInCountryIds(country.CountryId, newCountryIds) {
@@ -35,8 +35,8 @@ func GetCountryIdsNotExistInNewCountryIds(newCountryIds []uint, countries []mode
 	return &result
 }
 
-func GetNewCountryIdsNotExistInCountries(countryIds []uint, countries []model.Country) *[]uint {
-	result := make([]uint, 0)
+func GetNewCountryIdsNotExistInCountries(countryIds []int64, countries []model.Country) *[]int64 {
+	result := make([]int64, 0)
 
 	for _, countryId := range countryIds {
 		if !validator.ExistCountryIdInCountries(countryId, countries) {

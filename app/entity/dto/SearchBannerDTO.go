@@ -1,8 +1,8 @@
 package dto
 
 type SearchBannerDTO struct {
-	BannerId    uint   `json:"banner_id"`
-	MovieId     uint   `json:"movie_id"`
+	BannerId    int64  `json:"banner_id"`
+	MovieId     int64  `json:"movie_id"`
 	OriginName  string `json:"origin_name"`
 	Name        string `json:"name"`
 	Slug        string `json:"slug"`

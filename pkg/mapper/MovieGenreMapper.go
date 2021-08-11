@@ -5,7 +5,7 @@ import (
 	"github.com/xdorro/golang-fiber-base-project/pkg/validator"
 )
 
-func MovieGenres(movieId *uint, genreIds *[]uint) []model.MovieGenre {
+func MovieGenres(movieId *int64, genreIds *[]int64) []model.MovieGenre {
 	result := make([]model.MovieGenre, 0)
 
 	for _, genreId := range *genreIds {
@@ -16,15 +16,15 @@ func MovieGenres(movieId *uint, genreIds *[]uint) []model.MovieGenre {
 	return result
 }
 
-func MovieGenre(movieId *uint, genreId *uint) *model.MovieGenre {
+func MovieGenre(movieId *int64, genreId *int64) *model.MovieGenre {
 	return &model.MovieGenre{
 		MovieId: *movieId,
 		GenreId: *genreId,
 	}
 }
 
-func GetGenreIdsNotExistInNewGenreIds(newGenreIds []uint, genres []model.Genre) *[]uint {
-	result := make([]uint, 0)
+func GetGenreIdsNotExistInNewGenreIds(newGenreIds []int64, genres []model.Genre) *[]int64 {
+	result := make([]int64, 0)
 
 	for _, genre := range genres {
 		if !validator.ExistGenreIdInGenreIds(genre.GenreId, newGenreIds) {
@@ -35,8 +35,8 @@ func GetGenreIdsNotExistInNewGenreIds(newGenreIds []uint, genres []model.Genre) 
 	return &result
 }
 
-func GetNewGenreIdsNotExistInGenres(genreIds []uint, genres []model.Genre) *[]uint {
-	result := make([]uint, 0)
+func GetNewGenreIdsNotExistInGenres(genreIds []int64, genres []model.Genre) *[]int64 {
+	result := make([]int64, 0)
 
 	for _, genreId := range genreIds {
 		if !validator.ExistGenreIdInGenres(genreId, genres) {

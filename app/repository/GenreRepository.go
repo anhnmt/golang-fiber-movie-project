@@ -48,7 +48,7 @@ func (obj *GenreRepository) FindAllGenresByStatusNotIn(status []int) (*[]model.G
 	return &genres, err
 }
 
-func (obj *GenreRepository) FindAllGenresByGenreIdsInAndStatusNotIn(genreIds []uint, status []int) (*[]model.Genre, error) {
+func (obj *GenreRepository) FindAllGenresByGenreIdsInAndStatusNotIn(genreIds []int64, status []int) (*[]model.Genre, error) {
 	genres := make([]model.Genre, 0)
 
 	err := db.Model(model.Genre{}).
@@ -58,7 +58,7 @@ func (obj *GenreRepository) FindAllGenresByGenreIdsInAndStatusNotIn(genreIds []u
 }
 
 func (obj *GenreRepository) FindGenreByIdAndStatusNot(id string, status int) (*model.Genre, error) {
-	uid := util.ParseStringToUInt(id)
+	uid := util.ParseStringToInt64(id)
 
 	var genre model.Genre
 	err := db.Model(model.Genre{}).

@@ -45,7 +45,7 @@ func (obj *MovieRepository) FindAllMoviesByStatusNot(status int) (*[]dto.SearchM
 	return &movies, err
 }
 
-func (obj *MovieRepository) FindAllTopMoviesByMovieTypeIdAndStatusNotInAndLimit(movieTypeId uint, status []int, limit int) (*[]dto.SearchMovieDTO, error) {
+func (obj *MovieRepository) FindAllTopMoviesByMovieTypeIdAndStatusNotInAndLimit(movieTypeId int64, status []int, limit int) (*[]dto.SearchMovieDTO, error) {
 	movies := make([]dto.SearchMovieDTO, 0)
 
 	err := db.
@@ -99,7 +99,7 @@ func (obj *MovieRepository) FindAllTopMoviesByMovieTypeSlugAndStatusNotInAndLimi
 }
 
 func (obj *MovieRepository) FindMovieByIdAndStatusNot(id string, status int) (*model.Movie, error) {
-	uid := util.ParseStringToUInt(id)
+	uid := util.ParseStringToInt64(id)
 
 	var movie model.Movie
 	err := db.Model(model.Movie{}).
@@ -213,7 +213,7 @@ func (obj *MovieRepository) FindAllMoviesByCountrySlugAndStatusNotIn(movieCountr
 	return &movies, err
 }
 
-func (obj *MovieRepository) FindAllMoviesRelatedByMovieIdAndStatusNotInAndLimit(movieId uint, status []int, limit int) (*[]dto.SearchMovieDTO, error) {
+func (obj *MovieRepository) FindAllMoviesRelatedByMovieIdAndStatusNotInAndLimit(movieId int64, status []int, limit int) (*[]dto.SearchMovieDTO, error) {
 	movies := make([]dto.SearchMovieDTO, 0)
 
 	err := db.
