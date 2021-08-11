@@ -33,8 +33,24 @@ func NewEpisodeController() *EpisodeController {
 	return episodeController
 }
 
+func (obj *EpisodeController) ClientFindEpisodesByMovieId(c *fiber.Ctx) error {
+	movieId := c.Params("movieId")
+
+	if _, err := validator.ValidateMovieId(movieId); err != nil {
+		return err
+	}
+
+	episodes, err := obj.episodeRepository.FindAllEpisodesByMovieIdAndStatusNotIn(movieId, []int{util.StatusDraft, util.StatusDeleted})
+
+	if err != nil {
+		return util.ResponseError(err.Error(), nil)
+	}
+
+	return util.ResponseSuccess("Thành công", episodes)
+}
+
 func (obj *EpisodeController) FindAllEpisodesByMovieId(c *fiber.Ctx) error {
-	movieId := c.Params("id")
+	movieId := c.Params("movieId")
 
 	if _, err := validator.ValidateMovieId(movieId); err != nil {
 		return err
@@ -58,7 +74,7 @@ func (obj *EpisodeController) FindEpisodeByEpisodeId(c *fiber.Ctx) error {
 		return err
 	}
 
-	episodeDetails, err := obj.episodeDetailRepository.FindEpisodeDetailsByIdAndStatusNot(episodeId, []int{util.StatusDeleted})
+	episodeDetails, err := obj.episodeDetailRepository.FindEpisodeDetailsByIdAndStatusNotIn(episodeId, []int{util.StatusDeleted})
 
 	if err != nil {
 		return util.ResponseError(err.Error(), nil)
@@ -78,7 +94,7 @@ func (obj *EpisodeController) FindEpisodeByEpisodeId(c *fiber.Ctx) error {
 }
 
 func (obj *EpisodeController) CreateEpisodesByMovieId(c *fiber.Ctx) error {
-	movieId := c.Params("id")
+	movieId := c.Params("movieId")
 
 	movie, err := validator.ValidateMovieId(movieId)
 	if err != nil {

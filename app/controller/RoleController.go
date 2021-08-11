@@ -34,7 +34,7 @@ func FindAllRoles(c *fiber.Ctx) error {
 
 // FindRoleById : Find role by Role_Id and Status = 1
 func FindRoleById(c *fiber.Ctx) error {
-	roleId := c.Params("id")
+	roleId := c.Params("roleId")
 	role, err := repository.FindRoleByIdAndStatus(roleId, util.StatusActivated)
 
 	if err != nil || role.RoleId == 0 {
@@ -66,7 +66,7 @@ func CreateNewRole(c *fiber.Ctx) error {
 
 // UpdateRoleById : Update role by Role_Id and Status = 1
 func UpdateRoleById(c *fiber.Ctx) error {
-	roleId := c.Params("id")
+	roleId := c.Params("roleId")
 
 	role, err := repository.FindRoleByIdAndStatus(roleId, util.StatusActivated)
 
@@ -90,7 +90,7 @@ func UpdateRoleById(c *fiber.Ctx) error {
 
 // DeleteRoleById : Delete role by Role_Id and Status = 1
 func DeleteRoleById(c *fiber.Ctx) error {
-	roleId := c.Params("id")
+	roleId := c.Params("roleId")
 	role, err := repository.FindRoleByIdAndStatus(roleId, util.StatusActivated)
 
 	if err != nil || role.RoleId == 0 {

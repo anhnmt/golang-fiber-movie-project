@@ -52,7 +52,7 @@ func (obj *GenreController) ClientFindAllGenres(c *fiber.Ctx) error {
 
 // FindGenreById : Find genre by Genre_Id and Status = 1
 func (obj *GenreController) FindGenreById(c *fiber.Ctx) error {
-	genreId := c.Params("id")
+	genreId := c.Params("genreId")
 	genre, err := obj.genreRepository.FindGenreByIdAndStatusNot(genreId, util.StatusDeleted)
 
 	if err != nil || genre.GenreId == 0 {
@@ -85,7 +85,7 @@ func (obj *GenreController) CreateNewGenre(c *fiber.Ctx) error {
 
 // UpdateGenreById : Update genre by Genre_Id and Status = 1
 func (obj *GenreController) UpdateGenreById(c *fiber.Ctx) error {
-	genreId := c.Params("id")
+	genreId := c.Params("genreId")
 
 	genre, err := obj.genreRepository.FindGenreByIdAndStatusNot(genreId, util.StatusDeleted)
 
@@ -111,7 +111,7 @@ func (obj *GenreController) UpdateGenreById(c *fiber.Ctx) error {
 
 // DeleteGenreById : Delete genre by Genre_Id and Status = 1
 func (obj *GenreController) DeleteGenreById(c *fiber.Ctx) error {
-	genreId := c.Params("id")
+	genreId := c.Params("genreId")
 	genre, err := obj.genreRepository.FindGenreByIdAndStatusNot(genreId, util.StatusDeleted)
 
 	if err != nil || genre.GenreId == 0 {

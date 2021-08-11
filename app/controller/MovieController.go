@@ -228,7 +228,7 @@ func (obj *MovieController) ClientFindMovieByMovieCountry(c *fiber.Ctx) error {
 
 // FindMovieById : Find movie by Movie_Id and Status
 func (obj *MovieController) FindMovieById(c *fiber.Ctx) error {
-	movieId := c.Params("id")
+	movieId := c.Params("movieId")
 	movie, err := obj.movieRepository.FindMovieByIdAndStatusNotJoinMovieType(movieId, util.StatusDeleted)
 
 	if err != nil || movie.MovieId == 0 {
@@ -305,7 +305,7 @@ func (obj *MovieController) CreateNewMovie(c *fiber.Ctx) error {
 
 // UpdateMovieById : Update movie by Movie_Id and Status
 func (obj *MovieController) UpdateMovieById(c *fiber.Ctx) error {
-	movieId := c.Params("id")
+	movieId := c.Params("movieId")
 	movie, err := obj.movieRepository.FindMovieByIdAndStatusNot(movieId, util.StatusDeleted)
 
 	if err != nil || movie.MovieId == 0 {
@@ -368,7 +368,7 @@ func (obj *MovieController) UpdateMovieById(c *fiber.Ctx) error {
 
 // DeleteMovieById : Delete movie by Movie_Id and Status = 1
 func (obj *MovieController) DeleteMovieById(c *fiber.Ctx) error {
-	movieId := c.Params("id")
+	movieId := c.Params("movieId")
 	movie, err := obj.movieRepository.FindMovieByIdAndStatusNot(movieId, util.StatusDeleted)
 
 	if err != nil || movie.MovieId == 0 {

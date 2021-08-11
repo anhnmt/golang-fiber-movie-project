@@ -44,7 +44,7 @@ func (obj *TagController) FindAllTags(c *fiber.Ctx) error {
 
 // FindTagById : Find tag by Tag_Id and Status Not
 func (obj *TagController) FindTagById(c *fiber.Ctx) error {
-	tagId := c.Params("id")
+	tagId := c.Params("tagId")
 	tag, err := obj.tagRepository.FindTagByIdAndStatusNot(tagId, util.StatusDeleted)
 
 	if err != nil || tag.TagId == 0 {
@@ -77,7 +77,7 @@ func (obj *TagController) CreateNewTag(c *fiber.Ctx) error {
 
 // UpdateTagById : Update tag by Tag_Id and Status = 1
 func (obj *TagController) UpdateTagById(c *fiber.Ctx) error {
-	tagId := c.Params("id")
+	tagId := c.Params("tagId")
 	tag, err := obj.tagRepository.FindTagByIdAndStatusNot(tagId, util.StatusDeleted)
 
 	if err != nil || tag.TagId == 0 {
@@ -102,7 +102,7 @@ func (obj *TagController) UpdateTagById(c *fiber.Ctx) error {
 
 // DeleteTagById : Delete tag by Tag_Id and Status = 1
 func (obj *TagController) DeleteTagById(c *fiber.Ctx) error {
-	tagId := c.Params("id")
+	tagId := c.Params("tagId")
 	tag, err := obj.tagRepository.FindTagByIdAndStatusNot(tagId, util.StatusDeleted)
 
 	if err != nil || tag.TagId == 0 {

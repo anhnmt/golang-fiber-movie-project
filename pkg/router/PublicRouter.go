@@ -26,6 +26,14 @@ func publicRoute(a fiber.Router) {
 	clients.Get("/find-movie-genre/:movieGenre?", movieController.ClientFindMovieByMovieGenre)
 	clients.Get("/find-movie-country/:movieCountry?", movieController.ClientFindMovieByMovieCountry)
 
+	// Episode Controller
+	episodeController := controller.NewEpisodeController()
+	clients.Get("/find-episodes/:movieId", episodeController.ClientFindEpisodesByMovieId)
+
+	// Episode Details Controller
+	episodeDetailController := controller.NewEpisodeDetailController()
+	clients.Get("/find-episode-details/:episodeId", episodeDetailController.ClientFindEpisodeDetailByEpisodeId)
+
 	// Banner Controller
 	bannerController := controller.NewBannerController()
 	clients.Get("/banners", bannerController.ClientFindAllBanners)

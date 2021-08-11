@@ -37,6 +37,20 @@ func (obj *EpisodeRepository) FindAllEpisodesByMovieIdAndStatusNot(movieId strin
 	return &episodes, err
 }
 
+func (obj *EpisodeRepository) FindAllEpisodesByMovieIdAndStatusNotIn(movieId string, status []int) (*[]model.Episode, error) {
+	episodes := make([]model.Episode, 0)
+
+	err := db.Model(model.Episode{}).
+		Select("episodes.*").
+		Joins("JOIN movies ON episodes.movie_id = movies.movie_id").
+		Where("movies.status NOT IN ?", status).
+		Where("episodes.status NOT IN ?", status).
+		Where("movies.movie_id = ?", movieId).
+		Find(&episodes).Error
+
+	return &episodes, err
+}
+
 func (obj *EpisodeRepository) FindEpisodeByIdAndStatusNot(episodeId string, status int) (*model.Episode, error) {
 	episode := new(model.Episode)
 

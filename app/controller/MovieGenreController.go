@@ -8,7 +8,7 @@ import (
 
 func FindAllMovieGenreById(c *fiber.Ctx) error {
 	movieGenreRepository := repository.NewMovieGenreRepository()
-	movieId := util.ParseStringToUInt(c.Params("id"))
+	movieId := util.ParseStringToUInt(c.Params("movieId"))
 	genres, err := movieGenreRepository.FindAllGenresByMovieIdAndStatusNotIn(movieId, []int{util.StatusDeleted, util.StatusDraft})
 
 	if err != nil {

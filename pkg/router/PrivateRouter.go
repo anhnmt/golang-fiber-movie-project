@@ -14,18 +14,18 @@ func privateRoute(a fiber.Router) {
 	banners := a.Group("/banners")
 	banners.Get("/", bannerController.FindAllBanners)
 	banners.Post("/", bannerController.CreateNewBanner)
-	banners.Get("/:id", bannerController.FindBannerById)
-	banners.Put("/:id", bannerController.UpdateBannerById)
-	banners.Delete("/:id", bannerController.DeleteBannerById)
+	banners.Get("/:bannerId", bannerController.FindBannerById)
+	banners.Put("/:bannerId", bannerController.UpdateBannerById)
+	banners.Delete("/:bannerId", bannerController.DeleteBannerById)
 
 	// Tags Controller
 	tagController := controller.NewTagController()
 	tags := a.Group("/tags")
 	tags.Get("/", tagController.FindAllTags)
 	tags.Post("/", tagController.CreateNewTag)
-	tags.Get("/:id", tagController.FindTagById)
-	tags.Put("/:id", tagController.UpdateTagById)
-	tags.Delete("/:id", tagController.DeleteTagById)
+	tags.Get("/:tagId", tagController.FindTagById)
+	tags.Put("/:tagId", tagController.UpdateTagById)
+	tags.Delete("/:tagId", tagController.DeleteTagById)
 
 	// Genres Controller
 	genreController := controller.NewGenreController()
@@ -33,9 +33,9 @@ func privateRoute(a fiber.Router) {
 	genres.Get("/genreSlug", genreController.FindAllGenres)
 	genres.Get("/", genreController.FindAllGenres)
 	genres.Post("/", genreController.CreateNewGenre)
-	genres.Get("/:id", genreController.FindGenreById)
-	genres.Put("/:id", genreController.UpdateGenreById)
-	genres.Delete("/:id", genreController.DeleteGenreById)
+	genres.Get("/:genreId", genreController.FindGenreById)
+	genres.Put("/:genreId", genreController.UpdateGenreById)
+	genres.Delete("/:genreId", genreController.DeleteGenreById)
 
 	// Countries Controller
 	countryController := controller.NewCountryController()
@@ -43,17 +43,17 @@ func privateRoute(a fiber.Router) {
 	countries.Get("/:countrySlug", countryController.FindAllCountries)
 	countries.Get("/", countryController.FindAllCountries)
 	countries.Post("/", countryController.CreateNewCountry)
-	countries.Get("/:id", countryController.FindCountryById)
-	countries.Put("/:id", countryController.UpdateCountryById)
-	countries.Delete("/:id", countryController.DeleteCountryById)
+	countries.Get("/:countryId", countryController.FindCountryById)
+	countries.Put("/:countryId", countryController.UpdateCountryById)
+	countries.Delete("/:countryId", countryController.DeleteCountryById)
 
 	// Users Controller
 	users := a.Group("/users")
 	users.Get("/", controller.FindAllUsers)
 	users.Post("/", controller.CreateNewUser)
-	users.Get("/:id", controller.FindUserById)
-	users.Put("/:id", controller.UpdateUserById)
-	users.Delete("/:id", controller.DeleteUserById)
+	users.Get("/:userId", controller.FindUserById)
+	users.Put("/:userId", controller.UpdateUserById)
+	users.Delete("/:userId", controller.DeleteUserById)
 
 	// UserRoles Controller
 	//users.Get("/:id/roles", controller.FindAllUserRoles)
@@ -63,9 +63,9 @@ func privateRoute(a fiber.Router) {
 	roles.Get("/:roleSlug", controller.FindAllRoles)
 	roles.Get("/", controller.FindAllRoles)
 	roles.Post("/", controller.CreateNewRole)
-	roles.Get("/:id", controller.FindRoleById)
-	roles.Put("/:id", controller.UpdateRoleById)
-	roles.Delete("/:id", controller.DeleteRoleById)
+	roles.Get("/:roleId", controller.FindRoleById)
+	roles.Put("/:roleId", controller.UpdateRoleById)
+	roles.Delete("/:roleId", controller.DeleteRoleById)
 
 	// Movies Group
 	movies := a.Group("/movies")
@@ -76,9 +76,9 @@ func privateRoute(a fiber.Router) {
 	movieTypes.Get("/:movieTypeSlug", movieTypeController.FindAllMovieTypes)
 	movieTypes.Get("/", movieTypeController.FindAllMovieTypes)
 	movieTypes.Post("/", movieTypeController.CreateNewMovieType)
-	movieTypes.Get("/:id", movieTypeController.FindMovieTypeById)
-	movieTypes.Put("/:id", movieTypeController.UpdateMovieTypeById)
-	movieTypes.Delete("/:id", movieTypeController.DeleteMovieTypeById)
+	movieTypes.Get("/:movieTypeId", movieTypeController.FindMovieTypeById)
+	movieTypes.Put("/:movieTypeId", movieTypeController.UpdateMovieTypeById)
+	movieTypes.Delete("/:movieTypeId", movieTypeController.DeleteMovieTypeById)
 
 	// Movies Controller
 	movieController := controller.NewMovieController()
@@ -87,7 +87,7 @@ func privateRoute(a fiber.Router) {
 	movies.Post("/", movieController.CreateNewMovie)
 
 	// Movie Detail Controller
-	movieDetails := movies.Group("/:id")
+	movieDetails := movies.Group("/:movieId")
 	movieDetails.Get("/", movieController.FindMovieById)
 	movieDetails.Put("/", movieController.UpdateMovieById)
 	movieDetails.Delete("/", movieController.DeleteMovieById)
@@ -106,9 +106,9 @@ func privateRoute(a fiber.Router) {
 	episodeTypes := a.Group("/episode-types")
 	episodeTypes.Get("/", episodeTypeController.FindAllEpisodeTypes)
 	episodeTypes.Post("/", episodeTypeController.CreateNewEpisodeType)
-	episodeTypes.Get("/:id", episodeTypeController.FindEpisodeTypeById)
-	episodeTypes.Put("/:id", episodeTypeController.UpdateEpisodeTypeById)
-	episodeTypes.Delete("/:id", episodeTypeController.DeleteEpisodeTypeById)
+	episodeTypes.Get("/:episodeTypeId", episodeTypeController.FindEpisodeTypeById)
+	episodeTypes.Put("/:episodeTypeId", episodeTypeController.UpdateEpisodeTypeById)
+	episodeTypes.Delete("/:episodeTypeId", episodeTypeController.DeleteEpisodeTypeById)
 
 	// Episodes Group
 	episodes := a.Group("/episodes")

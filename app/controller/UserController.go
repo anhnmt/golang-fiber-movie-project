@@ -24,7 +24,7 @@ func FindAllUsers(c *fiber.Ctx) error {
 
 // FindUserById : Find user by User_Id and Status = 1
 func FindUserById(c *fiber.Ctx) error {
-	userId := c.Params("id")
+	userId := c.Params("userId")
 	user, err := repository.FindUserByIdAndStatus(userId, util.StatusActivated)
 
 	if err != nil || user.UserId == 0 {
@@ -66,7 +66,7 @@ func CreateNewUser(c *fiber.Ctx) error {
 
 // UpdateUserById : Update user by User_Id and Status = 1
 func UpdateUserById(c *fiber.Ctx) error {
-	userId := c.Params("id")
+	userId := c.Params("userId")
 
 	user, err := repository.FindUserByIdAndStatus(userId, util.StatusActivated)
 
@@ -98,7 +98,7 @@ func UpdateUserById(c *fiber.Ctx) error {
 
 // DeleteUserById : Delete user by User_Id and Status = 1
 func DeleteUserById(c *fiber.Ctx) error {
-	userId := c.Params("id")
+	userId := c.Params("userId")
 
 	user, err := repository.FindUserByIdAndStatus(userId, util.StatusActivated)
 

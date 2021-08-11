@@ -33,6 +33,24 @@ func NewEpisodeDetailController() *EpisodeDetailController {
 	return episodeDetailController
 }
 
+func (obj *EpisodeDetailController) ClientFindEpisodeDetailByEpisodeId(c *fiber.Ctx) error {
+	episodeId := c.Params("episodeId")
+
+	_, err := validator.ValidateEpisodeId(episodeId)
+
+	if err != nil {
+		return err
+	}
+
+	episodeDetails, err := obj.episodeDetailRepository.FindEpisodeDetailsByIdAndStatusNotIn(episodeId, []int{util.StatusDraft, util.StatusDeleted})
+
+	if err != nil {
+		return util.ResponseError(err.Error(), nil)
+	}
+
+	return util.ResponseSuccess("Thành công", episodeDetails)
+}
+
 func (obj *EpisodeDetailController) FindEpisodeDetailById(c *fiber.Ctx) error {
 	episodeId := c.Params("episodeId")
 	episodeDetailId := c.Params("episodeDetailId")

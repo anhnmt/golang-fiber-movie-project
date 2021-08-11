@@ -44,7 +44,7 @@ func (obj *MovieTypeController) FindAllMovieTypes(c *fiber.Ctx) error {
 
 // FindMovieTypeById : Find moveType by MovieType_Id and Status = 1
 func (obj *MovieTypeController) FindMovieTypeById(c *fiber.Ctx) error {
-	moveTypeId := c.Params("id")
+	moveTypeId := c.Params("movieTypeId")
 	moveType, err := obj.movieTypeRepository.FindMovieTypeByIdAndStatusNot(moveTypeId, util.StatusDeleted)
 
 	if err != nil || moveType.MovieTypeId == 0 {
@@ -77,7 +77,7 @@ func (obj *MovieTypeController) CreateNewMovieType(c *fiber.Ctx) error {
 
 // UpdateMovieTypeById : Update moveType by MovieType_Id and Status = 1
 func (obj *MovieTypeController) UpdateMovieTypeById(c *fiber.Ctx) error {
-	moveTypeId := c.Params("id")
+	moveTypeId := c.Params("movieTypeId")
 	moveType, err := obj.movieTypeRepository.FindMovieTypeByIdAndStatusNot(moveTypeId, util.StatusDeleted)
 
 	if err != nil || moveType.MovieTypeId == 0 {
@@ -102,7 +102,7 @@ func (obj *MovieTypeController) UpdateMovieTypeById(c *fiber.Ctx) error {
 
 // DeleteMovieTypeById : Delete moveType by MovieType_Id and Status = 1
 func (obj *MovieTypeController) DeleteMovieTypeById(c *fiber.Ctx) error {
-	moveTypeId := c.Params("id")
+	moveTypeId := c.Params("movieTypeId")
 	moveType, err := obj.movieTypeRepository.FindMovieTypeByIdAndStatusNot(moveTypeId, util.StatusDeleted)
 
 	if err != nil || moveType.MovieTypeId == 0 {

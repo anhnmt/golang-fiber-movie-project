@@ -45,7 +45,7 @@ func (obj *EpisodeDetailRepository) UpdateEpisodeDetail(episodeDetailId string, 
 	return &episodeDetail, err
 }
 
-func (obj *EpisodeDetailRepository) FindEpisodeDetailsByIdAndStatusNot(id string, status []int) (*[]model.EpisodeDetail, error) {
+func (obj *EpisodeDetailRepository) FindEpisodeDetailsByIdAndStatusNotIn(id string, status []int) (*[]model.EpisodeDetail, error) {
 	episodeDetails := make([]model.EpisodeDetail, 0)
 
 	err := obj.db.

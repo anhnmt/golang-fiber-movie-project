@@ -40,7 +40,7 @@ func (obj *EpisodeTypeController) FindAllEpisodeTypes(c *fiber.Ctx) error {
 }
 
 func (obj *EpisodeTypeController) FindEpisodeTypeById(c *fiber.Ctx) error {
-	episodeTypeId := c.Params("id")
+	episodeTypeId := c.Params("episodeTypeId")
 	episodeType, err := obj.episodeTypeRepository.FindEpisodeTypeByIdAndStatusNot(episodeTypeId, util.StatusDeleted)
 
 	if err != nil || episodeType.EpisodeTypeId == 0 {
@@ -72,7 +72,7 @@ func (obj *EpisodeTypeController) CreateNewEpisodeType(c *fiber.Ctx) error {
 
 // UpdateEpisodeTypeById : Update episodeType by Episode_Type_Id and Status = 1
 func (obj *EpisodeTypeController) UpdateEpisodeTypeById(c *fiber.Ctx) error {
-	episodeTypeId := c.Params("id")
+	episodeTypeId := c.Params("episodeTypeId")
 	episodeType, err := obj.episodeTypeRepository.FindEpisodeTypeByIdAndStatusNot(episodeTypeId, util.StatusDeleted)
 
 	if err != nil || episodeType.EpisodeTypeId == 0 {
@@ -96,7 +96,7 @@ func (obj *EpisodeTypeController) UpdateEpisodeTypeById(c *fiber.Ctx) error {
 
 // DeleteEpisodeTypeById : Delete episodeType by EpisodeType_Id and Status = 1
 func (obj *EpisodeTypeController) DeleteEpisodeTypeById(c *fiber.Ctx) error {
-	episodeTypeId := c.Params("id")
+	episodeTypeId := c.Params("episodeTypeId")
 	episodeType, err := obj.episodeTypeRepository.FindEpisodeTypeByIdAndStatusNot(episodeTypeId, util.StatusDeleted)
 
 	if err != nil || episodeType.EpisodeTypeId == 0 {

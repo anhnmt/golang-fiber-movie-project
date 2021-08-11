@@ -65,6 +65,7 @@ func (obj *BannerRepository) FindAllBannersByStatusNotInAndJoinMovie(status []in
 		Joins("JOIN movies on movies.movie_id = banners.movie_id").
 		Where("movies.status NOT IN ?", status).
 		Where("banners.status NOT IN ?", status).
+		Order("banners.updated_at DESC").
 		Find(&banners).Error
 
 	return &banners, err

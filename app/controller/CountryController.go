@@ -52,7 +52,7 @@ func (obj *CountryController) ClientFindAllCountries(c *fiber.Ctx) error {
 
 // FindCountryById : Find country by Country_Id and Status = 1
 func (obj *CountryController) FindCountryById(c *fiber.Ctx) error {
-	countryId := c.Params("id")
+	countryId := c.Params("countryId")
 	country, err := obj.countryRepository.FindCountryByIdAndStatusNot(countryId, util.StatusDeleted)
 
 	if err != nil || country.CountryId == 0 {
@@ -85,7 +85,7 @@ func (obj *CountryController) CreateNewCountry(c *fiber.Ctx) error {
 
 // UpdateCountryById : Update country by Country_Id and Status = 1
 func (obj *CountryController) UpdateCountryById(c *fiber.Ctx) error {
-	countryId := c.Params("id")
+	countryId := c.Params("countryId")
 
 	country, err := obj.countryRepository.FindCountryByIdAndStatusNot(countryId, util.StatusDeleted)
 
@@ -111,7 +111,7 @@ func (obj *CountryController) UpdateCountryById(c *fiber.Ctx) error {
 
 // DeleteCountryById : Delete country by Country_Id and Status = 1
 func (obj *CountryController) DeleteCountryById(c *fiber.Ctx) error {
-	countryId := c.Params("id")
+	countryId := c.Params("countryId")
 	country, err := obj.countryRepository.FindCountryByIdAndStatusNot(countryId, util.StatusDeleted)
 
 	if err != nil || country.CountryId == 0 {

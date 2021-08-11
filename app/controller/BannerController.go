@@ -61,7 +61,7 @@ func (obj *BannerController) FindAllBanners(c *fiber.Ctx) error {
 
 // FindBannerById : Find banner by Banner_Id and Status Not
 func (obj *BannerController) FindBannerById(c *fiber.Ctx) error {
-	bannerId := c.Params("id")
+	bannerId := c.Params("bannerId")
 	banner, err := obj.bannerRepository.FindBannerByIdAndStatusNotAndJoinMovie(bannerId, util.StatusDeleted)
 
 	if err != nil || banner.BannerId == 0 {
@@ -118,7 +118,7 @@ func (obj *BannerController) CreateNewBanner(c *fiber.Ctx) error {
 
 // UpdateBannerById : Update banner by Banner_Id and Status = 1
 func (obj *BannerController) UpdateBannerById(c *fiber.Ctx) error {
-	bannerId := c.Params("id")
+	bannerId := c.Params("bannerId")
 	banner, err := obj.bannerRepository.FindBannerByIdAndStatusNot(bannerId, util.StatusDeleted)
 
 	if err != nil || banner.BannerId == 0 {
@@ -166,7 +166,7 @@ func (obj *BannerController) UpdateBannerById(c *fiber.Ctx) error {
 
 // DeleteBannerById : Delete banner by Banner_Id and Status = 1
 func (obj *BannerController) DeleteBannerById(c *fiber.Ctx) error {
-	bannerId := c.Params("id")
+	bannerId := c.Params("bannerId")
 	banner, err := obj.bannerRepository.FindBannerByIdAndStatusNot(bannerId, util.StatusDeleted)
 
 	if err != nil || banner.BannerId == 0 {

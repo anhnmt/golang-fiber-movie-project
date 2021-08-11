@@ -39,6 +39,7 @@ func (obj *MovieRepository) FindAllMoviesByStatusNot(status int) (*[]dto.SearchM
 		Select("movies.*, movie_types.name movie_type_name, movie_types.slug movie_type_slug").
 		Joins("LEFT JOIN movie_types on movies.movie_type_id = movie_types.movie_type_id").
 		Where("movies.status <> ? AND movie_types.status <> ?", status, status).
+		Order("movies.movie_id DESC").
 		Find(&movies).Error
 
 	return &movies, err
