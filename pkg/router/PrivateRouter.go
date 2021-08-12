@@ -11,61 +11,73 @@ func privateRoute(a fiber.Router) {
 
 	// Banners Controller
 	bannerController := controller.NewBannerController()
-	banners := a.Group("/banners")
-	banners.Get("/", bannerController.FindAllBanners)
-	banners.Post("/", bannerController.CreateNewBanner)
-	banners.Get("/:bannerId", bannerController.FindBannerById)
-	banners.Put("/:bannerId", bannerController.UpdateBannerById)
-	banners.Delete("/:bannerId", bannerController.DeleteBannerById)
+	{
+		banners := a.Group("/banners")
+		banners.Get("/", bannerController.FindAllBanners)
+		banners.Post("/", bannerController.CreateNewBanner)
+		banners.Get("/:bannerId", bannerController.FindBannerById)
+		banners.Put("/:bannerId", bannerController.UpdateBannerById)
+		banners.Delete("/:bannerId", bannerController.DeleteBannerById)
+	}
 
 	// Tags Controller
 	tagController := controller.NewTagController()
-	tags := a.Group("/tags")
-	tags.Get("/", tagController.FindAllTags)
-	tags.Post("/", tagController.CreateNewTag)
-	tags.Get("/:tagId", tagController.FindTagById)
-	tags.Put("/:tagId", tagController.UpdateTagById)
-	tags.Delete("/:tagId", tagController.DeleteTagById)
+	{
+		tags := a.Group("/tags")
+		tags.Get("/", tagController.FindAllTags)
+		tags.Post("/", tagController.CreateNewTag)
+		tags.Get("/:tagId", tagController.FindTagById)
+		tags.Put("/:tagId", tagController.UpdateTagById)
+		tags.Delete("/:tagId", tagController.DeleteTagById)
+	}
 
 	// Genres Controller
 	genreController := controller.NewGenreController()
-	genres := a.Group("/genres")
-	genres.Get("/genreSlug", genreController.FindAllGenres)
-	genres.Get("/", genreController.FindAllGenres)
-	genres.Post("/", genreController.CreateNewGenre)
-	genres.Get("/:genreId", genreController.FindGenreById)
-	genres.Put("/:genreId", genreController.UpdateGenreById)
-	genres.Delete("/:genreId", genreController.DeleteGenreById)
+	{
+		genres := a.Group("/genres")
+		genres.Get("/genreSlug", genreController.FindAllGenres)
+		genres.Get("/", genreController.FindAllGenres)
+		genres.Post("/", genreController.CreateNewGenre)
+		genres.Get("/:genreId", genreController.FindGenreById)
+		genres.Put("/:genreId", genreController.UpdateGenreById)
+		genres.Delete("/:genreId", genreController.DeleteGenreById)
+	}
 
 	// Countries Controller
 	countryController := controller.NewCountryController()
-	countries := a.Group("/countries")
-	countries.Get("/:countrySlug", countryController.FindAllCountries)
-	countries.Get("/", countryController.FindAllCountries)
-	countries.Post("/", countryController.CreateNewCountry)
-	countries.Get("/:countryId", countryController.FindCountryById)
-	countries.Put("/:countryId", countryController.UpdateCountryById)
-	countries.Delete("/:countryId", countryController.DeleteCountryById)
+	{
+		countries := a.Group("/countries")
+		countries.Get("/:countrySlug", countryController.FindAllCountries)
+		countries.Get("/", countryController.FindAllCountries)
+		countries.Post("/", countryController.CreateNewCountry)
+		countries.Get("/:countryId", countryController.FindCountryById)
+		countries.Put("/:countryId", countryController.UpdateCountryById)
+		countries.Delete("/:countryId", countryController.DeleteCountryById)
+	}
 
 	// Users Controller
-	users := a.Group("/users")
-	users.Get("/", controller.FindAllUsers)
-	users.Post("/", controller.CreateNewUser)
-	users.Get("/:userId", controller.FindUserById)
-	users.Put("/:userId", controller.UpdateUserById)
-	users.Delete("/:userId", controller.DeleteUserById)
+	{
+		users := a.Group("/users")
+		users.Get("/", controller.FindAllUsers)
+		users.Post("/", controller.CreateNewUser)
+		users.Get("/:userId", controller.FindUserById)
+		users.Put("/:userId", controller.UpdateUserById)
+		users.Delete("/:userId", controller.DeleteUserById)
+	}
 
 	// UserRoles Controller
 	//users.Get("/:id/roles", controller.FindAllUserRoles)
 
 	// Roles Controller
-	roles := a.Group("/roles")
-	roles.Get("/:roleSlug", controller.FindAllRoles)
-	roles.Get("/", controller.FindAllRoles)
-	roles.Post("/", controller.CreateNewRole)
-	roles.Get("/:roleId", controller.FindRoleById)
-	roles.Put("/:roleId", controller.UpdateRoleById)
-	roles.Delete("/:roleId", controller.DeleteRoleById)
+	{
+		roles := a.Group("/roles")
+		roles.Get("/:roleSlug", controller.FindAllRoles)
+		roles.Get("/", controller.FindAllRoles)
+		roles.Post("/", controller.CreateNewRole)
+		roles.Get("/:roleId", controller.FindRoleById)
+		roles.Put("/:roleId", controller.UpdateRoleById)
+		roles.Delete("/:roleId", controller.DeleteRoleById)
+	}
 
 	// Movies Group
 	movies := a.Group("/movies")

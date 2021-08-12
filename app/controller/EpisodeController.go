@@ -6,6 +6,7 @@ import (
 	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-base-project/app/entity/response"
 	"github.com/xdorro/golang-fiber-base-project/app/repository"
+	"github.com/xdorro/golang-fiber-base-project/pkg/mapper"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
 	"github.com/xdorro/golang-fiber-base-project/pkg/validator"
 	"log"
@@ -46,7 +47,22 @@ func (obj *EpisodeController) ClientFindEpisodesByMovieId(c *fiber.Ctx) error {
 		return util.ResponseError(err.Error(), nil)
 	}
 
-	return util.ResponseSuccess("Thành công", episodes)
+	episodeIds := mapper.GetEpisodeIds(*episodes)
+
+	var episodeDetails *[]model.EpisodeDetail
+
+	if len(*episodeIds) > 0 {
+		episodeDetails, err = obj.episodeDetailRepository.
+			FindEpisodeDetailsByEpisodeIdInAndStatusNotIn(*episodeIds, []int{util.StatusDraft, util.StatusDeleted})
+
+		if err != nil {
+			return util.ResponseError(err.Error(), nil)
+		}
+	}
+
+	result := mapper.EpisodeDetailsMapper(episodes, episodeDetails)
+
+	return util.ResponseSuccess("Thành công", result)
 }
 
 func (obj *EpisodeController) FindAllEpisodesByMovieId(c *fiber.Ctx) error {
@@ -81,12 +97,7 @@ func (obj *EpisodeController) FindEpisodeByEpisodeId(c *fiber.Ctx) error {
 	}
 
 	result := &response.MovieEpisodeDetailResponse{
-		Episode: model.Episode{
-			EpisodeId: episode.EpisodeId,
-			Name:      episode.Name,
-			MovieId:   episode.MovieId,
-			Status:    episode.Status,
-		},
+		Episode:        *episode,
 		EpisodeDetails: *episodeDetails,
 	}
 

@@ -45,6 +45,21 @@ func (obj *EpisodeDetailRepository) UpdateEpisodeDetail(episodeDetailId string, 
 	return &episodeDetail, err
 }
 
+func (obj *EpisodeDetailRepository) FindEpisodeDetailsByEpisodeIdInAndStatusNotIn(episodeIds []int64, status []int) (*[]model.EpisodeDetail, error) {
+	episodeDetails := make([]model.EpisodeDetail, 0)
+
+	err := obj.db.
+		Model(&model.Episode{}).
+		Select("episode_details.*").
+		Joins("LEFT JOIN episode_details ON episode_details.episode_id = episodes.episode_id").
+		Where("episodes.episode_id IN ?", episodeIds).
+		Where("episodes.status NOT IN ?", status).
+		Where("episode_details.status NOT IN ?", status).
+		Find(&episodeDetails).Error
+
+	return &episodeDetails, err
+}
+
 func (obj *EpisodeDetailRepository) FindEpisodeDetailsByIdAndStatusNotIn(id string, status []int) (*[]model.EpisodeDetail, error) {
 	episodeDetails := make([]model.EpisodeDetail, 0)
 
