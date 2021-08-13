@@ -87,6 +87,7 @@ func (obj *EpisodeDetailController) CreateEpisodeDetailById(c *fiber.Ctx) error 
 	newEpisodeDetail := model.EpisodeDetail{
 		EpisodeId:     episode.EpisodeId,
 		Name:          episodeDetailRequest.Name,
+		Link:          episodeDetailRequest.Link,
 		EpisodeTypeId: episodeDetailRequest.EpisodeTypeId,
 		Status:        episodeDetailRequest.Status,
 	}
@@ -120,6 +121,7 @@ func (obj *EpisodeDetailController) UpdateEpisodeDetailById(c *fiber.Ctx) error 
 	}
 
 	episodeDetail.Name = episodeDetailRequest.Name
+	episodeDetail.Link = episodeDetailRequest.Link
 	episodeDetail.EpisodeTypeId = episodeDetailRequest.EpisodeTypeId
 	episodeDetail.Status = episodeDetailRequest.Status
 
