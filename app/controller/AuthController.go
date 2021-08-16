@@ -4,6 +4,7 @@ import (
 	"github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
 	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
+	"github.com/xdorro/golang-fiber-base-project/app/entity/response"
 	"github.com/xdorro/golang-fiber-base-project/app/repository"
 	"github.com/xdorro/golang-fiber-base-project/pkg/config"
 	"github.com/xdorro/golang-fiber-base-project/pkg/util"
@@ -41,9 +42,17 @@ func AuthToken(c *fiber.Ctx) error {
 	claims["username"] = user.Username
 	claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
 
-	result, err := token.SignedString([]byte(config.GetJwt().Secret))
+	accessToken, err := token.SignedString([]byte(config.GetJwt().Secret))
 	if err != nil {
-		return c.SendStatus(fiber.StatusInternalServerError)
+		return util.ResponseError(err.Error(), nil)
+	}
+
+	result := &response.UserResponse{
+		UserId:   user.UserId,
+		Name:     user.Name,
+		Username: user.Username,
+		Gender:   user.Gender,
+		Token:    accessToken,
 	}
 
 	return util.ResponseSuccess("Thành công", result)

@@ -5,4 +5,5 @@ type UserResponse struct {
 	Name     string `json:"name"`
 	Username string `json:"username"`
 	Gender   int    `json:"gender"`
+	Token    string `json:"token"`
 }
