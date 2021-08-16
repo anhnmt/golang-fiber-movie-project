@@ -17,7 +17,7 @@ func Protected() fiber.Handler {
 
 func jwtError(c *fiber.Ctx, err error) error {
 	if err.Error() == "Missing or malformed JWT" {
-		return util.ResponseBadRequest("Token bị thiếu hoặc không đúng định dạng", nil)
+		return util.ResponseUnauthorized("Token bị thiếu hoặc không đúng định dạng", nil)
 	}
 
 	return util.ResponseUnauthorized("Token không hợp lệ hoặc hết hạn", nil)

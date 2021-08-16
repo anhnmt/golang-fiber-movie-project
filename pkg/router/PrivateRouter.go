@@ -3,16 +3,14 @@ package router
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/xdorro/golang-fiber-base-project/app/controller"
+	"github.com/xdorro/golang-fiber-base-project/pkg/middleware"
 )
 
 func privateRoute(a fiber.Router) {
-	// Using Protected
-	//private := a.Group("/", middleware.Protected())
-
 	// Banners Controller
 	bannerController := controller.NewBannerController()
 	{
-		banners := a.Group("/banners")
+		banners := a.Group("/banners", middleware.Protected())
 		banners.Get("/", bannerController.FindAllBanners)
 		banners.Post("/", bannerController.CreateNewBanner)
 		banners.Get("/:bannerId", bannerController.FindBannerById)
@@ -23,7 +21,7 @@ func privateRoute(a fiber.Router) {
 	// Tags Controller
 	tagController := controller.NewTagController()
 	{
-		tags := a.Group("/tags")
+		tags := a.Group("/tags", middleware.Protected())
 		tags.Get("/", tagController.FindAllTags)
 		tags.Post("/", tagController.CreateNewTag)
 		tags.Get("/:tagId", tagController.FindTagById)
@@ -34,7 +32,7 @@ func privateRoute(a fiber.Router) {
 	// Genres Controller
 	genreController := controller.NewGenreController()
 	{
-		genres := a.Group("/genres")
+		genres := a.Group("/genres", middleware.Protected())
 		genres.Get("/genreSlug", genreController.FindAllGenres)
 		genres.Get("/", genreController.FindAllGenres)
 		genres.Post("/", genreController.CreateNewGenre)
@@ -46,7 +44,7 @@ func privateRoute(a fiber.Router) {
 	// Countries Controller
 	countryController := controller.NewCountryController()
 	{
-		countries := a.Group("/countries")
+		countries := a.Group("/countries", middleware.Protected())
 		countries.Get("/:countrySlug", countryController.FindAllCountries)
 		countries.Get("/", countryController.FindAllCountries)
 		countries.Post("/", countryController.CreateNewCountry)
@@ -57,7 +55,7 @@ func privateRoute(a fiber.Router) {
 
 	// Users Controller
 	{
-		users := a.Group("/users")
+		users := a.Group("/users", middleware.Protected())
 		users.Get("/", controller.FindAllUsers)
 		users.Post("/", controller.CreateNewUser)
 		users.Get("/:userId", controller.FindUserById)
@@ -70,7 +68,7 @@ func privateRoute(a fiber.Router) {
 
 	// Roles Controller
 	{
-		roles := a.Group("/roles")
+		roles := a.Group("/roles", middleware.Protected())
 		roles.Get("/:roleSlug", controller.FindAllRoles)
 		roles.Get("/", controller.FindAllRoles)
 		roles.Post("/", controller.CreateNewRole)
@@ -80,7 +78,7 @@ func privateRoute(a fiber.Router) {
 	}
 
 	// Movies Group
-	movies := a.Group("/movies")
+	movies := a.Group("/movies", middleware.Protected())
 
 	// Movies Controller
 	movieTypeController := controller.NewMovieTypeController()
@@ -115,15 +113,17 @@ func privateRoute(a fiber.Router) {
 
 	// Episode Type
 	episodeTypeController := controller.NewEpisodeTypeController()
-	episodeTypes := a.Group("/episode-types")
-	episodeTypes.Get("/", episodeTypeController.FindAllEpisodeTypes)
-	episodeTypes.Post("/", episodeTypeController.CreateNewEpisodeType)
-	episodeTypes.Get("/:episodeTypeId", episodeTypeController.FindEpisodeTypeById)
-	episodeTypes.Put("/:episodeTypeId", episodeTypeController.UpdateEpisodeTypeById)
-	episodeTypes.Delete("/:episodeTypeId", episodeTypeController.DeleteEpisodeTypeById)
+	episodeTypes := a.Group("/episode-types", middleware.Protected())
+	{
+		episodeTypes.Get("/", episodeTypeController.FindAllEpisodeTypes)
+		episodeTypes.Post("/", episodeTypeController.CreateNewEpisodeType)
+		episodeTypes.Get("/:episodeTypeId", episodeTypeController.FindEpisodeTypeById)
+		episodeTypes.Put("/:episodeTypeId", episodeTypeController.UpdateEpisodeTypeById)
+		episodeTypes.Delete("/:episodeTypeId", episodeTypeController.DeleteEpisodeTypeById)
+	}
 
 	// Episodes Group
-	episodes := a.Group("/episodes")
+	episodes := a.Group("/episodes", middleware.Protected())
 
 	episodeDetail := episodes.Group("/:episodeId")
 
@@ -139,4 +139,5 @@ func privateRoute(a fiber.Router) {
 	episodeDetails.Get("/:episodeDetailId", episodeDetailController.FindEpisodeDetailById)
 	episodeDetails.Put("/:episodeDetailId", episodeDetailController.UpdateEpisodeDetailById)
 	episodeDetails.Delete("/:episodeDetailId", episodeDetailController.DeleteEpisodeDetailById)
+
 }
