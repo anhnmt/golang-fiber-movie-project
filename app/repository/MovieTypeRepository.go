@@ -1,77 +1,66 @@
 package repository
 
 import (
-	"errors"
-	"github.com/xdorro/golang-fiber-base-project/app/model"
-	"github.com/xdorro/golang-fiber-base-project/pkg/util"
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
+	"github.com/xdorro/golang-fiber-movie-project/pkg/util"
 	"gorm.io/gorm"
+	"log"
+	"sync"
 )
 
-// FindAllMovieTypesByStatus : Find tag by MovieTypeId and Status
-func FindAllMovieTypesByStatus(status int) (*[]model.MovieType, error) {
-	tags := make([]model.MovieType, 0)
-
-	if err := db.Find(&tags, "status = ?", status).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
-
-		return nil, err
-	}
-
-	return &tags, nil
+type MovieTypeRepository struct {
+	db *gorm.DB
 }
 
-func FindAllMovieTypesByStatusNot(status int) (*[]model.MovieType, error) {
-	tags := make([]model.MovieType, 0)
+func NewMovieTypeRepository() *MovieTypeRepository {
+	if movieTypeRepository == nil {
+		once = &sync.Once{}
 
-	if err := db.Find(&tags, "status <> ?", status).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
-
-		return nil, err
+		once.Do(func() {
+			if movieTypeRepository == nil {
+				movieTypeRepository = &MovieTypeRepository{
+					db: db,
+				}
+				log.Println("Create new MovieTypeRepository")
+			}
+		})
 	}
 
-	return &tags, nil
+	return movieTypeRepository
 }
 
-// FindMovieTypeByIdAndStatus : Find tag by MovieTypeId and Status
-func FindMovieTypeByIdAndStatus(id string, status int) (*model.MovieType, error) {
-	uid := util.ParseStringToUInt(id)
+func (obj *MovieTypeRepository) FindAllMovieTypesByStatusNot(status int) (*[]model.MovieType, error) {
+	movieTypes := make([]model.MovieType, 0)
 
-	var tag model.MovieType
-	if err := db.Where("movie_type_id = ? AND status = ?", uid, status).Find(&tag).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
+	err := db.Model(&model.MovieType{}).
+		Find(&movieTypes, "status <> ?", status).Error
 
-		return nil, err
-	}
-
-	return &tag, nil
+	return &movieTypes, err
 }
 
-func FindMovieTypeByIdAndStatusNot(id string, status int) (*model.MovieType, error) {
-	uid := util.ParseStringToUInt(id)
+func (obj *MovieTypeRepository) FindMovieTypeByIdAndStatusNot(id string, status int) (*model.MovieType, error) {
+	uid := util.ParseStringToInt64(id)
 
-	var tag model.MovieType
-	if err := db.Where("movie_type_id = ? AND status <> ?", uid, status).Find(&tag).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
+	var movieType model.MovieType
+	err := db.Model(&model.MovieType{}).
+		Where("movie_type_id = ? AND status <> ?", uid, status).
+		Find(&movieType).Error
 
-		return nil, err
-	}
-
-	return &tag, nil
+	return &movieType, err
 }
 
 // SaveMovieType : Save Movie Type
-func SaveMovieType(tag model.MovieType) (*model.MovieType, error) {
-	if err := db.Save(&tag).Error; err != nil {
-		return nil, err
-	}
+func (obj *MovieTypeRepository) SaveMovieType(movieType model.MovieType) (*model.MovieType, error) {
+	err := db.Model(&model.MovieType{}).
+		Save(&movieType).Error
 
-	return &tag, nil
+	return &movieType, err
+}
+
+func (obj *MovieTypeRepository) UpdateStatusByMovieTypeId(movieTypeId int64, status int) error {
+	err := db.Model(&model.Movie{}).
+		Where("movie_type_id = ?", movieTypeId).
+		Update("status", status).Error
+
+	return err
 }

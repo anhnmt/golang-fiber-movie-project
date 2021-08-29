@@ -3,10 +3,11 @@ package controller
 import (
 	"github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
-	"github.com/xdorro/golang-fiber-base-project/app/dto"
-	"github.com/xdorro/golang-fiber-base-project/app/repository"
-	"github.com/xdorro/golang-fiber-base-project/pkg/config"
-	"github.com/xdorro/golang-fiber-base-project/pkg/util"
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/request"
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/response"
+	"github.com/xdorro/golang-fiber-movie-project/app/repository"
+	"github.com/xdorro/golang-fiber-movie-project/pkg/config"
+	"github.com/xdorro/golang-fiber-movie-project/pkg/util"
 	"time"
 )
 
@@ -19,19 +20,19 @@ import (
 // @Failure 400 {object} dto.DataResponse{}
 // @Router /api/oauth/token [post]
 func AuthToken(c *fiber.Ctx) error {
-	var loginRequest dto.LoginRequest
+	var loginRequest request.LoginRequest
 
 	if err := c.BodyParser(&loginRequest); err != nil {
-		return util.ResponseBadRequest(c, "Đăng nhập không thành công", err)
+		return util.ResponseBadRequest("Đăng nhập không thành công", err)
 	}
 
-	user, err := repository.FindUserByUsernameAndStatus(loginRequest.Username, util.STATUS_ACTIVATED)
+	user, err := repository.FindUserByUsernameAndStatus(loginRequest.Username, util.StatusActivated)
 	if user == nil || user.Username == "" || err != nil {
-		return util.ResponseUnauthenticated(c, "Tài khoản không tồn tại", err)
+		return util.ResponseUnauthorized("Tài khoản không tồn tại", err)
 	}
 
 	if !util.CheckPasswordHash(loginRequest.Password, user.Password) {
-		return util.ResponseUnauthenticated(c, "Mật khẩu không chính xác", nil)
+		return util.ResponseUnauthorized("Mật khẩu không chính xác", nil)
 	}
 
 	token := jwt.New(jwt.SigningMethodHS256)
@@ -41,10 +42,18 @@ func AuthToken(c *fiber.Ctx) error {
 	claims["username"] = user.Username
 	claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
 
-	result, err := token.SignedString([]byte(config.GetJwt().Secret))
+	accessToken, err := token.SignedString([]byte(config.GetJwt().Secret))
 	if err != nil {
-		return c.SendStatus(fiber.StatusInternalServerError)
+		return util.ResponseError(err.Error(), nil)
 	}
 
-	return util.ResponseSuccess(c, "Thành công", result)
+	result := &response.UserResponse{
+		UserId:   user.UserId,
+		Name:     user.Name,
+		Username: user.Username,
+		Gender:   user.Gender,
+		Token:    accessToken,
+	}
+
+	return util.ResponseSuccess("Thành công", result)
 }

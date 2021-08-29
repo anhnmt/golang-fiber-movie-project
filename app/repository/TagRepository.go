@@ -1,76 +1,76 @@
 package repository
 
 import (
-	"errors"
-	"github.com/xdorro/golang-fiber-base-project/app/model"
-	"github.com/xdorro/golang-fiber-base-project/pkg/util"
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
 	"gorm.io/gorm"
+	"log"
+	"sync"
 )
 
-// FindAllTagsByStatus : Find tag by TagId and Status
-func FindAllTagsByStatus(status int) (*[]model.Tag, error) {
-	tags := make([]model.Tag, 0)
-
-	if err := db.Find(&tags, "status = ?", status).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
-
-		return nil, err
-	}
-
-	return &tags, nil
+type TagRepository struct {
+	db *gorm.DB
 }
 
-func FindAllTagsByStatusNot(status int) (*[]model.Tag, error) {
-	tags := make([]model.Tag, 0)
+func NewTagRepository() *TagRepository {
+	if tagRepository == nil {
+		once = &sync.Once{}
 
-	if err := db.Find(&tags, "status <> ?", status).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
-
-		return nil, err
+		once.Do(func() {
+			if tagRepository == nil {
+				tagRepository = &TagRepository{
+					db: db,
+				}
+				log.Println("Create new TagRepository")
+			}
+		})
 	}
 
-	return &tags, nil
+	return tagRepository
+}
+
+// FindAllTagsByStatus : Find tag by TagId and Status
+func (obj *TagRepository) FindAllTagsByStatus(status int) (*[]model.Tag, error) {
+	tags := make([]model.Tag, 0)
+
+	err := db.Model(model.Tag{}).
+		Find(&tags, "status = ?", status).Error
+
+	return &tags, err
+}
+
+func (obj *TagRepository) FindAllTagsByStatusNot(status int) (*[]model.Tag, error) {
+	tags := make([]model.Tag, 0)
+
+	err := db.Model(model.Tag{}).
+		Find(&tags, "status <> ?", status).Error
+
+	return &tags, err
 }
 
 // FindTagByIdAndStatus : Find tag by TagId and Status
-func FindTagByIdAndStatus(id string, status int) (*model.Tag, error) {
-	uid := util.ParseStringToUInt(id)
-
+func (obj *TagRepository) FindTagByIdAndStatus(id string, status int) (*model.Tag, error) {
 	var tag model.Tag
-	if err := db.Where("tag_id = ? AND status = ?", uid, status).Find(&tag).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
 
-		return nil, err
-	}
+	err := obj.db.Model(model.Tag{}).
+		Where("tag_id = ? AND status = ?", id, status).
+		Find(&tag).Error
 
-	return &tag, nil
+	return &tag, err
 }
 
-func FindTagByIdAndStatusNot(id string, status int) (*model.Tag, error) {
-	uid := util.ParseStringToUInt(id)
-
+func (obj *TagRepository) FindTagByIdAndStatusNot(id string, status int) (*model.Tag, error) {
 	var tag model.Tag
-	if err := db.Where("tag_id = ? AND status <> ?", uid, status).Find(&tag).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
 
-		return nil, err
-	}
+	err := obj.db.Model(model.Tag{}).
+		Where("tag_id = ? AND status <> ?", id, status).
+		Find(&tag).Error
 
-	return &tag, nil
+	return &tag, err
 }
 
-func SaveTag(tag model.Tag) (*model.Tag, error) {
-	if err := db.Save(&tag).Error; err != nil {
-		return nil, err
-	}
+func (obj *TagRepository) SaveTag(tag model.Tag) (*model.Tag, error) {
+	err := obj.db.Model(model.Tag{}).
+		Save(&tag).Error
 
-	return &tag, nil
+	return &tag, err
 }

@@ -3,22 +3,35 @@ package router
 import (
 	swagger "github.com/arsmn/fiber-swagger/v2"
 	"github.com/gofiber/fiber/v2"
-	"github.com/xdorro/golang-fiber-base-project/pkg/util"
+	"github.com/xdorro/golang-fiber-movie-project/pkg/util"
 )
 
 func BaseRouter(app *fiber.App) {
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Static("/storage", "./storage")
+
+	// Create route group.
+	app.Get("/swagger/*", swagger.Handler)
+
+	api := app.Group("/api")
+
+	api.Get("/", func(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{
 			"msg":  "Welcome to Fiber Go API!",
 			"docs": "/swagger/index.html",
 		})
 	})
 
-	// Create route group.
-	app.Get("/swagger/*", swagger.Handler)
+	api.Post("/", func(c *fiber.Ctx) error {
+		return c.JSON(fiber.Map{
+			"msg": "Welcome to Fiber Go API!",
+		})
+	})
 
-	api := app.Group("/api")
+	// Private router
 	privateRoute(api)
+
+	// Public router
+	publicRoute(api)
 
 	// Auth Router
 	authRouter(api)
@@ -30,7 +43,7 @@ func BaseRouter(app *fiber.App) {
 func notFoundRoute(a *fiber.App) {
 	a.Use(
 		func(c *fiber.Ctx) error {
-			return util.ResponseNotFound(c, "Đường dẫn không tồn tại")
+			return util.ResponseNotFound("Đường dẫn không tồn tại")
 		},
 	)
 }

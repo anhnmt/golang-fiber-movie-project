@@ -1,76 +1,75 @@
 package repository
 
 import (
-	"errors"
-	"github.com/xdorro/golang-fiber-base-project/app/model"
-	"github.com/xdorro/golang-fiber-base-project/pkg/util"
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
+	"github.com/xdorro/golang-fiber-movie-project/pkg/util"
 	"gorm.io/gorm"
+	"log"
+	"sync"
 )
 
-// FindAllCountriesByStatus : Find country by CountryId and Status = 1
-func FindAllCountriesByStatus(status int) (*[]model.Country, error) {
+type CountryRepository struct {
+	db *gorm.DB
+}
+
+func NewCountryRepository() *CountryRepository {
+	if countryRepository == nil {
+		once = &sync.Once{}
+
+		once.Do(func() {
+			if countryRepository == nil {
+				countryRepository = &CountryRepository{
+					db: db,
+				}
+				log.Println("Create new CountryRepository")
+			}
+		})
+	}
+
+	return countryRepository
+}
+
+func (obj *CountryRepository) FindAllCountriesByStatusNot(status int) (*[]model.Country, error) {
 	countries := make([]model.Country, 0)
 
-	if err := db.Find(&countries, "status = ?", status).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
+	err := db.Model(model.Country{}).
+		Find(&countries, "status <> ?", status).Error
 
-		return nil, err
-	}
-
-	return &countries, nil
+	return &countries, err
 }
 
-func FindAllCountriesByStatusNot(status int) (*[]model.Country, error) {
+func (obj *CountryRepository) FindAllCountriesByStatusNotIn(status []int) (*[]model.Country, error) {
 	countries := make([]model.Country, 0)
 
-	if err := db.Find(&countries, "status <> ?", status).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
+	err := db.Model(model.Country{}).
+		Find(&countries, "status NOT IN ?", status).Error
 
-		return nil, err
-	}
-
-	return &countries, nil
+	return &countries, err
 }
 
-// FindCountryByIdAndStatus : Find country by CountryId and Status = 1
-func FindCountryByIdAndStatus(id string, status int) (*model.Country, error) {
-	uid := util.ParseStringToUInt(id)
+func (obj *CountryRepository) FindCountryByIdAndStatusNot(id string, status int) (*model.Country, error) {
+	uid := util.ParseStringToInt64(id)
 
 	var country model.Country
-	if err := db.Where("country_id = ? AND status = ?", uid, status).Find(&country).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
+	err := db.Model(model.Country{}).
+		Where("country_id = ? AND status <> ?", uid, status).
+		Find(&country).Error
 
-		return nil, err
-	}
-
-	return &country, nil
+	return &country, err
 }
 
-func FindCountryByIdAndStatusNot(id string, status int) (*model.Country, error) {
-	uid := util.ParseStringToUInt(id)
+func (obj *CountryRepository) FindAllCountriesByCountryIdsInAndStatusNotIn(countryIds []int64, status []int) (*[]model.Country, error) {
+	countries := make([]model.Country, 0)
 
-	var country model.Country
-	if err := db.Where("country_id = ? AND status <> ?", uid, status).Find(&country).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
+	err := db.Model(model.Country{}).
+		Find(&countries, "country_id IN ? AND status NOT IN ?", countryIds, status).Error
 
-		return nil, err
-	}
-
-	return &country, nil
+	return &countries, err
 }
 
-func SaveCountry(country model.Country) (*model.Country, error) {
-	if err := db.Save(&country).Error; err != nil {
-		return nil, err
-	}
+func (obj *CountryRepository) SaveCountry(country model.Country) (*model.Country, error) {
+	err := db.Model(model.Country{}).
+		Save(&country).Error
 
-	return &country, nil
+	return &country, err
 }

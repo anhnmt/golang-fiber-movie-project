@@ -2,8 +2,9 @@ package middleware
 
 import (
 	"github.com/gofiber/fiber/v2"
-	jwtware "github.com/gofiber/jwt/v2"
-	"github.com/xdorro/golang-fiber-base-project/pkg/config"
+	"github.com/gofiber/jwt/v2"
+	"github.com/xdorro/golang-fiber-movie-project/pkg/config"
+	"github.com/xdorro/golang-fiber-movie-project/pkg/util"
 )
 
 // Protected protect routes
@@ -16,9 +17,8 @@ func Protected() fiber.Handler {
 
 func jwtError(c *fiber.Ctx, err error) error {
 	if err.Error() == "Missing or malformed JWT" {
-		return c.Status(fiber.StatusBadRequest).
-			JSON(fiber.Map{"status": "error", "message": "Missing or malformed JWT", "data": nil})
+		return util.ResponseUnauthorized("Token bị thiếu hoặc không đúng định dạng", nil)
 	}
-	return c.Status(fiber.StatusUnauthorized).
-		JSON(fiber.Map{"status": "error", "message": "Invalid or expired JWT", "data": nil})
+
+	return util.ResponseUnauthorized("Token không hợp lệ hoặc hết hạn", nil)
 }

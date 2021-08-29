@@ -1,65 +1,65 @@
 {
-    "swagger": "2.0",
-    "info": {
-        "description": "This is a sample swagger for Fiber",
-        "title": "Golang Fiber Base Project",
-        "termsOfService": "http://swagger.io/terms/",
-        "contact": {
-            "name": "Tuan Anh Nguyen Manh",
-            "email": "xdorro@gmail.com"
-        },
-        "license": {
-            "name": "Apache 2.0",
-            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-        },
-        "version": "1.0"
+  "swagger": "2.0",
+  "info": {
+    "description": "This is a sample swagger for Fiber",
+    "title": "Golang Fiber Base Project",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "name": "Tuan Anh Nguyen Manh",
+      "email": "xdorro@gmail.com"
     },
-    "host": "localhost:8080",
-    "basePath": "/",
-    "paths": {
-        "/api/oauth/token": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "token"
-                ],
-                "summary": "Authentication User",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.DataResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/dto.DataResponse"
-                        }
-                    }
-                }
-            }
-        }
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "definitions": {
-        "dto.DataResponse": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "type": "object"
-                },
-                "message": {
-                    "type": "object"
-                },
-                "status": {
-                    "type": "integer"
-                }
+    "version": "1.0"
+  },
+  "host": "localhost:8080",
+  "basePath": "/",
+  "paths": {
+    "/api/oauth/token": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "token"
+        ],
+        "summary": "Authentication User",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse"
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse"
+            }
+          }
         }
+      }
     }
+  },
+  "definitions": {
+    "dto.DataResponse": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object"
+        },
+        "message": {
+          "type": "object"
+        },
+        "status": {
+          "type": "integer"
+        }
+      }
+    }
+  }
 }
