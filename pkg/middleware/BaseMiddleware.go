@@ -6,7 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/favicon"
 	"github.com/gofiber/fiber/v2/middleware/logger"
-	"github.com/xdorro/golang-fiber-base-project/pkg/config"
+	"github.com/xdorro/golang-fiber-movie-project/pkg/config"
 )
 
 func BaseMiddleware(a *fiber.App) {

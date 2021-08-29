@@ -1,6 +1,6 @@
 package response
 
-import "github.com/xdorro/golang-fiber-base-project/app/entity/dto"
+import "github.com/xdorro/golang-fiber-movie-project/app/entity/dto"
 
 type SearchMovieResponse struct {
 	MovieId     int64            `json:"movie_id"`

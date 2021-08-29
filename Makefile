@@ -1,7 +1,7 @@
-APP_NAME=golang-fiber-base-project
+APP_NAME=golang-fiber-movie-project
 APP_VERSION=1.0.0
 BUILD_DIR=./build
-DOCKER_LOCAL=ghcr.io/xdorro
+DOCKER_LOCAL=registry.gitlab.com/xdorro/registry
 
 config:
 	cp config.example.yml config.yml

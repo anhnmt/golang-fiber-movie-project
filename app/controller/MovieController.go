@@ -3,15 +3,17 @@ package controller
 import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
-	"github.com/xdorro/golang-fiber-base-project/app/entity/model"
-	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
-	"github.com/xdorro/golang-fiber-base-project/app/entity/response"
-	"github.com/xdorro/golang-fiber-base-project/app/repository"
-	"github.com/xdorro/golang-fiber-base-project/pkg/mapper"
-	"github.com/xdorro/golang-fiber-base-project/pkg/util"
-	"github.com/xdorro/golang-fiber-base-project/pkg/validator"
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/request"
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/response"
+	"github.com/xdorro/golang-fiber-movie-project/app/repository"
+	"github.com/xdorro/golang-fiber-movie-project/pkg/mapper"
+	"github.com/xdorro/golang-fiber-movie-project/pkg/util"
+	"github.com/xdorro/golang-fiber-movie-project/pkg/validator"
 	"log"
+	"math"
 	"net/url"
+	"strconv"
 	"sync"
 )
 
@@ -151,6 +153,19 @@ func (obj *MovieController) ClientFindMovieDetail(c *fiber.Ctx) error {
 }
 
 func (obj *MovieController) ClientFindMovieByName(c *fiber.Ctx) error {
+	page, _ := strconv.Atoi(c.Query("page", "1"))
+	if page == 0 {
+		page = 1
+	}
+
+	pageSize, _ := strconv.Atoi(c.Query("page_size", "10"))
+	switch {
+	case pageSize > 100:
+		pageSize = 100
+	case pageSize <= 0:
+		pageSize = 10
+	}
+
 	movieName, err := url.PathUnescape(c.Params("movieName"))
 	if err != nil {
 		log.Fatal(err)
@@ -158,18 +173,42 @@ func (obj *MovieController) ClientFindMovieByName(c *fiber.Ctx) error {
 
 	status := []int{util.StatusDraft, util.StatusDeleted}
 
-	movies, err := obj.movieRepository.FindAllMoviesByMovieNameAndStatusNotIn(movieName, status, 10)
+	count, err := obj.movieRepository.CountAllMoviesByMovieNameAndStatusNotIn(movieName, status)
 
 	if err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
-	result := mapper.SearchMovies(movies)
+	movies, err := obj.movieRepository.FindAllMoviesByMovieNameAndStatusNotIn(movieName, status, page, pageSize)
+
+	if err != nil {
+		return util.ResponseError(err.Error(), nil)
+	}
+
+	result := response.PaginateResponse{
+		Total:    count,
+		Page:     page,
+		LastPage: math.Ceil(float64(count / int64(pageSize))),
+		Result:   mapper.SearchMovies(movies),
+	}
 
 	return util.ResponseSuccess("Thành công", result)
 }
 
 func (obj *MovieController) ClientFindMovieByMovieTypeSlug(c *fiber.Ctx) error {
+	page, _ := strconv.Atoi(c.Query("page", "1"))
+	if page == 0 {
+		page = 1
+	}
+
+	pageSize, _ := strconv.Atoi(c.Query("page_size", "10"))
+	switch {
+	case pageSize > 100:
+		pageSize = 100
+	case pageSize <= 0:
+		pageSize = 10
+	}
+
 	movieType, err := url.PathUnescape(c.Params("movieType"))
 	if err != nil {
 		log.Fatal(err)
@@ -177,18 +216,42 @@ func (obj *MovieController) ClientFindMovieByMovieTypeSlug(c *fiber.Ctx) error {
 
 	status := []int{util.StatusDraft, util.StatusDeleted}
 
-	movies, err := obj.movieRepository.FindAllMoviesByMovieTypeSlugAndStatusNotIn(movieType, status, 10)
+	count, err := obj.movieRepository.CountAllMoviesByMovieTypeSlugAndStatusNotIn(movieType, status)
 
 	if err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
-	result := mapper.SearchMovies(movies)
+	movies, err := obj.movieRepository.FindAllMoviesByMovieTypeSlugAndStatusNotIn(movieType, status, page, pageSize)
+
+	if err != nil {
+		return util.ResponseError(err.Error(), nil)
+	}
+
+	result := response.PaginateResponse{
+		Total:    count,
+		Page:     page,
+		LastPage: math.Ceil(float64(count / int64(pageSize))),
+		Result:   mapper.SearchMovies(movies),
+	}
 
 	return util.ResponseSuccess("Thành công", result)
 }
 
 func (obj *MovieController) ClientFindMovieByMovieGenre(c *fiber.Ctx) error {
+	page, _ := strconv.Atoi(c.Query("page", "1"))
+	if page == 0 {
+		page = 1
+	}
+
+	pageSize, _ := strconv.Atoi(c.Query("page_size", "10"))
+	switch {
+	case pageSize > 100:
+		pageSize = 100
+	case pageSize <= 0:
+		pageSize = 10
+	}
+
 	movieGenre, err := url.PathUnescape(c.Params("movieGenre"))
 	if err != nil {
 		log.Fatal(err)
@@ -196,18 +259,43 @@ func (obj *MovieController) ClientFindMovieByMovieGenre(c *fiber.Ctx) error {
 
 	status := []int{util.StatusDraft, util.StatusDeleted}
 
-	movies, err := obj.movieRepository.FindAllMoviesByGenreSlugAndStatusNotIn(movieGenre, status, 10)
+	count, err := obj.movieRepository.CountAllMoviesByGenreSlugAndStatusNotIn(movieGenre, status)
 
 	if err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
-	result := mapper.SearchMovies(movies)
+	movies, err := obj.movieRepository.FindAllMoviesByGenreSlugAndStatusNotIn(movieGenre, status, page, pageSize)
+
+	if err != nil {
+		return util.ResponseError(err.Error(), nil)
+	}
+
+	//result := mapper.SearchMovies(movies)
+	result := response.PaginateResponse{
+		Total:    count,
+		Page:     page,
+		LastPage: math.Ceil(float64(count / int64(pageSize))),
+		Result:   mapper.SearchMovies(movies),
+	}
 
 	return util.ResponseSuccess("Thành công", result)
 }
 
 func (obj *MovieController) ClientFindMovieByMovieCountry(c *fiber.Ctx) error {
+	page, _ := strconv.Atoi(c.Query("page", "1"))
+	if page == 0 {
+		page = 1
+	}
+
+	pageSize, _ := strconv.Atoi(c.Query("page_size", "10"))
+	switch {
+	case pageSize > 100:
+		pageSize = 100
+	case pageSize <= 0:
+		pageSize = 10
+	}
+
 	movieCountry, err := url.PathUnescape(c.Params("movieCountry"))
 	if err != nil {
 		log.Fatal(err)
@@ -215,13 +303,25 @@ func (obj *MovieController) ClientFindMovieByMovieCountry(c *fiber.Ctx) error {
 
 	status := []int{util.StatusDraft, util.StatusDeleted}
 
-	movies, err := obj.movieRepository.FindAllMoviesByCountrySlugAndStatusNotIn(movieCountry, status, 10)
+	count, err := obj.movieRepository.CountAllMoviesByCountrySlugAndStatusNotIn(movieCountry, status)
 
 	if err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
-	result := mapper.SearchMovies(movies)
+	movies, err := obj.movieRepository.FindAllMoviesByCountrySlugAndStatusNotIn(movieCountry, status, page, pageSize)
+
+	if err != nil {
+		return util.ResponseError(err.Error(), nil)
+	}
+
+	//result := mapper.SearchMovies(movies)
+	result := response.PaginateResponse{
+		Total:    count,
+		Page:     page,
+		LastPage: math.Ceil(float64(count / int64(pageSize))),
+		Result:   mapper.SearchMovies(movies),
+	}
 
 	return util.ResponseSuccess("Thành công", result)
 }

@@ -1,7 +1,7 @@
 package validator
 
 import (
-	"github.com/xdorro/golang-fiber-base-project/app/entity/model"
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
 )
 
 func ExistGenreIdInGenres(genreId int64, genres []model.Genre) bool {

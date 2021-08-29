@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"github.com/xdorro/golang-fiber-base-project/app/entity/dto"
-	"github.com/xdorro/golang-fiber-base-project/app/entity/model"
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/dto"
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
 	"gorm.io/gorm"
 	"log"
 	"sync"

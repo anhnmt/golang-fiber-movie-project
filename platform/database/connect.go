@@ -2,7 +2,7 @@ package database
 
 import (
 	"fmt"
-	"github.com/xdorro/golang-fiber-base-project/pkg/config"
+	"github.com/xdorro/golang-fiber-movie-project/pkg/config"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

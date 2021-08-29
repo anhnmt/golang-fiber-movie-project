@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/xdorro/golang-fiber-base-project/platform/database"
+	"github.com/xdorro/golang-fiber-movie-project/platform/database"
 	"gorm.io/gorm"
 	"sync"
 )

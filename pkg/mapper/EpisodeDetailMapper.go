@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	"github.com/xdorro/golang-fiber-base-project/app/entity/model"
-	"github.com/xdorro/golang-fiber-base-project/app/entity/response"
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/response"
 )
 
 func EpisodeDetailsMapper(episodes *[]model.Episode, episodeDetails *[]model.EpisodeDetail) []response.MovieEpisodeDetailResponse {

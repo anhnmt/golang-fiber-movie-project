@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/xdorro/golang-fiber-base-project/app/entity/model"
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
 )
 
 func FindAllUsersByStatus(status int) (*[]model.User, error) {

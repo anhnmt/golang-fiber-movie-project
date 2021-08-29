@@ -1,7 +1,7 @@
 package database
 
 import (
-	"github.com/xdorro/golang-fiber-base-project/pkg/config"
+	"github.com/xdorro/golang-fiber-movie-project/pkg/config"
 	"gorm.io/gorm"
 	"log"
 	"os"

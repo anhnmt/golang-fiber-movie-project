@@ -1,9 +1,9 @@
 package repository
 
 import (
-	"github.com/xdorro/golang-fiber-base-project/app/entity/dto"
-	"github.com/xdorro/golang-fiber-base-project/app/entity/model"
-	"github.com/xdorro/golang-fiber-base-project/pkg/util"
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/dto"
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
+	"github.com/xdorro/golang-fiber-movie-project/pkg/util"
 	"gorm.io/gorm"
 	"log"
 	"sync"
@@ -135,8 +135,8 @@ func (obj *MovieRepository) FindMovieBySlugAndStatusNotInAndJoinMovieType(movieS
 	return &movie, err
 }
 
-func (obj *MovieRepository) FindAllMoviesByMovieNameAndStatusNotIn(movieName string, status []int, limit int) (*[]dto.SearchMovieDTO, error) {
-	movies := make([]dto.SearchMovieDTO, 0)
+func (obj *MovieRepository) CountAllMoviesByMovieNameAndStatusNotIn(movieName string, status []int) (int64, error) {
+	var count int64
 	movieName = "%" + movieName + "%"
 
 	err := db.
@@ -147,14 +147,33 @@ func (obj *MovieRepository) FindAllMoviesByMovieNameAndStatusNotIn(movieName str
 		Where("movie_types.status NOT IN ?", status).
 		Where("movies.name LIKE ? OR movies.origin_name LIKE ?", movieName, movieName).
 		Order("movies.updated_at DESC").
-		Limit(limit).
+		Count(&count).Error
+
+	return count, err
+}
+
+func (obj *MovieRepository) FindAllMoviesByMovieNameAndStatusNotIn(movieName string, status []int, page int, pageSize int) (*[]dto.SearchMovieDTO, error) {
+	movies := make([]dto.SearchMovieDTO, 0)
+	movieName = "%" + movieName + "%"
+	offset := (page - 1) * pageSize
+
+	err := db.
+		Model(&model.Movie{}).
+		Select("movies.*, movie_types.name movie_type_name, movie_types.slug movie_type_slug").
+		Joins("JOIN movie_types on movie_types.movie_type_id = movies.movie_type_id").
+		Where("movies.status NOT IN ?", status).
+		Where("movie_types.status NOT IN ?", status).
+		Where("movies.name LIKE ? OR movies.origin_name LIKE ?", movieName, movieName).
+		Order("movies.updated_at DESC").
+		Offset(offset).
+		Limit(pageSize).
 		Find(&movies).Error
 
 	return &movies, err
 }
 
-func (obj *MovieRepository) FindAllMoviesByMovieTypeSlugAndStatusNotIn(movieType string, status []int, limit int) (*[]dto.SearchMovieDTO, error) {
-	movies := make([]dto.SearchMovieDTO, 0)
+func (obj *MovieRepository) CountAllMoviesByMovieTypeSlugAndStatusNotIn(movieType string, status []int) (int64, error) {
+	var count int64
 	movieType = "%" + movieType + "%"
 
 	err := db.
@@ -165,14 +184,33 @@ func (obj *MovieRepository) FindAllMoviesByMovieTypeSlugAndStatusNotIn(movieType
 		Where("movie_types.status NOT IN ?", status).
 		Where("movie_types.slug LIKE ?", movieType).
 		Order("movies.updated_at DESC").
-		Limit(limit).
+		Count(&count).Error
+
+	return count, err
+}
+
+func (obj *MovieRepository) FindAllMoviesByMovieTypeSlugAndStatusNotIn(movieType string, status []int, page int, pageSize int) (*[]dto.SearchMovieDTO, error) {
+	movies := make([]dto.SearchMovieDTO, 0)
+	movieType = "%" + movieType + "%"
+	offset := (page - 1) * pageSize
+
+	err := db.
+		Model(&model.Movie{}).
+		Select("movies.*, movie_types.name movie_type_name, movie_types.slug movie_type_slug").
+		Joins("JOIN movie_types on movie_types.movie_type_id = movies.movie_type_id").
+		Where("movies.status NOT IN ?", status).
+		Where("movie_types.status NOT IN ?", status).
+		Where("movie_types.slug LIKE ?", movieType).
+		Order("movies.updated_at DESC").
+		Offset(offset).
+		Limit(pageSize).
 		Find(&movies).Error
 
 	return &movies, err
 }
 
-func (obj *MovieRepository) FindAllMoviesByGenreSlugAndStatusNotIn(movieGenre string, status []int, limit int) (*[]dto.SearchMovieDTO, error) {
-	movies := make([]dto.SearchMovieDTO, 0)
+func (obj *MovieRepository) CountAllMoviesByGenreSlugAndStatusNotIn(movieGenre string, status []int) (int64, error) {
+	var count int64
 	movieGenre = "%" + movieGenre + "%"
 
 	err := db.
@@ -186,14 +224,36 @@ func (obj *MovieRepository) FindAllMoviesByGenreSlugAndStatusNotIn(movieGenre st
 		Where("genres.status NOT IN ?", status).
 		Where("genres.slug LIKE ?", movieGenre).
 		Order("movies.updated_at DESC").
-		Limit(limit).
+		Count(&count).Error
+
+	return count, err
+}
+
+func (obj *MovieRepository) FindAllMoviesByGenreSlugAndStatusNotIn(movieGenre string, status []int, page int, pageSize int) (*[]dto.SearchMovieDTO, error) {
+	movies := make([]dto.SearchMovieDTO, 0)
+	movieGenre = "%" + movieGenre + "%"
+	offset := (page - 1) * pageSize
+
+	err := db.
+		Model(&model.Movie{}).
+		Select("movies.*, movie_types.name movie_type_name, movie_types.slug movie_type_slug").
+		Joins("JOIN movie_types on movie_types.movie_type_id = movies.movie_type_id").
+		Joins("JOIN movie_genres on movie_genres.movie_id = movies.movie_id").
+		Joins("JOIN genres on genres.genre_id = movie_genres.genre_id").
+		Where("movies.status NOT IN ?", status).
+		Where("movie_types.status NOT IN ?", status).
+		Where("genres.status NOT IN ?", status).
+		Where("genres.slug LIKE ?", movieGenre).
+		Order("movies.updated_at DESC").
+		Offset(offset).
+		Limit(pageSize).
 		Find(&movies).Error
 
 	return &movies, err
 }
 
-func (obj *MovieRepository) FindAllMoviesByCountrySlugAndStatusNotIn(movieCountry string, status []int, limit int) (*[]dto.SearchMovieDTO, error) {
-	movies := make([]dto.SearchMovieDTO, 0)
+func (obj *MovieRepository) CountAllMoviesByCountrySlugAndStatusNotIn(movieCountry string, status []int) (int64, error) {
+	var count int64
 	movieCountry = "%" + movieCountry + "%"
 
 	err := db.
@@ -207,7 +267,29 @@ func (obj *MovieRepository) FindAllMoviesByCountrySlugAndStatusNotIn(movieCountr
 		Where("countries.status NOT IN ?", status).
 		Where("countries.slug LIKE ?", movieCountry).
 		Order("movies.updated_at DESC").
-		Limit(limit).
+		Count(&count).Error
+
+	return count, err
+}
+
+func (obj *MovieRepository) FindAllMoviesByCountrySlugAndStatusNotIn(movieCountry string, status []int, page int, pageSize int) (*[]dto.SearchMovieDTO, error) {
+	movies := make([]dto.SearchMovieDTO, 0)
+	movieCountry = "%" + movieCountry + "%"
+	offset := (page - 1) * pageSize
+
+	err := db.
+		Model(&model.Movie{}).
+		Select("movies.*, movie_types.name movie_type_name, movie_types.slug movie_type_slug").
+		Joins("JOIN movie_types on movie_types.movie_type_id = movies.movie_type_id").
+		Joins("JOIN movie_countries on movie_countries.movie_id = movies.movie_id").
+		Joins("JOIN countries on countries.country_id = movie_countries.country_id").
+		Where("movies.status NOT IN ?", status).
+		Where("movie_types.status NOT IN ?", status).
+		Where("countries.status NOT IN ?", status).
+		Where("countries.slug LIKE ?", movieCountry).
+		Order("movies.updated_at DESC").
+		Offset(offset).
+		Limit(pageSize).
 		Find(&movies).Error
 
 	return &movies, err

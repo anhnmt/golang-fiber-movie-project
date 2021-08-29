@@ -2,11 +2,11 @@ package controller
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/xdorro/golang-fiber-base-project/app/entity/model"
-	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
-	"github.com/xdorro/golang-fiber-base-project/app/repository"
-	"github.com/xdorro/golang-fiber-base-project/pkg/util"
-	"github.com/xdorro/golang-fiber-base-project/pkg/validator"
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/request"
+	"github.com/xdorro/golang-fiber-movie-project/app/repository"
+	"github.com/xdorro/golang-fiber-movie-project/pkg/util"
+	"github.com/xdorro/golang-fiber-movie-project/pkg/validator"
 	"log"
 	"sync"
 )

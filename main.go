@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
-	"github.com/xdorro/golang-fiber-base-project/pkg/config"
-	"github.com/xdorro/golang-fiber-base-project/pkg/middleware"
-	"github.com/xdorro/golang-fiber-base-project/pkg/router"
+	"github.com/xdorro/golang-fiber-movie-project/pkg/config"
+	"github.com/xdorro/golang-fiber-movie-project/pkg/middleware"
+	"github.com/xdorro/golang-fiber-movie-project/pkg/router"
 	"log"
 	"os"
 	"os/signal"

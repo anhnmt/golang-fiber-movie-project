@@ -2,7 +2,7 @@ package util
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/xdorro/golang-fiber-base-project/app/entity/response"
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/response"
 )
 
 // ResponseSuccess : returning json structure for success request

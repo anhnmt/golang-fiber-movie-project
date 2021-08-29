@@ -1,7 +1,7 @@
 package mapper
 
 import (
-	"github.com/xdorro/golang-fiber-base-project/app/entity/model"
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
 )
 
 func GetEpisodeIds(episodes []model.Episode) *[]int64 {

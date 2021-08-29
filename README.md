@@ -1,1 +1,1 @@
-# golang-fiber-base-project
+# golang-fiber-movie-project

@@ -1,6 +1,6 @@
 package response
 
-import "github.com/xdorro/golang-fiber-base-project/app/entity/model"
+import "github.com/xdorro/golang-fiber-movie-project/app/entity/model"
 
 type MovieEpisodeDetailResponse struct {
 	model.Episode

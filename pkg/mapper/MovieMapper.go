@@ -1,9 +1,9 @@
 package mapper
 
 import (
-	"github.com/xdorro/golang-fiber-base-project/app/entity/dto"
-	"github.com/xdorro/golang-fiber-base-project/app/entity/model"
-	"github.com/xdorro/golang-fiber-base-project/app/entity/response"
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/dto"
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/response"
 )
 
 func SearchMovies(movies *[]dto.SearchMovieDTO) []response.SearchMovieResponse {

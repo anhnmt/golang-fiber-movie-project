@@ -3,11 +3,11 @@ package controller
 import (
 	"github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
-	"github.com/xdorro/golang-fiber-base-project/app/entity/request"
-	"github.com/xdorro/golang-fiber-base-project/app/entity/response"
-	"github.com/xdorro/golang-fiber-base-project/app/repository"
-	"github.com/xdorro/golang-fiber-base-project/pkg/config"
-	"github.com/xdorro/golang-fiber-base-project/pkg/util"
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/request"
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/response"
+	"github.com/xdorro/golang-fiber-movie-project/app/repository"
+	"github.com/xdorro/golang-fiber-movie-project/pkg/config"
+	"github.com/xdorro/golang-fiber-movie-project/pkg/util"
 	"time"
 )
 

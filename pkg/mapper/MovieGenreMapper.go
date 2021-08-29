@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	"github.com/xdorro/golang-fiber-base-project/app/entity/model"
-	"github.com/xdorro/golang-fiber-base-project/pkg/validator"
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
+	"github.com/xdorro/golang-fiber-movie-project/pkg/validator"
 )
 
 func MovieGenres(movieId *int64, genreIds *[]int64) []model.MovieGenre {
