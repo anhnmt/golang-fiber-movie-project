@@ -7,11 +7,34 @@ import (
 	"github.com/xdorro/golang-fiber-movie-project/app/repository"
 	"github.com/xdorro/golang-fiber-movie-project/pkg/mapper"
 	"github.com/xdorro/golang-fiber-movie-project/pkg/util"
+	"log"
+	"sync"
 )
 
+type UserController struct {
+	userRepository *repository.UserRepository
+}
+
+func NewUserController() *UserController {
+	if userController == nil {
+		once = &sync.Once{}
+
+		once.Do(func() {
+			if userController == nil {
+				userController = &UserController{
+					userRepository: repository.NewUserRepository(),
+				}
+				log.Println("Create new UserController")
+			}
+		})
+	}
+
+	return userController
+}
+
 // FindAllUsers : Find all users by Status = 1
-func FindAllUsers(c *fiber.Ctx) error {
-	users, err := repository.FindAllUsersByStatus(util.StatusActivated)
+func (obj *UserController) FindAllUsers(c *fiber.Ctx) error {
+	users, err := obj.userRepository.FindAllUsersByStatus(util.StatusActivated)
 
 	if err != nil {
 		return util.ResponseError(err.Error(), nil)
@@ -23,9 +46,9 @@ func FindAllUsers(c *fiber.Ctx) error {
 }
 
 // FindUserById : Find user by User_Id and Status = 1
-func FindUserById(c *fiber.Ctx) error {
+func (obj *UserController) FindUserById(c *fiber.Ctx) error {
 	userId := c.Params("userId")
-	user, err := repository.FindUserByIdAndStatus(userId, util.StatusActivated)
+	user, err := obj.userRepository.FindUserByIdAndStatus(userId, util.StatusActivated)
 
 	if err != nil || user.UserId == 0 {
 		return util.ResponseBadRequest("ID không tồn tại", err)
@@ -37,7 +60,7 @@ func FindUserById(c *fiber.Ctx) error {
 }
 
 // CreateNewUser : Create a new user
-func CreateNewUser(c *fiber.Ctx) error {
+func (obj *UserController) CreateNewUser(c *fiber.Ctx) error {
 	userRequest := new(request.UserRequest)
 
 	if err := c.BodyParser(userRequest); err != nil {
@@ -57,7 +80,7 @@ func CreateNewUser(c *fiber.Ctx) error {
 		Status:   util.StatusActivated,
 	}
 
-	if _, err = repository.SaveUser(user); err != nil {
+	if _, err = obj.userRepository.SaveUser(user); err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
@@ -65,10 +88,10 @@ func CreateNewUser(c *fiber.Ctx) error {
 }
 
 // UpdateUserById : Update user by User_Id and Status = 1
-func UpdateUserById(c *fiber.Ctx) error {
+func (obj *UserController) UpdateUserById(c *fiber.Ctx) error {
 	userId := c.Params("userId")
 
-	user, err := repository.FindUserByIdAndStatus(userId, util.StatusActivated)
+	user, err := obj.userRepository.FindUserByIdAndStatus(userId, util.StatusActivated)
 
 	if err != nil || user.UserId == 0 {
 		return util.ResponseBadRequest("ID không tồn tại", err)
@@ -89,7 +112,7 @@ func UpdateUserById(c *fiber.Ctx) error {
 	user.Password = hash
 	user.Gender = userRequest.Gender
 
-	if _, err = repository.SaveUser(*user); err != nil {
+	if _, err = obj.userRepository.SaveUser(*user); err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
@@ -97,10 +120,10 @@ func UpdateUserById(c *fiber.Ctx) error {
 }
 
 // DeleteUserById : Delete user by User_Id and Status = 1
-func DeleteUserById(c *fiber.Ctx) error {
+func (obj *UserController) DeleteUserById(c *fiber.Ctx) error {
 	userId := c.Params("userId")
 
-	user, err := repository.FindUserByIdAndStatus(userId, util.StatusActivated)
+	user, err := obj.userRepository.FindUserByIdAndStatus(userId, util.StatusActivated)
 
 	if err != nil || user.UserId == 0 {
 		return util.ResponseBadRequest("ID không tồn tại", err)
@@ -108,7 +131,7 @@ func DeleteUserById(c *fiber.Ctx) error {
 
 	user.Status = util.StatusDeleted
 
-	if _, err = repository.SaveUser(*user); err != nil {
+	if _, err = obj.userRepository.SaveUser(*user); err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 

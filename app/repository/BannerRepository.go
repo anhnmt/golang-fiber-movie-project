@@ -39,6 +39,18 @@ func (obj *BannerRepository) FindAllBannersByStatus(status int) (*[]model.Banner
 	return &banners, err
 }
 
+func (obj *BannerRepository) CountAllBannersStatusNotIn(status []int) (int64, error) {
+	var count int64
+
+	err := db.
+		Model(&model.Banner{}).
+		Select("banners.banner_id").
+		Where("banners.status NOT IN ?", status).
+		Count(&count).Error
+
+	return count, err
+}
+
 func (obj *BannerRepository) FindAllBannersByStatusNot(status int) (*[]model.Banner, error) {
 	banners := make([]model.Banner, 0)
 

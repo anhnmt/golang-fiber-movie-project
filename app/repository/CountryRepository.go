@@ -29,6 +29,18 @@ func NewCountryRepository() *CountryRepository {
 	return countryRepository
 }
 
+func (obj *CountryRepository) CountAllCountriesStatusNotIn(status []int) (int64, error) {
+	var count int64
+
+	err := db.
+		Model(&model.Country{}).
+		Select("countries.country_id").
+		Where("countries.status NOT IN ?", status).
+		Count(&count).Error
+
+	return count, err
+}
+
 func (obj *CountryRepository) FindAllCountriesByStatusNot(status int) (*[]model.Country, error) {
 	countries := make([]model.Country, 0)
 

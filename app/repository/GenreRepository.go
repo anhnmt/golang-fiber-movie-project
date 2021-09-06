@@ -30,6 +30,18 @@ func NewGenreRepository() *GenreRepository {
 	return genreRepository
 }
 
+func (obj *GenreRepository) CountAllGenresStatusNotIn(status []int) (int64, error) {
+	var count int64
+
+	err := db.
+		Model(&model.Genre{}).
+		Select("genres.genre_id").
+		Where("genres.status NOT IN ?", status).
+		Count(&count).Error
+
+	return count, err
+}
+
 func (obj *GenreRepository) FindAllGenresByStatusNot(status int) (*[]model.Genre, error) {
 	genres := make([]model.Genre, 0)
 

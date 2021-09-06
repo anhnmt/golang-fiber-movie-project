@@ -81,6 +81,18 @@ func (obj *MovieRepository) FindAllTopMoviesByGenreSlugAndStatusNotInAndLimit(sl
 	return &movies, err
 }
 
+func (obj *MovieRepository) CountAllMoviesStatusNotIn(status []int) (int64, error) {
+	var count int64
+
+	err := db.
+		Model(&model.Movie{}).
+		Select("movies.movie_id").
+		Where("movies.status NOT IN ?", status).
+		Count(&count).Error
+
+	return count, err
+}
+
 func (obj *MovieRepository) FindAllTopMoviesByMovieTypeSlugAndStatusNotInAndLimit(slug string, status []int, limit int) (*[]dto.SearchMovieDTO, error) {
 	movies := make([]dto.SearchMovieDTO, 0)
 

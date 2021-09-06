@@ -7,6 +7,13 @@ import (
 )
 
 func privateRoute(a fiber.Router) {
+	// Dashboard Controller
+	dashboardController := controller.NewDashboardController()
+	{
+		dashboard := a.Group("/dashboard", middleware.Protected())
+		dashboard.Get("/", dashboardController.DashboardAnalyzer)
+	}
+
 	// Banners Controller
 	bannerController := controller.NewBannerController()
 	{
@@ -54,13 +61,14 @@ func privateRoute(a fiber.Router) {
 	}
 
 	// Users Controller
+	userController := controller.NewUserController()
 	{
 		users := a.Group("/users", middleware.Protected())
-		users.Get("/", controller.FindAllUsers)
-		users.Post("/", controller.CreateNewUser)
-		users.Get("/:userId", controller.FindUserById)
-		users.Put("/:userId", controller.UpdateUserById)
-		users.Delete("/:userId", controller.DeleteUserById)
+		users.Get("/", userController.FindAllUsers)
+		users.Post("/", userController.CreateNewUser)
+		users.Get("/:userId", userController.FindUserById)
+		users.Put("/:userId", userController.UpdateUserById)
+		users.Delete("/:userId", userController.DeleteUserById)
 	}
 
 	// UserRoles Controller
