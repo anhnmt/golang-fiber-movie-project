@@ -7,6 +7,13 @@ import (
 )
 
 func privateRoute(a fiber.Router) {
+	// Dashboard Controller
+	dashboardController := controller.NewDashboardController()
+	{
+		dashboard := a.Group("/dashboard", middleware.Protected())
+		dashboard.Get("/", dashboardController.DashboardAnalyzer)
+	}
+
 	// Banners Controller
 	bannerController := controller.NewBannerController()
 	{
@@ -33,7 +40,7 @@ func privateRoute(a fiber.Router) {
 	genreController := controller.NewGenreController()
 	{
 		genres := a.Group("/genres", middleware.Protected())
-		genres.Get("/genreSlug", genreController.FindAllGenres)
+		genres.Get("/check_slug", genreController.CheckIsExistGenreSlug)
 		genres.Get("/", genreController.FindAllGenres)
 		genres.Post("/", genreController.CreateNewGenre)
 		genres.Get("/:genreId", genreController.FindGenreById)
@@ -45,7 +52,7 @@ func privateRoute(a fiber.Router) {
 	countryController := controller.NewCountryController()
 	{
 		countries := a.Group("/countries", middleware.Protected())
-		countries.Get("/:countrySlug", countryController.FindAllCountries)
+		countries.Get("/check_slug", countryController.CheckIsExistCountrySlug)
 		countries.Get("/", countryController.FindAllCountries)
 		countries.Post("/", countryController.CreateNewCountry)
 		countries.Get("/:countryId", countryController.FindCountryById)
@@ -54,13 +61,15 @@ func privateRoute(a fiber.Router) {
 	}
 
 	// Users Controller
+	userController := controller.NewUserController()
 	{
 		users := a.Group("/users", middleware.Protected())
-		users.Get("/", controller.FindAllUsers)
-		users.Post("/", controller.CreateNewUser)
-		users.Get("/:userId", controller.FindUserById)
-		users.Put("/:userId", controller.UpdateUserById)
-		users.Delete("/:userId", controller.DeleteUserById)
+		users.Get("/", userController.FindAllUsers)
+		users.Post("/", userController.CreateNewUser)
+		users.Get("/check_username", userController.CheckIsExistUsername)
+		users.Get("/:userId", userController.FindUserById)
+		users.Put("/:userId", userController.UpdateUserById)
+		users.Delete("/:userId", userController.DeleteUserById)
 	}
 
 	// UserRoles Controller
@@ -69,7 +78,6 @@ func privateRoute(a fiber.Router) {
 	// Roles Controller
 	{
 		roles := a.Group("/roles", middleware.Protected())
-		roles.Get("/:roleSlug", controller.FindAllRoles)
 		roles.Get("/", controller.FindAllRoles)
 		roles.Post("/", controller.CreateNewRole)
 		roles.Get("/:roleId", controller.FindRoleById)
@@ -83,9 +91,9 @@ func privateRoute(a fiber.Router) {
 	// Movies Controller
 	movieTypeController := controller.NewMovieTypeController()
 	movieTypes := movies.Group("/types")
-	movieTypes.Get("/:movieTypeSlug", movieTypeController.FindAllMovieTypes)
 	movieTypes.Get("/", movieTypeController.FindAllMovieTypes)
 	movieTypes.Post("/", movieTypeController.CreateNewMovieType)
+	movieTypes.Get("/check_slug", movieTypeController.CheckIsExistMovieTypeSlug)
 	movieTypes.Get("/:movieTypeId", movieTypeController.FindMovieTypeById)
 	movieTypes.Put("/:movieTypeId", movieTypeController.UpdateMovieTypeById)
 	movieTypes.Delete("/:movieTypeId", movieTypeController.DeleteMovieTypeById)
@@ -95,6 +103,7 @@ func privateRoute(a fiber.Router) {
 	movieTypes.Get("/:movieSlug", movieController.FindAllMovies)
 	movies.Get("/", movieController.FindAllMovies)
 	movies.Post("/", movieController.CreateNewMovie)
+	movies.Get("/check_slug", movieController.CheckIsExistMovieSlug)
 
 	// Movie Detail Controller
 	movieDetails := movies.Group("/:movieId")

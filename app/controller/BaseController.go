@@ -13,4 +13,7 @@ var (
 	movieTypeController     *MovieTypeController
 	episodeDetailController *EpisodeDetailController
 	bannerController        *BannerController
+	dashboardController     *DashboardController
+	userController          *UserController
+	authController          *AuthController
 )

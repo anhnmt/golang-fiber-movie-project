@@ -126,3 +126,24 @@ func (obj *CountryController) DeleteCountryById(c *fiber.Ctx) error {
 
 	return util.ResponseSuccess("Thành công", nil)
 }
+
+func (obj *CountryController) CheckIsExistCountrySlug(c *fiber.Ctx) error {
+	var err error
+	var country *model.Country
+
+	slug := c.Query("slug")
+	countryId := c.Query("country_id")
+	status := []int{util.StatusDraft, util.StatusDeleted}
+
+	if countryId != "" {
+		country, err = obj.countryRepository.FindCountryBySlugAndCountryIdNotAndStatusNotIn(slug, countryId, status)
+	} else {
+		country, err = obj.countryRepository.FindCountryBySlugAndStatusNotIn(slug, status)
+	}
+
+	if err != nil || country.CountryId == 0 {
+		return util.ResponseSuccess("Thành công", false)
+	}
+
+	return util.ResponseSuccess("Thành công", true)
+}

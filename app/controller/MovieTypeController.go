@@ -123,3 +123,24 @@ func (obj *MovieTypeController) DeleteMovieTypeById(c *fiber.Ctx) error {
 
 	return util.ResponseSuccess("Thành công", nil)
 }
+
+func (obj *MovieTypeController) CheckIsExistMovieTypeSlug(c *fiber.Ctx) error {
+	var err error
+	var movieType *model.MovieType
+
+	slug := c.Query("slug")
+	movieTypeId := c.Query("movie_type_id")
+	status := []int{util.StatusDraft, util.StatusDeleted}
+
+	if movieTypeId != "" {
+		movieType, err = obj.movieTypeRepository.FindMovieTypeBySlugAndMovieTypeIdNotAndStatusNotIn(slug, movieTypeId, status)
+	} else {
+		movieType, err = obj.movieTypeRepository.FindMovieTypeBySlugAndStatusNotIn(slug, status)
+	}
+
+	if err != nil || movieType.MovieTypeId == 0 {
+		return util.ResponseSuccess("Thành công", false)
+	}
+
+	return util.ResponseSuccess("Thành công", true)
+}

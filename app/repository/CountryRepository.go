@@ -29,6 +29,18 @@ func NewCountryRepository() *CountryRepository {
 	return countryRepository
 }
 
+func (obj *CountryRepository) CountAllCountriesStatusNotIn(status []int) (int64, error) {
+	var count int64
+
+	err := db.
+		Model(&model.Country{}).
+		Select("countries.country_id").
+		Where("countries.status NOT IN ?", status).
+		Count(&count).Error
+
+	return count, err
+}
+
 func (obj *CountryRepository) FindAllCountriesByStatusNot(status int) (*[]model.Country, error) {
 	countries := make([]model.Country, 0)
 
@@ -70,6 +82,27 @@ func (obj *CountryRepository) FindAllCountriesByCountryIdsInAndStatusNotIn(count
 func (obj *CountryRepository) SaveCountry(country model.Country) (*model.Country, error) {
 	err := db.Model(model.Country{}).
 		Save(&country).Error
+
+	return &country, err
+}
+
+func (obj *CountryRepository) FindCountryBySlugAndCountryIdNotAndStatusNotIn(slug string, id string, status []int) (*model.Country, error) {
+	var country model.Country
+
+	err := obj.db.
+		Where("country_id <> ?", id).
+		Where("slug = ? AND status NOT IN ?", slug, status).
+		Find(&country).Error
+
+	return &country, err
+}
+
+func (obj *CountryRepository) FindCountryBySlugAndStatusNotIn(slug string, status []int) (*model.Country, error) {
+	var country model.Country
+
+	err := obj.db.
+		Where("slug = ? AND status NOT IN ?", slug, status).
+		Find(&country).Error
 
 	return &country, err
 }

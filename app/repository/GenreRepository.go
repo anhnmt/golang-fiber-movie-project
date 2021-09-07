@@ -30,6 +30,18 @@ func NewGenreRepository() *GenreRepository {
 	return genreRepository
 }
 
+func (obj *GenreRepository) CountAllGenresStatusNotIn(status []int) (int64, error) {
+	var count int64
+
+	err := db.
+		Model(&model.Genre{}).
+		Select("genres.genre_id").
+		Where("genres.status NOT IN ?", status).
+		Count(&count).Error
+
+	return count, err
+}
+
 func (obj *GenreRepository) FindAllGenresByStatusNot(status int) (*[]model.Genre, error) {
 	genres := make([]model.Genre, 0)
 
@@ -71,6 +83,27 @@ func (obj *GenreRepository) FindGenreByIdAndStatusNot(id string, status int) (*m
 func (obj *GenreRepository) SaveGenre(genre model.Genre) (*model.Genre, error) {
 	err := db.Model(model.Genre{}).
 		Save(&genre).Error
+
+	return &genre, err
+}
+
+func (obj *GenreRepository) FindGenreBySlugAndGenreIdNotAndStatusNotIn(slug string, id string, status []int) (*model.Genre, error) {
+	var genre model.Genre
+
+	err := obj.db.
+		Where("genre_id <> ?", id).
+		Where("slug = ? AND status NOT IN ?", slug, status).
+		Find(&genre).Error
+
+	return &genre, err
+}
+
+func (obj *GenreRepository) FindGenreBySlugAndStatusNotIn(slug string, status []int) (*model.Genre, error) {
+	var genre model.Genre
+
+	err := obj.db.
+		Where("slug = ? AND status NOT IN ?", slug, status).
+		Find(&genre).Error
 
 	return &genre, err
 }

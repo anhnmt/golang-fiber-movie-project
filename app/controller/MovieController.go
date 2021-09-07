@@ -593,3 +593,24 @@ func (obj *MovieController) updateMovieCountries(movieId *int64, newCountryIds *
 
 	return nil
 }
+
+func (obj *MovieController) CheckIsExistMovieSlug(c *fiber.Ctx) error {
+	var err error
+	var movie *model.Movie
+
+	slug := c.Query("slug")
+	movieId := c.Query("movie_id")
+	status := []int{util.StatusDraft, util.StatusDeleted}
+
+	if movieId != "" {
+		movie, err = obj.movieRepository.FindMovieBySlugAndMovieIdNotAndStatusNotIn(slug, movieId, status)
+	} else {
+		movie, err = obj.movieRepository.FindMovieBySlugAndStatusNotIn(slug, status)
+	}
+
+	if err != nil || movie.MovieId == 0 {
+		return util.ResponseSuccess("Thành công", false)
+	}
+
+	return util.ResponseSuccess("Thành công", true)
+}
