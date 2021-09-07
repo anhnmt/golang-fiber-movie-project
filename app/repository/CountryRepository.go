@@ -86,6 +86,14 @@ func (obj *CountryRepository) SaveCountry(country model.Country) (*model.Country
 	return &country, err
 }
 
+func (obj *CountryRepository) UpdateCountry(countryId string, country model.Country) (*model.Country, error) {
+	err := db.Model(model.Country{}).
+		Where("country_id = ?", countryId).
+		Save(&country).Error
+
+	return &country, err
+}
+
 func (obj *CountryRepository) FindCountryBySlugAndCountryIdNotAndStatusNotIn(slug string, id string, status []int) (*model.Country, error) {
 	var country model.Country
 

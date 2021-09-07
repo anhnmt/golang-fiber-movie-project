@@ -87,6 +87,14 @@ func (obj *GenreRepository) SaveGenre(genre model.Genre) (*model.Genre, error) {
 	return &genre, err
 }
 
+func (obj *GenreRepository) UpdateGenre(genreId string, genre model.Genre) (*model.Genre, error) {
+	err := db.Model(model.Genre{}).
+		Where("genre_id = ?", genreId).
+		Save(&genre).Error
+
+	return &genre, err
+}
+
 func (obj *GenreRepository) FindGenreBySlugAndGenreIdNotAndStatusNotIn(slug string, id string, status []int) (*model.Genre, error) {
 	var genre model.Genre
 

@@ -102,7 +102,7 @@ func (obj *GenreController) UpdateGenreById(c *fiber.Ctx) error {
 	genre.Slug = genreRequest.Slug
 	genre.Status = genreRequest.Status
 
-	if _, err = obj.genreRepository.SaveGenre(*genre); err != nil {
+	if _, err = obj.genreRepository.UpdateGenre(genreId, *genre); err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
@@ -120,7 +120,7 @@ func (obj *GenreController) DeleteGenreById(c *fiber.Ctx) error {
 
 	genre.Status = util.StatusDeleted
 
-	if _, err = obj.genreRepository.SaveGenre(*genre); err != nil {
+	if _, err = obj.genreRepository.UpdateGenre(genreId, *genre); err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 

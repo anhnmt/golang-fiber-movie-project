@@ -477,7 +477,7 @@ func (obj *MovieController) DeleteMovieById(c *fiber.Ctx) error {
 
 	movie.Status = util.StatusDeleted
 
-	if _, err = obj.movieRepository.SaveMovie(*movie); err != nil {
+	if _, err = obj.movieRepository.UpdateMovie(movieId, *movie); err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 

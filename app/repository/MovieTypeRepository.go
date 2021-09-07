@@ -57,6 +57,14 @@ func (obj *MovieTypeRepository) SaveMovieType(movieType model.MovieType) (*model
 	return &movieType, err
 }
 
+func (obj *MovieTypeRepository) UpdateMovieType(movieTypeId string, movieType model.MovieType) (*model.MovieType, error) {
+	err := db.Model(&model.MovieType{}).
+		Where("movie_type_id = ?", movieTypeId).
+		Save(&movieType).Error
+
+	return &movieType, err
+}
+
 func (obj *MovieTypeRepository) UpdateStatusByMovieTypeId(movieTypeId int64, status int) error {
 	err := db.Model(&model.Movie{}).
 		Where("movie_type_id = ?", movieTypeId).

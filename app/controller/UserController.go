@@ -106,7 +106,7 @@ func (obj *UserController) UpdateUserById(c *fiber.Ctx) error {
 	user.Username = userRequest.Username
 	user.Gender = userRequest.Gender
 
-	if _, err = obj.userRepository.SaveUser(*user); err != nil {
+	if _, err = obj.userRepository.UpdateUser(userId, *user); err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
@@ -125,7 +125,7 @@ func (obj *UserController) DeleteUserById(c *fiber.Ctx) error {
 
 	user.Status = util.StatusDeleted
 
-	if _, err = obj.userRepository.SaveUser(*user); err != nil {
+	if _, err = obj.userRepository.UpdateUser(userId, *user); err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
