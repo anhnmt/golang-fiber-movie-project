@@ -345,3 +345,24 @@ func (obj *MovieRepository) UpdateMovie(movieId string, movie model.Movie) (*mod
 
 	return &movie, err
 }
+
+func (obj *MovieRepository) FindMovieBySlugAndMovieIdNotAndStatusNotIn(slug string, id string, status []int) (*model.Movie, error) {
+	var movie model.Movie
+
+	err := obj.db.
+		Where("movie_id <> ?", id).
+		Where("slug = ? AND status NOT IN ?", slug, status).
+		Find(&movie).Error
+
+	return &movie, err
+}
+
+func (obj *MovieRepository) FindMovieBySlugAndStatusNotIn(slug string, status []int) (*model.Movie, error) {
+	var movie model.Movie
+
+	err := obj.db.
+		Where("slug = ? AND status NOT IN ?", slug, status).
+		Find(&movie).Error
+
+	return &movie, err
+}

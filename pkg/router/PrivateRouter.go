@@ -40,7 +40,7 @@ func privateRoute(a fiber.Router) {
 	genreController := controller.NewGenreController()
 	{
 		genres := a.Group("/genres", middleware.Protected())
-		genres.Get("/genreSlug", genreController.FindAllGenres)
+		genres.Get("/check_slug", genreController.CheckIsExistGenreSlug)
 		genres.Get("/", genreController.FindAllGenres)
 		genres.Post("/", genreController.CreateNewGenre)
 		genres.Get("/:genreId", genreController.FindGenreById)
@@ -52,7 +52,7 @@ func privateRoute(a fiber.Router) {
 	countryController := controller.NewCountryController()
 	{
 		countries := a.Group("/countries", middleware.Protected())
-		countries.Get("/:countrySlug", countryController.FindAllCountries)
+		countries.Get("/check_slug", countryController.CheckIsExistCountrySlug)
 		countries.Get("/", countryController.FindAllCountries)
 		countries.Post("/", countryController.CreateNewCountry)
 		countries.Get("/:countryId", countryController.FindCountryById)
@@ -78,7 +78,6 @@ func privateRoute(a fiber.Router) {
 	// Roles Controller
 	{
 		roles := a.Group("/roles", middleware.Protected())
-		roles.Get("/:roleSlug", controller.FindAllRoles)
 		roles.Get("/", controller.FindAllRoles)
 		roles.Post("/", controller.CreateNewRole)
 		roles.Get("/:roleId", controller.FindRoleById)
@@ -92,9 +91,9 @@ func privateRoute(a fiber.Router) {
 	// Movies Controller
 	movieTypeController := controller.NewMovieTypeController()
 	movieTypes := movies.Group("/types")
-	movieTypes.Get("/:movieTypeSlug", movieTypeController.FindAllMovieTypes)
 	movieTypes.Get("/", movieTypeController.FindAllMovieTypes)
 	movieTypes.Post("/", movieTypeController.CreateNewMovieType)
+	movieTypes.Get("/check_slug", movieTypeController.CheckIsExistMovieTypeSlug)
 	movieTypes.Get("/:movieTypeId", movieTypeController.FindMovieTypeById)
 	movieTypes.Put("/:movieTypeId", movieTypeController.UpdateMovieTypeById)
 	movieTypes.Delete("/:movieTypeId", movieTypeController.DeleteMovieTypeById)
@@ -104,6 +103,7 @@ func privateRoute(a fiber.Router) {
 	movieTypes.Get("/:movieSlug", movieController.FindAllMovies)
 	movies.Get("/", movieController.FindAllMovies)
 	movies.Post("/", movieController.CreateNewMovie)
+	movies.Get("/check_slug", movieController.CheckIsExistMovieSlug)
 
 	// Movie Detail Controller
 	movieDetails := movies.Group("/:movieId")

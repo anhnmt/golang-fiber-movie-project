@@ -126,3 +126,24 @@ func (obj *GenreController) DeleteGenreById(c *fiber.Ctx) error {
 
 	return util.ResponseSuccess("Thành công", nil)
 }
+
+func (obj *GenreController) CheckIsExistGenreSlug(c *fiber.Ctx) error {
+	var err error
+	var genre *model.Genre
+
+	slug := c.Query("slug")
+	genreId := c.Query("genre_id")
+	status := []int{util.StatusDraft, util.StatusDeleted}
+
+	if genreId != "" {
+		genre, err = obj.genreRepository.FindGenreBySlugAndGenreIdNotAndStatusNotIn(slug, genreId, status)
+	} else {
+		genre, err = obj.genreRepository.FindGenreBySlugAndStatusNotIn(slug, status)
+	}
+
+	if err != nil || genre.GenreId == 0 {
+		return util.ResponseSuccess("Thành công", false)
+	}
+
+	return util.ResponseSuccess("Thành công", true)
+}

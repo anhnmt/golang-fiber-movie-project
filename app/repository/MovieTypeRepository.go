@@ -64,3 +64,24 @@ func (obj *MovieTypeRepository) UpdateStatusByMovieTypeId(movieTypeId int64, sta
 
 	return err
 }
+
+func (obj *MovieTypeRepository) FindMovieTypeBySlugAndMovieTypeIdNotAndStatusNotIn(slug string, id string, status []int) (*model.MovieType, error) {
+	var movieType model.MovieType
+
+	err := obj.db.
+		Where("movie_type_id <> ?", id).
+		Where("slug = ? AND status NOT IN ?", slug, status).
+		Find(&movieType).Error
+
+	return &movieType, err
+}
+
+func (obj *MovieTypeRepository) FindMovieTypeBySlugAndStatusNotIn(slug string, status []int) (*model.MovieType, error) {
+	var movieType model.MovieType
+
+	err := obj.db.
+		Where("slug = ? AND status NOT IN ?", slug, status).
+		Find(&movieType).Error
+
+	return &movieType, err
+}

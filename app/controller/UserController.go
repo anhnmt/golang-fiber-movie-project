@@ -139,9 +139,18 @@ func (obj *UserController) DeleteUserById(c *fiber.Ctx) error {
 }
 
 func (obj *UserController) CheckIsExistUsername(c *fiber.Ctx) error {
+	var err error
+	var user *model.User
+
 	username := c.Query("username")
-	status := []int{util.StatusDeleted}
-	user, err := obj.userRepository.FindUserByUsernameAndStatusNotIn(username, status)
+	userId := c.Query("user_id")
+	status := []int{util.StatusDraft, util.StatusDeleted}
+
+	if userId != "" {
+		user, err = obj.userRepository.FindUserByUsernameAndUserIdNotAndStatusNotIn(username, userId, status)
+	} else {
+		user, err = obj.userRepository.FindUserByUsernameAndStatusNotIn(username, status)
+	}
 
 	if err != nil || user.UserId == 0 {
 		return util.ResponseSuccess("Thành công", false)

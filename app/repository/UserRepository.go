@@ -57,6 +57,17 @@ func (obj *UserRepository) FindUserByIdAndStatus(id string, status int) (*model.
 	return &user, err
 }
 
+func (obj *UserRepository) FindUserByUsernameAndUserIdNotAndStatusNotIn(username string, id string, status []int) (*model.User, error) {
+	var user model.User
+
+	err := obj.db.
+		Where("user_id <> ?", id).
+		Where("username = ? AND status NOT IN ?", username, status).
+		Find(&user).Error
+
+	return &user, err
+}
+
 func (obj *UserRepository) FindUserByUsernameAndStatusNotIn(username string, status []int) (*model.User, error) {
 	var user model.User
 
