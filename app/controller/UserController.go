@@ -102,14 +102,8 @@ func (obj *UserController) UpdateUserById(c *fiber.Ctx) error {
 		return util.ResponseError(err.Error(), nil)
 	}
 
-	hash, err := util.HashPassword(userRequest.Password)
-	if err != nil {
-		return util.ResponseError("Không thể mã hoá mật khẩu", err)
-	}
-
 	user.Name = userRequest.Name
 	user.Username = userRequest.Username
-	user.Password = hash
 	user.Gender = userRequest.Gender
 
 	if _, err = obj.userRepository.SaveUser(*user); err != nil {
