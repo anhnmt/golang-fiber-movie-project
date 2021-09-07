@@ -66,6 +66,7 @@ func privateRoute(a fiber.Router) {
 		users := a.Group("/users", middleware.Protected())
 		users.Get("/", userController.FindAllUsers)
 		users.Post("/", userController.CreateNewUser)
+		users.Get("/check_username", userController.CheckIsExistUsername)
 		users.Get("/:userId", userController.FindUserById)
 		users.Put("/:userId", userController.UpdateUserById)
 		users.Delete("/:userId", userController.DeleteUserById)

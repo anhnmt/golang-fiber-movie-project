@@ -13,6 +13,8 @@ func authRouter(a fiber.Router) {
 	oauth.Post("/token", authController.AuthToken)
 
 	protected := oauth.Use(middleware.Protected())
-	protected.Get("/current_user", authController.CurrentUser)
 	protected.Get("/restricted", authController.Restricted)
+	protected.Get("/current_user", authController.CurrentUser)
+	protected.Get("/change_password", authController.ChangePassword)
+	protected.Get("/update_profile", authController.UpdateProfile)
 }

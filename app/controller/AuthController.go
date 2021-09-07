@@ -100,6 +100,67 @@ func (obj *AuthController) CurrentUser(c *fiber.Ctx) error {
 	return util.ResponseSuccess("Thành công", result)
 }
 
+func (obj *AuthController) UpdateProfile(c *fiber.Ctx) error {
+	token := c.Locals("user").(*jwt.Token)
+	claims := token.Claims.(jwt.MapClaims)
+	username := claims["username"].(string)
+	status := []int{util.StatusDraft, util.StatusDeleted}
+
+	user, err := obj.userRepository.FindUserByUsernameAndStatusNotIn(username, status)
+
+	if err != nil || user.UserId == 0 {
+		return util.ResponseBadRequest("ID không tồn tại", err)
+	}
+
+	var profileRequest request.ProfileRequest
+
+	if err = c.BodyParser(&profileRequest); err != nil {
+		return util.ResponseBadRequest("Vui lòng nhập thông tin", err)
+	}
+
+	user.Name = profileRequest.Name
+	user.Username = profileRequest.Username
+	user.Gender = profileRequest.Gender
+
+	if _, err = obj.userRepository.SaveUser(*user); err != nil {
+		return util.ResponseError(err.Error(), nil)
+	}
+
+	return util.ResponseSuccess("Thành công", nil)
+}
+
+func (obj *AuthController) ChangePassword(c *fiber.Ctx) error {
+	token := c.Locals("user").(*jwt.Token)
+	claims := token.Claims.(jwt.MapClaims)
+	username := claims["username"].(string)
+	status := []int{util.StatusDraft, util.StatusDeleted}
+
+	user, err := obj.userRepository.FindUserByUsernameAndStatusNotIn(username, status)
+
+	if err != nil || user.UserId == 0 {
+		return util.ResponseBadRequest("ID không tồn tại", err)
+	}
+
+	var passwordRequest request.ChangePasswordRequest
+
+	if err = c.BodyParser(&passwordRequest); err != nil {
+		return util.ResponseBadRequest("Vui lòng nhập thông tin", err)
+	}
+
+	if passwordRequest.OldPassword == "" || !util.CheckPasswordHash(passwordRequest.OldPassword, user.Password) {
+		return util.ResponseUnauthorized("Mật khẩu cũ không chính xác", nil)
+	}
+
+	hash, _ := util.HashPassword(passwordRequest.NewPassword)
+	user.Password = hash
+
+	if _, err = obj.userRepository.SaveUser(*user); err != nil {
+		return util.ResponseError(err.Error(), nil)
+	}
+
+	return util.ResponseSuccess("Thành công", nil)
+}
+
 func (obj *AuthController) Restricted(c *fiber.Ctx) error {
 	token := c.Locals("user").(*jwt.Token)
 	claims := token.Claims.(jwt.MapClaims)
