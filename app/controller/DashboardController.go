@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/xdorro/golang-fiber-movie-project/app/entity/response"
 	"github.com/xdorro/golang-fiber-movie-project/app/repository"
+	"github.com/xdorro/golang-fiber-movie-project/pkg/mapper"
 	"github.com/xdorro/golang-fiber-movie-project/pkg/util"
 	"log"
 	"sync"
@@ -46,13 +47,14 @@ func (obj *DashboardController) DashboardAnalyzer(*fiber.Ctx) error {
 	genres, _ := obj.genreRepository.CountAllGenresStatusNotIn(status)
 
 	latestMovies, _ := obj.movieRepository.FindAllTopMoviesByStatusNotInAndLimit(status, 5)
+	latest := mapper.SearchMovies(latestMovies)
 
 	result := response.DashboardAnalyzerResponse{
 		Movies:       movies,
 		Banners:      banners,
 		Countries:    countries,
 		Genres:       genres,
-		LatestMovies: latestMovies,
+		LatestMovies: latest,
 	}
 
 	return util.ResponseSuccess("Thành công", result)
