@@ -93,7 +93,7 @@ func (obj *MovieTypeController) UpdateMovieTypeById(c *fiber.Ctx) error {
 	moveType.Slug = moveTypeRequest.Slug
 	moveType.Status = moveTypeRequest.Status
 
-	if _, err = obj.movieTypeRepository.SaveMovieType(*moveType); err != nil {
+	if _, err = obj.movieTypeRepository.UpdateMovieType(moveTypeId, *moveType); err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
@@ -112,7 +112,7 @@ func (obj *MovieTypeController) DeleteMovieTypeById(c *fiber.Ctx) error {
 	moveType.Status = util.StatusDeleted
 
 	// Update movieType status
-	if _, err = obj.movieTypeRepository.SaveMovieType(*moveType); err != nil {
+	if _, err = obj.movieTypeRepository.UpdateMovieType(moveTypeId, *moveType); err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 

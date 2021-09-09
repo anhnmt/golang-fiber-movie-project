@@ -52,11 +52,11 @@ func (obj *AuthController) AuthToken(c *fiber.Ctx) error {
 
 	user, err := obj.userRepository.FindUserByUsernameAndStatus(loginRequest.Username, util.StatusActivated)
 	if user == nil || user.Username == "" || err != nil {
-		return util.ResponseUnauthorized("Tài khoản không tồn tại", err)
+		return util.ResponseBadRequest("Tài khoản không tồn tại", err)
 	}
 
 	if !util.CheckPasswordHash(loginRequest.Password, user.Password) {
-		return util.ResponseUnauthorized("Mật khẩu không chính xác", nil)
+		return util.ResponseBadRequest("Mật khẩu không chính xác", nil)
 	}
 
 	token := jwt.New(jwt.SigningMethodHS256)
@@ -122,7 +122,7 @@ func (obj *AuthController) UpdateProfile(c *fiber.Ctx) error {
 	user.Username = profileRequest.Username
 	user.Gender = profileRequest.Gender
 
-	if _, err = obj.userRepository.SaveUser(*user); err != nil {
+	if _, err = obj.userRepository.UpdateByUsername(username, *user); err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
@@ -154,7 +154,7 @@ func (obj *AuthController) ChangePassword(c *fiber.Ctx) error {
 	hash, _ := util.HashPassword(passwordRequest.NewPassword)
 	user.Password = hash
 
-	if _, err = obj.userRepository.SaveUser(*user); err != nil {
+	if _, err = obj.userRepository.UpdateByUsername(username, *user); err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 

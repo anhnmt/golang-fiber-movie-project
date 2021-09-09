@@ -102,7 +102,7 @@ func (obj *CountryController) UpdateCountryById(c *fiber.Ctx) error {
 	country.Slug = countryRequest.Slug
 	country.Status = countryRequest.Status
 
-	if _, err = obj.countryRepository.SaveCountry(*country); err != nil {
+	if _, err = obj.countryRepository.UpdateCountry(countryId, *country); err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 
@@ -120,7 +120,7 @@ func (obj *CountryController) DeleteCountryById(c *fiber.Ctx) error {
 
 	country.Status = util.StatusDeleted
 
-	if _, err = obj.countryRepository.SaveCountry(*country); err != nil {
+	if _, err = obj.countryRepository.UpdateCountry(countryId, *country); err != nil {
 		return util.ResponseError(err.Error(), nil)
 	}
 

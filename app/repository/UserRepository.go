@@ -31,7 +31,7 @@ func NewUserRepository() *UserRepository {
 func (obj *UserRepository) FindAllUsersByStatus(status int) (*[]model.User, error) {
 	users := make([]model.User, 0)
 
-	err := obj.db.Find(&users, "status = ?", status).Error
+	err := db.Model(&model.User{}).Find(&users, "status = ?", status).Error
 
 	return &users, err
 }
@@ -40,7 +40,7 @@ func (obj *UserRepository) FindAllUsersByStatus(status int) (*[]model.User, erro
 func (obj *UserRepository) FindUserByUsernameAndStatus(username string, status int) (*model.User, error) {
 	var user model.User
 
-	err := obj.db.
+	err := db.Model(&model.User{}).
 		Where("username = ? AND status = ?", username, status).
 		Find(&user).Error
 
@@ -50,7 +50,7 @@ func (obj *UserRepository) FindUserByUsernameAndStatus(username string, status i
 func (obj *UserRepository) FindUserByIdAndStatus(id string, status int) (*model.User, error) {
 	var user model.User
 
-	err := obj.db.
+	err := db.Model(&model.User{}).
 		Where("user_id = ? AND status = ?", id, status).
 		Find(&user).Error
 
@@ -60,7 +60,7 @@ func (obj *UserRepository) FindUserByIdAndStatus(id string, status int) (*model.
 func (obj *UserRepository) FindUserByUsernameAndUserIdNotAndStatusNotIn(username string, id string, status []int) (*model.User, error) {
 	var user model.User
 
-	err := obj.db.
+	err := db.Model(&model.User{}).
 		Where("user_id <> ?", id).
 		Where("username = ? AND status NOT IN ?", username, status).
 		Find(&user).Error
@@ -71,7 +71,7 @@ func (obj *UserRepository) FindUserByUsernameAndUserIdNotAndStatusNotIn(username
 func (obj *UserRepository) FindUserByUsernameAndStatusNotIn(username string, status []int) (*model.User, error) {
 	var user model.User
 
-	err := obj.db.
+	err := db.Model(&model.User{}).
 		Where("username = ? AND status NOT IN ?", username, status).
 		Find(&user).Error
 
@@ -79,7 +79,25 @@ func (obj *UserRepository) FindUserByUsernameAndStatusNotIn(username string, sta
 }
 
 func (obj *UserRepository) SaveUser(user model.User) (*model.User, error) {
-	if err := obj.db.Save(&user).Error; err != nil {
+	if err := db.Model(&model.User{}).Save(&user).Error; err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+func (obj *UserRepository) UpdateUser(userId string, user model.User) (*model.User, error) {
+	if err := db.Model(&model.User{}).Where("user_id = ?", userId).Save(&user).
+		Error; err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+func (obj *UserRepository) UpdateByUsername(username string, user model.User) (*model.User, error) {
+	if err := db.Model(&model.User{}).Where("username = ?", username).Save(&user).
+		Error; err != nil {
 		return nil, err
 	}
 
