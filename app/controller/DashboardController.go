@@ -45,11 +45,14 @@ func (obj *DashboardController) DashboardAnalyzer(*fiber.Ctx) error {
 	countries, _ := obj.countryRepository.CountAllCountriesStatusNotIn(status)
 	genres, _ := obj.genreRepository.CountAllGenresStatusNotIn(status)
 
+	latestMovies, _ := obj.movieRepository.FindAllTopMoviesByStatusNotInAndLimit(status, 5)
+
 	result := response.DashboardAnalyzerResponse{
-		Movies:    movies,
-		Banners:   banners,
-		Countries: countries,
-		Genres:    genres,
+		Movies:       movies,
+		Banners:      banners,
+		Countries:    countries,
+		Genres:       genres,
+		LatestMovies: latestMovies,
 	}
 
 	return util.ResponseSuccess("Thành công", result)
