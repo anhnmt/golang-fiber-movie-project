@@ -2,13 +2,14 @@ package controller
 
 import (
 	"github.com/gofiber/fiber/v2"
+
 	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
 	"github.com/xdorro/golang-fiber-movie-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-movie-project/app/repository"
 	"github.com/xdorro/golang-fiber-movie-project/pkg/util"
 )
 
-//func FindAllUserRoles(c *fiber.Ctx) error {
+// func FindAllUserRoles(c *fiber.Ctx) error {
 //	userId := c.Params("id")
 //	roles, err := repository.FindAllUserRolesByUserIdAndStatus(userId, util.STATUS_ACTIVATED)
 //
@@ -19,7 +20,7 @@ import (
 //	result := mapper.UserRoles(*roles)
 //
 //	return util.ResponseSuccess("Thành công", result)
-//}
+// }
 
 // FindAllRoles : Find all roles by Status = 1
 func FindAllRoles(c *fiber.Ctx) error {

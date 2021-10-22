@@ -5,7 +5,7 @@ import (
 	"github.com/xdorro/golang-fiber-movie-project/pkg/util"
 )
 
-//func FindAllUserRolesByUserIdAndStatus(id string, status int) (*[]model.Role, error) {
+// func FindAllUserRolesByUserIdAndStatus(id string, status int) (*[]model.Role, error) {
 //	uid := util.ParseStringToInt64(id)
 //
 //	roles := make([]model.Role, 0)
@@ -24,7 +24,7 @@ import (
 //	}
 //
 //	return &roles, nil
-//}
+// }
 
 // FindAllRolesByStatus : Find role by RoleId and Status = 1
 func FindAllRolesByStatus(status int) (*[]model.Role, error) {

@@ -1,10 +1,12 @@
 package repository
 
 import (
-	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
-	"gorm.io/gorm"
 	"log"
 	"sync"
+
+	"gorm.io/gorm"
+
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
 )
 
 type EpisodeRepository struct {
@@ -28,7 +30,9 @@ func NewEpisodeRepository() *EpisodeRepository {
 	return episodeRepository
 }
 
-func (obj *EpisodeRepository) FindAllEpisodesByMovieIdAndStatusNot(movieId string, status int) (*[]model.Episode, error) {
+func (obj *EpisodeRepository) FindAllEpisodesByMovieIdAndStatusNot(movieId string, status int) (
+	*[]model.Episode, error,
+) {
 	episodes := make([]model.Episode, 0)
 
 	err := db.Model(model.Episode{}).
@@ -37,7 +41,9 @@ func (obj *EpisodeRepository) FindAllEpisodesByMovieIdAndStatusNot(movieId strin
 	return &episodes, err
 }
 
-func (obj *EpisodeRepository) FindAllEpisodesByMovieIdAndStatusNotIn(movieId string, status []int) (*[]model.Episode, error) {
+func (obj *EpisodeRepository) FindAllEpisodesByMovieIdAndStatusNotIn(movieId string, status []int) (
+	*[]model.Episode, error,
+) {
 	episodes := make([]model.Episode, 0)
 
 	err := db.Model(model.Episode{}).

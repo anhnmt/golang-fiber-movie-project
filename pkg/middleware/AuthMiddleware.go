@@ -3,6 +3,7 @@ package middleware
 import (
 	"github.com/gofiber/fiber/v2"
 	jwtware "github.com/gofiber/jwt/v3"
+
 	"github.com/xdorro/golang-fiber-movie-project/pkg/config"
 	"github.com/xdorro/golang-fiber-movie-project/pkg/util"
 )

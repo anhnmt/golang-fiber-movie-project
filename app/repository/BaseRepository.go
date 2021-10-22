@@ -1,9 +1,11 @@
 package repository
 
 import (
-	"github.com/xdorro/golang-fiber-movie-project/platform/database"
-	"gorm.io/gorm"
 	"sync"
+
+	"gorm.io/gorm"
+
+	"github.com/xdorro/golang-fiber-movie-project/platform/database"
 )
 
 var db *gorm.DB

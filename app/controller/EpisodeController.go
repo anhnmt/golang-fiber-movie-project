@@ -1,7 +1,11 @@
 package controller
 
 import (
+	"log"
+	"sync"
+
 	"github.com/gofiber/fiber/v2"
+
 	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
 	"github.com/xdorro/golang-fiber-movie-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-movie-project/app/entity/response"
@@ -9,8 +13,6 @@ import (
 	"github.com/xdorro/golang-fiber-movie-project/pkg/mapper"
 	"github.com/xdorro/golang-fiber-movie-project/pkg/util"
 	"github.com/xdorro/golang-fiber-movie-project/pkg/validator"
-	"log"
-	"sync"
 )
 
 type EpisodeController struct {
@@ -41,7 +43,9 @@ func (obj *EpisodeController) ClientFindEpisodesByMovieId(c *fiber.Ctx) error {
 		return err
 	}
 
-	episodes, err := obj.episodeRepository.FindAllEpisodesByMovieIdAndStatusNotIn(movieId, []int{util.StatusDraft, util.StatusDeleted})
+	episodes, err := obj.episodeRepository.FindAllEpisodesByMovieIdAndStatusNotIn(movieId, []int{
+		util.StatusDraft, util.StatusDeleted,
+	})
 
 	if err != nil {
 		return util.ResponseError(err.Error(), nil)

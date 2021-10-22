@@ -1,11 +1,13 @@
 package repository
 
 import (
-	"github.com/xdorro/golang-fiber-movie-project/app/entity/dto"
-	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
-	"gorm.io/gorm"
 	"log"
 	"sync"
+
+	"gorm.io/gorm"
+
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/dto"
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
 )
 
 type BannerRepository struct {
@@ -104,7 +106,9 @@ func (obj *BannerRepository) FindBannerByIdAndStatusNot(id string, status int) (
 	return &banner, err
 }
 
-func (obj *BannerRepository) FindBannerByIdAndStatusNotAndJoinMovie(id string, status int) (*dto.SearchBannerDTO, error) {
+func (obj *BannerRepository) FindBannerByIdAndStatusNotAndJoinMovie(id string, status int) (
+	*dto.SearchBannerDTO, error,
+) {
 	var banner dto.SearchBannerDTO
 
 	err := db.Model(model.Banner{}).

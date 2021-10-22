@@ -1,11 +1,13 @@
 package repository
 
 import (
-	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
-	"github.com/xdorro/golang-fiber-movie-project/pkg/util"
-	"gorm.io/gorm"
 	"log"
 	"sync"
+
+	"gorm.io/gorm"
+
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
+	"github.com/xdorro/golang-fiber-movie-project/pkg/util"
 )
 
 type MovieTypeRepository struct {
@@ -57,7 +59,9 @@ func (obj *MovieTypeRepository) SaveMovieType(movieType model.MovieType) (*model
 	return &movieType, err
 }
 
-func (obj *MovieTypeRepository) UpdateMovieType(movieTypeId string, movieType model.MovieType) (*model.MovieType, error) {
+func (obj *MovieTypeRepository) UpdateMovieType(movieTypeId string, movieType model.MovieType) (
+	*model.MovieType, error,
+) {
 	err := db.Model(&model.MovieType{}).
 		Where("movie_type_id = ?", movieTypeId).
 		Save(&movieType).Error
@@ -73,7 +77,9 @@ func (obj *MovieTypeRepository) UpdateStatusByMovieTypeId(movieTypeId int64, sta
 	return err
 }
 
-func (obj *MovieTypeRepository) FindMovieTypeBySlugAndMovieTypeIdNotAndStatusNotIn(slug string, id string, status []int) (*model.MovieType, error) {
+func (obj *MovieTypeRepository) FindMovieTypeBySlugAndMovieTypeIdNotAndStatusNotIn(
+	slug string, id string, status []int,
+) (*model.MovieType, error) {
 	var movieType model.MovieType
 
 	err := obj.db.

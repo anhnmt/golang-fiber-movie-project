@@ -1,16 +1,18 @@
 package controller
 
 import (
+	"log"
+	"strconv"
+	"sync"
+
 	"github.com/gofiber/fiber/v2"
+
 	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
 	"github.com/xdorro/golang-fiber-movie-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-movie-project/app/repository"
 	"github.com/xdorro/golang-fiber-movie-project/pkg/mapper"
 	"github.com/xdorro/golang-fiber-movie-project/pkg/util"
 	"github.com/xdorro/golang-fiber-movie-project/pkg/validator"
-	"log"
-	"strconv"
-	"sync"
 )
 
 type BannerController struct {
@@ -35,7 +37,9 @@ func NewBannerController() *BannerController {
 }
 
 func (obj *BannerController) ClientFindAllBanners(c *fiber.Ctx) error {
-	banners, err := obj.bannerRepository.FindAllBannersByStatusNotInAndJoinMovie([]int{util.StatusDraft, util.StatusDeleted})
+	banners, err := obj.bannerRepository.FindAllBannersByStatusNotInAndJoinMovie([]int{
+		util.StatusDraft, util.StatusDeleted,
+	})
 
 	if err != nil {
 		return util.ResponseError(err.Error(), nil)

@@ -3,6 +3,7 @@ package router
 import (
 	swagger "github.com/arsmn/fiber-swagger/v2"
 	"github.com/gofiber/fiber/v2"
+
 	"github.com/xdorro/golang-fiber-movie-project/pkg/util"
 )
 

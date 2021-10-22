@@ -2,6 +2,7 @@ package util
 
 import (
 	"github.com/gofiber/fiber/v2"
+
 	"github.com/xdorro/golang-fiber-movie-project/app/entity/response"
 )
 

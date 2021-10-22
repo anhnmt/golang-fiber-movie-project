@@ -1,10 +1,12 @@
 package repository
 
 import (
-	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
-	"gorm.io/gorm"
 	"log"
 	"sync"
+
+	"gorm.io/gorm"
+
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
 )
 
 type MovieGenreRepository struct {
@@ -47,7 +49,9 @@ func (obj *MovieGenreRepository) RemoveMovieGenreByMovieIdAndGenreIds(movieId in
 	return err
 }
 
-func (obj *MovieGenreRepository) FindAllGenresByMovieIdAndStatusNotIn(movieId int64, status []int) (*[]model.Genre, error) {
+func (obj *MovieGenreRepository) FindAllGenresByMovieIdAndStatusNotIn(movieId int64, status []int) (
+	*[]model.Genre, error,
+) {
 	genres := make([]model.Genre, 0)
 
 	err := db.

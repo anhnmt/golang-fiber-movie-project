@@ -1,10 +1,12 @@
 package repository
 
 import (
-	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
-	"gorm.io/gorm"
 	"log"
 	"sync"
+
+	"gorm.io/gorm"
+
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
 )
 
 type EpisodeDetailRepository struct {
@@ -37,7 +39,9 @@ func (obj *EpisodeDetailRepository) CreateEpisodeDetailsByEpisodeId(episodeDetai
 	return err
 }
 
-func (obj *EpisodeDetailRepository) UpdateEpisodeDetail(episodeDetailId string, episodeDetail model.EpisodeDetail) (*model.EpisodeDetail, error) {
+func (obj *EpisodeDetailRepository) UpdateEpisodeDetail(
+	episodeDetailId string, episodeDetail model.EpisodeDetail,
+) (*model.EpisodeDetail, error) {
 	err := db.Model(model.EpisodeDetail{}).
 		Where("episode_detail_id = ?", episodeDetailId).
 		Save(&episodeDetail).Error
@@ -45,7 +49,9 @@ func (obj *EpisodeDetailRepository) UpdateEpisodeDetail(episodeDetailId string, 
 	return &episodeDetail, err
 }
 
-func (obj *EpisodeDetailRepository) FindEpisodeDetailsByEpisodeIdInAndStatusNotIn(episodeIds []int64, status []int) (*[]model.EpisodeDetail, error) {
+func (obj *EpisodeDetailRepository) FindEpisodeDetailsByEpisodeIdInAndStatusNotIn(
+	episodeIds []int64, status []int,
+) (*[]model.EpisodeDetail, error) {
 	episodeDetails := make([]model.EpisodeDetail, 0)
 
 	err := obj.db.
@@ -60,7 +66,9 @@ func (obj *EpisodeDetailRepository) FindEpisodeDetailsByEpisodeIdInAndStatusNotI
 	return &episodeDetails, err
 }
 
-func (obj *EpisodeDetailRepository) FindEpisodeDetailsByIdAndStatusNotIn(id string, status []int) (*[]model.EpisodeDetail, error) {
+func (obj *EpisodeDetailRepository) FindEpisodeDetailsByIdAndStatusNotIn(
+	id string, status []int,
+) (*[]model.EpisodeDetail, error) {
 	episodeDetails := make([]model.EpisodeDetail, 0)
 
 	err := obj.db.
@@ -75,7 +83,9 @@ func (obj *EpisodeDetailRepository) FindEpisodeDetailsByIdAndStatusNotIn(id stri
 	return &episodeDetails, err
 }
 
-func (obj *EpisodeDetailRepository) FindEpisodeDetailByEpisodeIdAndEpisodeDetailIdAndStatusNot(episodeId string, episodeDetailId string, status []int) (*model.EpisodeDetail, error) {
+func (obj *EpisodeDetailRepository) FindEpisodeDetailByEpisodeIdAndEpisodeDetailIdAndStatusNot(
+	episodeId string, episodeDetailId string, status []int,
+) (*model.EpisodeDetail, error) {
 	episodeDetail := new(model.EpisodeDetail)
 
 	err := obj.db.
@@ -88,7 +98,9 @@ func (obj *EpisodeDetailRepository) FindEpisodeDetailByEpisodeIdAndEpisodeDetail
 	return episodeDetail, err
 }
 
-func (obj *EpisodeDetailRepository) FindEpisodeDetailByIdAndStatusNot(episodeDetailId string, status []int) (*model.EpisodeDetail, error) {
+func (obj *EpisodeDetailRepository) FindEpisodeDetailByIdAndStatusNot(
+	episodeDetailId string, status []int,
+) (*model.EpisodeDetail, error) {
 	episodeDetail := new(model.EpisodeDetail)
 
 	err := obj.db.

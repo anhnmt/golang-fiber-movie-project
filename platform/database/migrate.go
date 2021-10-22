@@ -1,8 +1,9 @@
 package database
 
 import (
-	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
 	"log"
+
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
 )
 
 // migrate : updates the db with new columns, and tables
@@ -11,17 +12,17 @@ func migrate() {
 		model.User{},
 		model.Role{},
 
-		//model.Tag{},
+		// model.Tag{},
 		model.Genre{},
 		model.Country{},
-		//model.People{},
+		// model.People{},
 		model.Banner{},
 
 		model.Movie{},
-		//model.MovieTag{},
+		// model.MovieTag{},
 		model.MovieGenre{},
 		model.MovieCountry{},
-		//model.MoviePeople{},
+		// model.MoviePeople{},
 		model.MovieType{},
 
 		model.Episode{},

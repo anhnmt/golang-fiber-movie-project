@@ -2,7 +2,14 @@ package controller
 
 import (
 	"fmt"
+	"log"
+	"math"
+	"net/url"
+	"strconv"
+	"sync"
+
 	"github.com/gofiber/fiber/v2"
+
 	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
 	"github.com/xdorro/golang-fiber-movie-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-movie-project/app/entity/response"
@@ -10,11 +17,6 @@ import (
 	"github.com/xdorro/golang-fiber-movie-project/pkg/mapper"
 	"github.com/xdorro/golang-fiber-movie-project/pkg/util"
 	"github.com/xdorro/golang-fiber-movie-project/pkg/validator"
-	"log"
-	"math"
-	"net/url"
-	"strconv"
-	"sync"
 )
 
 type MovieController struct {
@@ -271,7 +273,7 @@ func (obj *MovieController) ClientFindMovieByMovieGenre(c *fiber.Ctx) error {
 		return util.ResponseError(err.Error(), nil)
 	}
 
-	//result := mapper.SearchMovies(movies)
+	// result := mapper.SearchMovies(movies)
 	result := response.PaginateResponse{
 		Total:    count,
 		Page:     page,
@@ -315,7 +317,7 @@ func (obj *MovieController) ClientFindMovieByMovieCountry(c *fiber.Ctx) error {
 		return util.ResponseError(err.Error(), nil)
 	}
 
-	//result := mapper.SearchMovies(movies)
+	// result := mapper.SearchMovies(movies)
 	result := response.PaginateResponse{
 		Total:    count,
 		Page:     page,
@@ -488,7 +490,9 @@ func (obj *MovieController) DeleteMovieById(c *fiber.Ctx) error {
 func (obj *MovieController) createMovieGenres(movieId *int64, newGenreIds *[]int64) error {
 	if len(*newGenreIds) > 0 {
 		// Find genreIds in Genres
-		genres, err := obj.genreRepository.FindAllGenresByGenreIdsInAndStatusNotIn(*newGenreIds, []int{util.StatusDeleted, util.StatusDraft})
+		genres, err := obj.genreRepository.FindAllGenresByGenreIdsInAndStatusNotIn(*newGenreIds, []int{
+			util.StatusDeleted, util.StatusDraft,
+		})
 		if err != nil {
 			return util.ResponseError(err.Error(), nil)
 		}
@@ -517,7 +521,9 @@ func (obj *MovieController) createMovieGenres(movieId *int64, newGenreIds *[]int
 func (obj *MovieController) updateMovieGenres(movieId *int64, newGenreIds *[]int64) error {
 	if len(*newGenreIds) > 0 {
 		// Find all genres by movieId
-		genres, err := obj.movieGenreRepository.FindAllGenresByMovieIdAndStatusNotIn(*movieId, []int{util.StatusDeleted, util.StatusDraft})
+		genres, err := obj.movieGenreRepository.FindAllGenresByMovieIdAndStatusNotIn(*movieId, []int{
+			util.StatusDeleted, util.StatusDraft,
+		})
 		if err != nil {
 			return util.ResponseError(err.Error(), nil)
 		}
@@ -543,7 +549,9 @@ func (obj *MovieController) updateMovieGenres(movieId *int64, newGenreIds *[]int
 func (obj *MovieController) createMovieCountries(movieId *int64, newCountryIds *[]int64) error {
 	if len(*newCountryIds) > 0 {
 		// Find countryIds in Countries
-		countries, err := obj.countryRepository.FindAllCountriesByCountryIdsInAndStatusNotIn(*newCountryIds, []int{util.StatusDeleted, util.StatusDraft})
+		countries, err := obj.countryRepository.FindAllCountriesByCountryIdsInAndStatusNotIn(*newCountryIds, []int{
+			util.StatusDeleted, util.StatusDraft,
+		})
 		if err != nil {
 			return util.ResponseError(err.Error(), nil)
 		}
@@ -572,7 +580,9 @@ func (obj *MovieController) createMovieCountries(movieId *int64, newCountryIds *
 func (obj *MovieController) updateMovieCountries(movieId *int64, newCountryIds *[]int64) error {
 	if len(*newCountryIds) > 0 {
 		// Find all genres by movieId
-		countries, err := obj.movieCountryRepository.FindAllCountriesByMovieIdAndStatusNotIn(*movieId, []int{util.StatusDeleted, util.StatusDraft})
+		countries, err := obj.movieCountryRepository.FindAllCountriesByMovieIdAndStatusNotIn(*movieId, []int{
+			util.StatusDeleted, util.StatusDraft,
+		})
 		if err != nil {
 			return util.ResponseError(err.Error(), nil)
 		}
