@@ -1,7 +1,7 @@
 package mapper
 
 import (
-	model "github.com/xdorro/golang-fiber-movie-project/app/entity/model"
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
 	"github.com/xdorro/golang-fiber-movie-project/app/entity/response"
 )
 

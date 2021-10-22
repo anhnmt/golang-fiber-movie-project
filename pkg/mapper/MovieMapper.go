@@ -65,7 +65,9 @@ func MovieDetail(movie *dto.MovieDetailDTO) *response.MovieDetailResponse {
 	}
 }
 
-func ClientMovieDetail(movie *dto.MovieDetailDTO, related *[]dto.SearchMovieDTO, genres *[]model.Genre, countries *[]model.Country) *response.MovieDetailResponse {
+func ClientMovieDetail(
+	movie *dto.MovieDetailDTO, related *[]dto.SearchMovieDTO, genres *[]model.Genre, countries *[]model.Country,
+) *response.MovieDetailResponse {
 	movieRelated := SearchMovies(related)
 
 	return &response.MovieDetailResponse{

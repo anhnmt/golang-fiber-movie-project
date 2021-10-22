@@ -1,17 +1,19 @@
 package controller
 
 import (
+	"log"
+	"sync"
+	"time"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
+
 	"github.com/xdorro/golang-fiber-movie-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-movie-project/app/entity/response"
 	"github.com/xdorro/golang-fiber-movie-project/app/repository"
 	"github.com/xdorro/golang-fiber-movie-project/pkg/config"
 	"github.com/xdorro/golang-fiber-movie-project/pkg/mapper"
 	"github.com/xdorro/golang-fiber-movie-project/pkg/util"
-	"log"
-	"sync"
-	"time"
 )
 
 type AuthController struct {

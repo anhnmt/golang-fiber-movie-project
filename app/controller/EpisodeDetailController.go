@@ -1,14 +1,16 @@
 package controller
 
 import (
+	"log"
+	"sync"
+
 	"github.com/gofiber/fiber/v2"
+
 	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
 	"github.com/xdorro/golang-fiber-movie-project/app/entity/request"
 	"github.com/xdorro/golang-fiber-movie-project/app/repository"
 	"github.com/xdorro/golang-fiber-movie-project/pkg/util"
 	"github.com/xdorro/golang-fiber-movie-project/pkg/validator"
-	"log"
-	"sync"
 )
 
 type EpisodeDetailController struct {
@@ -42,7 +44,9 @@ func (obj *EpisodeDetailController) ClientFindEpisodeDetailByEpisodeId(c *fiber.
 		return err
 	}
 
-	episodeDetails, err := obj.episodeDetailRepository.FindEpisodeDetailsByIdAndStatusNotIn(episodeId, []int{util.StatusDraft, util.StatusDeleted})
+	episodeDetails, err := obj.episodeDetailRepository.FindEpisodeDetailsByIdAndStatusNotIn(episodeId, []int{
+		util.StatusDraft, util.StatusDeleted,
+	})
 
 	if err != nil {
 		return util.ResponseError(err.Error(), nil)

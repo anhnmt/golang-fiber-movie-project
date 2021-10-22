@@ -2,6 +2,7 @@ package router
 
 import (
 	"github.com/gofiber/fiber/v2"
+
 	"github.com/xdorro/golang-fiber-movie-project/app/controller"
 	"github.com/xdorro/golang-fiber-movie-project/pkg/middleware"
 )
@@ -73,7 +74,7 @@ func privateRoute(a fiber.Router) {
 	}
 
 	// UserRoles Controller
-	//users.Get("/:id/roles", controller.FindAllUserRoles)
+	// users.Get("/:id/roles", controller.FindAllUserRoles)
 
 	// Roles Controller
 	{

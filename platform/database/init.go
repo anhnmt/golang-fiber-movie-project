@@ -1,11 +1,13 @@
 package database
 
 import (
-	"github.com/xdorro/golang-fiber-movie-project/pkg/config"
-	"gorm.io/gorm"
 	"log"
 	"os"
 	"sync"
+
+	"gorm.io/gorm"
+
+	"github.com/xdorro/golang-fiber-movie-project/pkg/config"
 )
 
 var (

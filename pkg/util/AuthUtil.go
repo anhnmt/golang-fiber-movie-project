@@ -1,9 +1,10 @@
 package util
 
 import (
+	"strconv"
+
 	"github.com/form3tech-oss/jwt-go"
 	"golang.org/x/crypto/bcrypt"
-	"strconv"
 )
 
 // CheckPasswordHash compare password with hash

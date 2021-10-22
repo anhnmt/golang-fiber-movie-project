@@ -1,11 +1,13 @@
 package repository
 
 import (
-	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
-	"github.com/xdorro/golang-fiber-movie-project/pkg/util"
-	"gorm.io/gorm"
 	"log"
 	"sync"
+
+	"gorm.io/gorm"
+
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
+	"github.com/xdorro/golang-fiber-movie-project/pkg/util"
 )
 
 type CountryRepository struct {
@@ -70,7 +72,9 @@ func (obj *CountryRepository) FindCountryByIdAndStatusNot(id string, status int)
 	return &country, err
 }
 
-func (obj *CountryRepository) FindAllCountriesByCountryIdsInAndStatusNotIn(countryIds []int64, status []int) (*[]model.Country, error) {
+func (obj *CountryRepository) FindAllCountriesByCountryIdsInAndStatusNotIn(
+	countryIds []int64, status []int,
+) (*[]model.Country, error) {
 	countries := make([]model.Country, 0)
 
 	err := db.Model(model.Country{}).
@@ -94,7 +98,9 @@ func (obj *CountryRepository) UpdateCountry(countryId string, country model.Coun
 	return &country, err
 }
 
-func (obj *CountryRepository) FindCountryBySlugAndCountryIdNotAndStatusNotIn(slug string, id string, status []int) (*model.Country, error) {
+func (obj *CountryRepository) FindCountryBySlugAndCountryIdNotAndStatusNotIn(
+	slug string, id string, status []int,
+) (*model.Country, error) {
 	var country model.Country
 
 	err := obj.db.

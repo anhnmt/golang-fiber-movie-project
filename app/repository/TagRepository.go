@@ -1,10 +1,12 @@
 package repository
 
 import (
-	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
-	"gorm.io/gorm"
 	"log"
 	"sync"
+
+	"gorm.io/gorm"
+
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
 )
 
 type TagRepository struct {

@@ -1,10 +1,12 @@
 package repository
 
 import (
-	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
-	"gorm.io/gorm"
 	"log"
 	"sync"
+
+	"gorm.io/gorm"
+
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
 )
 
 type UserRepository struct {
@@ -57,7 +59,9 @@ func (obj *UserRepository) FindUserByIdAndStatus(id string, status int) (*model.
 	return &user, err
 }
 
-func (obj *UserRepository) FindUserByUsernameAndUserIdNotAndStatusNotIn(username string, id string, status []int) (*model.User, error) {
+func (obj *UserRepository) FindUserByUsernameAndUserIdNotAndStatusNotIn(
+	username string, id string, status []int,
+) (*model.User, error) {
 	var user model.User
 
 	err := db.Model(&model.User{}).

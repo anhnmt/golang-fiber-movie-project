@@ -2,13 +2,15 @@ package database
 
 import (
 	"fmt"
-	"github.com/xdorro/golang-fiber-movie-project/pkg/config"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 	"log"
 	"os"
 	"time"
+
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
+
+	"github.com/xdorro/golang-fiber-movie-project/pkg/config"
 )
 
 // connect : creates a new Database object

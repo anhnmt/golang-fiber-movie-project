@@ -1,11 +1,13 @@
 package repository
 
 import (
-	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
-	"github.com/xdorro/golang-fiber-movie-project/pkg/util"
-	"gorm.io/gorm"
 	"log"
 	"sync"
+
+	"gorm.io/gorm"
+
+	"github.com/xdorro/golang-fiber-movie-project/app/entity/model"
+	"github.com/xdorro/golang-fiber-movie-project/pkg/util"
 )
 
 type GenreRepository struct {
@@ -60,7 +62,9 @@ func (obj *GenreRepository) FindAllGenresByStatusNotIn(status []int) (*[]model.G
 	return &genres, err
 }
 
-func (obj *GenreRepository) FindAllGenresByGenreIdsInAndStatusNotIn(genreIds []int64, status []int) (*[]model.Genre, error) {
+func (obj *GenreRepository) FindAllGenresByGenreIdsInAndStatusNotIn(genreIds []int64, status []int) (
+	*[]model.Genre, error,
+) {
 	genres := make([]model.Genre, 0)
 
 	err := db.Model(model.Genre{}).
@@ -95,7 +99,9 @@ func (obj *GenreRepository) UpdateGenre(genreId string, genre model.Genre) (*mod
 	return &genre, err
 }
 
-func (obj *GenreRepository) FindGenreBySlugAndGenreIdNotAndStatusNotIn(slug string, id string, status []int) (*model.Genre, error) {
+func (obj *GenreRepository) FindGenreBySlugAndGenreIdNotAndStatusNotIn(
+	slug string, id string, status []int,
+) (*model.Genre, error) {
 	var genre model.Genre
 
 	err := obj.db.

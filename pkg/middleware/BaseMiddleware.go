@@ -7,6 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/favicon"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
+
 	"github.com/xdorro/golang-fiber-movie-project/pkg/config"
 )
 
@@ -32,5 +33,5 @@ func BaseMiddleware(a *fiber.App) {
 	}
 
 	// Add caching.
-	//cache.New(),
+	// cache.New(),
 }

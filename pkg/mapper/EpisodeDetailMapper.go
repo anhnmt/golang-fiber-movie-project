@@ -5,7 +5,9 @@ import (
 	"github.com/xdorro/golang-fiber-movie-project/app/entity/response"
 )
 
-func EpisodeDetailsMapper(episodes *[]model.Episode, episodeDetails *[]model.EpisodeDetail) []response.MovieEpisodeDetailResponse {
+func EpisodeDetailsMapper(
+	episodes *[]model.Episode, episodeDetails *[]model.EpisodeDetail,
+) []response.MovieEpisodeDetailResponse {
 	result := make([]response.MovieEpisodeDetailResponse, 0)
 
 	for _, episode := range *episodes {
@@ -24,7 +26,9 @@ func EpisodeDetailsMapper(episodes *[]model.Episode, episodeDetails *[]model.Epi
 	return result
 }
 
-func EpisodeDetails(episode *model.Episode, episodeDetails *[]model.EpisodeDetail) *response.MovieEpisodeDetailResponse {
+func EpisodeDetails(
+	episode *model.Episode, episodeDetails *[]model.EpisodeDetail,
+) *response.MovieEpisodeDetailResponse {
 	return &response.MovieEpisodeDetailResponse{
 		Episode:        *episode,
 		EpisodeDetails: *episodeDetails,
