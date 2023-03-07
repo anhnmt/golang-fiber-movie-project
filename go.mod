@@ -18,9 +18,7 @@ require (
 	github.com/swaggo/swag v1.7.3
 	github.com/valyala/fasthttp v1.31.0 // indirect
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
-	golang.org/x/net v0.0.0-20211020060615-d418f374d309 // indirect
-	golang.org/x/sys v0.0.0-20211020174200-9d6173849985 // indirect
-	golang.org/x/tools v0.1.7 // indirect
+	golang.org/x/net v0.7.0 // indirect
 	gorm.io/driver/mysql v1.1.2
 	gorm.io/gorm v1.21.16
 )
